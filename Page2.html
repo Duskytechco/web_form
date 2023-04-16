@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Form Page 2/2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-1yJx7Gp58XzPf7+B+mnvHcI/Q+JeGZJqxSdeLjgbvEJQyAXlF+4gr4Jfv4A4w6+RuJRGZD+Y/ZTF/HdoJGBx6w==" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-R9Trz5U6fdOvZwHKCp+IaP8uyA6fNdnQ0B2Pb+k9M4/4zSPk0Tj7hTPEHuMV8/E7r1alAr+JG7xu40Ht8s7zgQ==" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="listitem">
+        <div class="list-container">
+            <div>
+                <div style="color:yellowgreen;font-size:18px">Working Information</div>
+                <hr>
+            </div>
+            <div class="list-gap">
+                <div>Employment Status  <span style="color:red;padding-left:0.25rem">*</span></div>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="inputGroupSelect01">
+                      <option selected></option>
+                      <option value="1">employed</option>
+                      <option value="2">self-employed</option>
+                      <option value="3">student</option>
+                      <option value="4">unemployed</option>
+                      <option value="5">other</option>
+                      <!--If pick other, show another line for user to key in-->
+                    </select>
+                </div>
+            </div>
+            <div class="list-gap">
+                <div>Position  <span style="color:red;padding-left:0.25rem">*</span></div>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="inputGroupSelect01">
+                      <option selected></option>
+                      <option value="1">manager / supervisor</option>
+                      <option value="2">waiter / waitress</option>
+                      <option value="3">admin</option>
+                      <option value="4">factory worker</option>
+                      <option value="5">general worker</option>
+                      <option value="6">general manager / assistant general manager</option>
+                      <option value="7">saleman / promoter</option>
+                      <option value="8">managing director</option>
+                      <option value="9">officer / executive</option>
+                      <option value="10">pensioner / retiree</option>
+                      <option value="11">professional ( lawyer, doctor )</option>
+                      <option value="12">skill worker ( technician / nurse )</option>
+                      <option value="13">teacher / lecture</option>
+                      <option value="14">other</option>
+                      <!--If pick other, show another line for user to key in-->
+                    </select>
+                </div>
+            </div>
+            <div class="list-gap">
+                <div>Department  <span style="color:red;padding-left:0.25rem">*</span></div>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="inputGroupSelect01">
+                      <option selected></option>
+                      <option value="1">account</option>
+                      <option value="2">admin</option>
+                      <option value="3">clerk</option>
+                      <option value="4">collection</option>
+                      <option value="5">construction</option>
+                      <option value="6">IT</option>
+                      <option value="7">management</option>
+                      <option value="8">production</option>
+                      <option value="9">sales</option>
+                      <option value="10">services</option>
+                      <option value="11">technical</option>
+                      <option value="12">other</option>
+                      <!--If pick other, show another line for user to key in-->
+                    </select>
+                </div>
+            </div>
+            <div class="list-gap">
+                <div>Company/Self-Employed Business Nature  <span style="color:red;padding-left:0.25rem">*</span></div>
+                <div class="input-group mb-3">
+                    <select class="form-select" id="inputGroupSelect01">
+                      <option selected></option>
+                      <option value="1">administrator / support services</option>
+                      <option value="2">agriculture</option>
+                      <option value="3">arts / entertainment / recreation</option>
+                      <option value="4">banking / finance</option>
+                      <option value="5">construction</option>
+                      <option value="6">education</option>
+                      <option value="7">extraterritorial organization and bodies</option>
+                      <option value="8">healthcare</option>
+                      <option value="9">investment</option>
+                      <option value="10">IT / research / development</option>
+                      <option value="11">logistic</option>
+                      <option value="12">manufacturing</option>
+                      <option value="13">mass media</option>
+                      <option value="14">mining / quarrying</option>
+                      <option value="15">electrical</option>
+                      <option value="16">other services activities</option>
+                      <option value="17">production of domestic / personal services</option>
+                      <option value="18">retail / wholesale</option>
+                      <option value="19">government</option>
+                      <option value="20">service line ( hotel, restaurants )</option>
+                      <option value="21">water supply / sewerage / waste management</option>
+                      <option value="22">other</option>
+                      <!--If pick other, show another line for user to key in-->
+                    </select>
+                </div>
+                <div class="list-gap">
+                    <div>Company Name  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div style="font-size:14px;padding-top:8px">All in Caps and must be full name as per registered</div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Company Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div style="font-size:14px;padding-top:8px">Numbers Only</div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Working in Singapore  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="input-group mb-3">
+                        <select class="form-select" id="inputGroupSelect01">
+                          <option selected></option>
+                          <option value="1">yes</option>
+                          <option value="2">no</option>
+                          <!--automatic tick no, if the address line is malaysia formula-->
+                        </select>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Company Address  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div style="font-size:14px;padding-top:8px">All addresses must be typed according to IC</div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>When You Join the Company  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <form>
+                        <input class="form-control" type="datetime-local" placeholder="Select DateTime">
+                    </form>
+                </div>
+                <div class="list-gap">
+                    <div>Gross Salary  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Salary Term  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div style="font-size:14px;padding-top:8px">Which day of the month is your salary issue</div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Existing Loans (estimate)</div>
+                    <div class="input-group mb-3">
+                        <select class="form-select" id="inputGroupSelect01">
+                          <option selected></option>
+                          <option value="1">1-5 years</option>
+                          <option value="2">6-10 years</option>
+                          <option value="3">11-15 years</option>
+                          <option value="4">16-20 years</option>
+                          <option value="5">More than 20 years</option>
+                          <option value="6">No loan</option>
+                          <option value="7">Other</option>
+                         <!--If pick other, show another line for user to key in-->
+                        </select>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Name of the Bank  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div style="font-size:14px;padding-top:8px">Which bank are you using?</div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Bank Account Number  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div style="font-size:14px;padding-top:8px">Bank account number (without Dash)</div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Type of Account  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="input-group mb-3">
+                        <select class="form-select" id="inputGroupSelect01">
+                          <option selected></option>
+                          <option value="1">saving</option>
+                          <option value="2">current</option>
+                          <option value="3">other</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>NRIC/bank statement/payslip</div>
+                    <div style="font-size:14px;padding-top:8px">Payslip(1 to 3 months), bank statement  (address, account number, name , transactions) , NRIC</div>
+                    <div style="font-size:14px;padding-top:8px">File has to be rename to your name</div>
+                    <div class="mb-3">
+                        <input class="form-control" type="file" id="formFile">
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Best Time of Contact</div>
+                    <div style="font-size:14px;padding-top:8px">For us to contact you in times of need</div>
+                    <div class="input-group mb-3">
+                        <select class="form-select" id="inputGroupSelect01">
+                          <option selected></option>
+                          <option value="1">8am to 12pm</option>
+                          <option value="2">12pm to 4pm</option>
+                          <option value="3">4pm to 8pm</option>
+                          <option value="4">8pm to 12am</option>
+                          <option value="5">Anytime</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Motorcycle License  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="input-group mb-3">
+                        <select class="form-select" id="inputGroupSelect01">
+                          <option selected></option>
+                          <option value="1">No License</option>
+                          <option value="2">Has License</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>How do you know Motosing</div>
+                    <div class="input-group mb-3">
+                        <select class="form-select" id="inputGroupSelect01">
+                          <option selected></option>
+                          <option value="1">Google</option>
+                          <option value="2">Facebook</option>
+                          <option value="3">Instagram</option>
+                          <option value="4">Telegram</option>
+                          <option value="5">Friends</option>
+                          <option value="6">Tiktok</option>
+                          <option value="7">Youtube</option>
+                          <option value="8">Other</option>
+                          <!--If pick other, show another line for user to key in-->
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="d-grid gap-2 d-md-block">
+                <a href="Page1.html" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Previous Page</button></a>
+                <a href="#" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Submit</button></a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr("input[type=datetime-local]", {});
+    </script>
+</body>
+</html>

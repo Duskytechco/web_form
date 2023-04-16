@@ -1,0 +1,59 @@
+*{
+    box-sizing:border-box;
+}
+a, abbr, acronym, address, applet, b, big, blockquote, body, button, caption, center, cite, code, dd, del, dfn, div, dl, dt, em, fieldset, font, footer, form, h1, h2, h3, h4, h5, h6, header, html, i, iframe, img, ins, kbd, label, legend, li, nav, object, ol, p, pre, q, s, samp, section, small, span, strike, strong, sub, sup, table, tbody, td, tfoot, th, thead, title, tr, tt, u, ul, var {
+    background: transparent;
+    border: 0;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+@viewport{
+    width:auto;
+    height:auto;
+}
+html{
+    display:block;
+}
+body{
+    background:rgb(244, 244, 244);
+}
+#listitem{
+    margin:auto;
+    width:640px;
+    display:flex;
+    flex-direction:column;
+}
+.list-container{
+    background:white;
+    padding:24px;
+    border:1px solid #dadce0;
+    border-radius:8px;
+}
+.list-gap{
+    margin-bottom:30px;
+}
+.abc{
+    display:flex;
+    padding-top:14px;
+    padding-bottom:8px;
+    position:relative;
+}
+.def{
+    position:relative;
+    min-height:1.5em;
+    vertical-align:top;
+}
+/* .textarea{
+    z-index:0;
+    overflow-y:visible;
+    overflow-x:hidden;
+    resize:none;
+    outline:none;
+    min-height:24px;
+    height:24px;
+    font-size:14px;
+    letter-spacing:.2px;
+    line-height:20px;
+} */
