@@ -24,7 +24,7 @@
                 <div style="font-size:14px;padding-top:8px">Full Name according to NRIC (Caps Only)</div>
                 <div class="abc">
                     <div class="def">
-                        <input class="form-control" placeholder="Your Answer" style="text-transform:uppercase"></input>
+                        <input class="form-control" id="uppercase" placeholder="Your Answer" required></input>
                     </div>
                 </div>
             </div>
@@ -33,16 +33,19 @@
                 <div style="font-size:14px;padding-top:8px">Numbers only ( no dash )</div>
                 <div class="abc">
                     <div class="def">
-                        <input class="form-control" placeholder="Your Answer"></input>
+                        <input class="form-control" placeholder="Your Answer" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
                     </div>
                 </div>
             </div>
             <div class="list-gap">
                 <div>Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="abc">
-                    <div class="def">
-                        <input class="form-control" placeholder="Your Answer"></input>
-                    </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="country-code">Country Code</span>
+                    <select class="form-select" id="input-country-code">
+                      <option value="+60">+60</option>
+                      <option value="+65">+65</option>
+                    </select>
+                    <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number" aria-describedby="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                 </div>
             </div>
             <div class="list-gap">
@@ -58,21 +61,26 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">MR</option>
-                      <option value="2">MRS</option>
-                      <option value="3">MS</option>
-                      <option value="4">MADAM</option>
+                      <option value="MR">MR</option>
+                      <option value="MRS">MRS</option>
+                      <option value="MS">MS</option>
+                      <option value="MADAM">MADAM</option>
                     </select>
                 </div>
             </div>
             <div class="list-gap">
                 <div>Gender  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="1">Male</option>
-                      <option value="2">Female</option>
-                    </select>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" id="option1">
+                    <label class="form-check-label" for="option1">
+                        Male
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="gender" id="option2">
+                    <label class="form-check-label" for="option2">
+                        Female
+                    </label>
                 </div>
             </div>
             <div class="list-gap">
@@ -80,10 +88,10 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">Malay</option>
-                      <option value="2">Chinese</option>
-                      <option value="3">Indian</option>
-                      <option value="4">Other</option>
+                      <option value="Malay">Malay</option>
+                      <option value="Chinese">Chinese</option>
+                      <option value="Indian">Indian</option>
+                      <option value="Other">Other</option>
                       <!--Show another line for user to put in if other ticked-->
                     </select>
                 </div>
@@ -93,21 +101,26 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">Single</option>
-                      <option value="2">Married</option>
-                      <option value="3">Widowed</option>
-                      <option value="4">Divorced</option>
+                      <option value="Single">Single</option>
+                      <option value="Married">Married</option>
+                      <option value="Widowed">Widowed</option>
+                      <option value="Divorced">Divorced</option>
                     </select>
                 </div>
             </div>
             <div class="list-gap">
                 <div>Bumi/Non  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="1">Bumi</option>
-                      <option value="2">Non-Bumi</option>
-                    </select>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="bumiornon" id="option3">
+                    <label class="form-check-label" for="option3">
+                        Bumi
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="bumiornon" id="option4">
+                    <label class="form-check-label" for="option4">
+                        Non-Bumi
+                    </label>
                 </div>
             </div>
             <div class="list-gap">
@@ -124,12 +137,12 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">1-2</option>
-                      <option value="2">3-4</option>
-                      <option value="3">5-6</option>
-                      <option value="4">6-7</option>
-                      <option value="5">8-9</option>
-                      <option value="6">>10</option>
+                      <option value="1-2">1-2</option>
+                      <option value="3-4">3-4</option>
+                      <option value="5-6">5-6</option>
+                      <option value="6-7">6-7</option>
+                      <option value="8-9">8-9</option>
+                      <option value=">10">>10</option>
                     </select>
                 </div>
             </div>
@@ -138,24 +151,29 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">employer quarters</option>
-                      <option value="2">family home</option>
-                      <option value="3">parents home</option>
-                      <option value="4">own mortgaged</option>
-                      <option value="5">rented</option>
+                      <option value="employer quarters">employer quarters</option>
+                      <option value="family home">family home</option>
+                      <option value="parents home">parents home</option>
+                      <option value="own mortgaged">own mortgaged</option>
+                      <option value="rented">rented</option>
                     </select>
                 </div>
             </div>
             <div class="list-gap">
-                <div>Mailing address same as registered address  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="1">yes</option>
-                      <option value="2">no</option>
-                      <!--If no, show another container for user to key in-->
-                    </select>
+                <div>Do you stay in registered address  <span style="color:red;padding-left:0.25rem">*</span></div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="stayinregisteredaddress" id="option5" checked>
+                    <label class="form-check-label" for="option5">
+                        Yes
+                    </label>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="stayinregisteredaddress" id="option6">
+                    <label class="form-check-label" for="option6">
+                        No
+                    </label>
+                </div>
+                <!--If No, show another container for fill in new address-->
             </div>
             <!-- <div class="list-gap">
                 <div>Mailing Address  <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -172,23 +190,36 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">superbike</option>
-                      <option value="2">moped</option>
-                      <option value="3">scooter bigbike</option>
-                      <option value="4">scooter superbike</option>
+                      <option value="scooter (below 200cc)">scooter (below 200cc)</option>
+                      <option value="scooter (200cc above)">scooter (200cc above)</option>
+                      <option value="moped (200cc and below)">moped (200cc and below)</option>
+                      <option value="bigbike (1000cc and below)">bigbike (1000cc and below)</option>
+                      <option value="superbike (1000cc and above)">superbike (1000cc and above)</option>
                     </select>
                 </div>
             </div>
             <div class="list-gap">
                 <div>New/Used/Recon  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="1">new</option>
-                      <option value="2">used</option>
-                      <option value="3">recon</option>
-                    </select>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="newusedrecon" id="option7">
+                    <label class="form-check-label" for="option7">
+                        New
+                    </label>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="newusedrecon" id="option8">
+                    <label class="form-check-label" for="option8">
+                        Used
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="newusedrecon" id="option9" required>
+                    <label class="form-check-label" for="option9">
+                        Recon
+                    </label>
+                </div>
+                <!--Only for Used and Recon-->
+                <!--IF radio used and recon checked, show another container title is Number Plate-->
             </div>
             <div class="list-gap">
                 <div>Tenure  <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -196,11 +227,14 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">12</option>
-                      <option value="2">24</option>
-                      <option value="3">36</option>
-                      <option value="4">48</option>
-                      <option value="5">60</option>
+                      <option value="12 month (1 year)">12 month (1 year)</option>
+                      <option value="24 months (2 years)">24 months (2 years)</option>
+                      <option value="36 months (3 years)">36 months (3 years)</option>
+                      <option value="48 months (4 years)">48 months (4 years)</option>
+                      <option value="60 months (5 years)">60 months (5 years)</option>
+                      <!-- 72 and 84 months only for superbike (1000cc and above)
+                      <option value="6">72 months (6 years)</option>
+                      <option value="7">84 months (7 years)</option> -->
                     </select>
                 </div>
             </div>
@@ -221,33 +255,31 @@
                 </div>
             </div>
             <div class="list-gap">
-                <div>NRIC  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div style="font-size:14px;padding-top:8px">Numbers only ( no dash )</div>
-                <div class="abc">
-                    <div class="def">
-                        <input class="form-control" placeholder="Your Answer"></input>
-                    </div>
-                </div>
-            </div>
-            <div class="list-gap">
                 <div>Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div style="font-size:14px;padding-top:8px">Numbers only</div>
-                <div class="abc">
-                    <div class="def">
-                        <input class="form-control" placeholder="Your Answer"></input>
-                    </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="country-code">Country Code</span>
+                    <select class="form-select" id="input-country-code">
+                      <option value="+60">+60</option>
+                      <option value="+65">+65</option>
+                    </select>
+                    <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number" aria-describedby="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                 </div>
             </div>
             <div class="list-gap">
                 <div>Do you stay with emergency contact (1)  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="1">yes</option>
-                      <option value="2">no</option>
-                      <!--Show Address of Emergency Contact, If the option is No-->
-                    </select>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="staywithemergencycontact1" id="option10">
+                    <label class="form-check-label" for="option10">
+                        Yes
+                    </label>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="staywithemergencycontact1" id="option11">
+                    <label class="form-check-label" for="option11">
+                        No
+                    </label>
+                </div>
+                <!--If No, show another container for fill in new address-->
             </div>
             <!-- <div class="list-gap">
                 <div>Address of Emergency Contact (1) <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -263,12 +295,12 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">spouse</option>
-                      <option value="2">parents</option>
-                      <option value="3">siblings</option>
-                      <option value="4">relatives</option>
-                      <option value="5">friends</option>
-                      <option value="6">children</option>
+                      <option value="spouse">spouse</option>
+                      <option value="parents">parents</option>
+                      <option value="siblings">siblings</option>
+                      <option value="relatives">relatives</option>
+                      <option value="friends">friends</option>
+                      <option value="children">children</option>
                     </select>
                 </div>
             </div>
@@ -284,33 +316,31 @@
                 </div>
             </div>
             <div class="list-gap">
-                <div>NRIC  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div style="font-size:14px;padding-top:8px">Numbers only ( no dash )</div>
-                <div class="abc">
-                    <div class="def">
-                        <input class="form-control" placeholder="Your Answer"></input>
-                    </div>
-                </div>
-            </div>
-            <div class="list-gap">
                 <div>Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div style="font-size:14px;padding-top:8px">Numbers only</div>
-                <div class="abc">
-                    <div class="def">
-                        <input class="form-control" placeholder="Your Answer"></input>
-                    </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="country-code">Country Code</span>
+                    <select class="form-select" id="input-country-code">
+                      <option value="+60">+60</option>
+                      <option value="+65">+65</option>
+                    </select>
+                    <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number" aria-describedby="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                 </div>
             </div>
             <div class="list-gap">
                 <div>Do you stay with emergency contact (2)  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="1">yes</option>
-                      <option value="2">no</option>
-                      <!--Show Address of Emergency Contact(2) Only when option value 2 ticked-->
-                    </select>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="staywithemergencycontact2" id="option12">
+                    <label class="form-check-label" for="option12">
+                        Yes
+                    </label>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="staywithemergencycontact2" id="option13">
+                    <label class="form-check-label" for="option13">
+                        No
+                    </label>
+                </div>
+                <!--If No, show another container for fill in new address-->
             </div>
             <!-- <div class="list-gap">
                 <div>Address of Emergency Contact (2)  <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -326,18 +356,19 @@
                 <div class="input-group mb-3">
                     <select class="form-select" id="inputGroupSelect01">
                       <option selected></option>
-                      <option value="1">spouse</option>
-                      <option value="2">parents</option>
-                      <option value="3">siblings</option>
-                      <option value="4">relatives</option>
-                      <option value="5">friends</option>
-                      <option value="6">children</option>
+                      <option value="spouse">spouse</option>
+                      <option value="parents">parents</option>
+                      <option value="siblings">siblings</option>
+                      <option value="relatives">relatives</option>
+                      <option value="friends">friends</option>
+                      <option value="children">children</option>
                     </select>
                 </div>
             </div>
             <div class="d-grid gap-2 d-md-block">
                 <a href="Page2.html" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Next Page</button></a>
-                <a href="#" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Submit</button></a>
+                <a href="#" rel="noopener noreferrer"><button class="btn btn-primary"><i class="fab fa-whatsapp"></i>Whatsapp Us</button></a>
+                <!--Add this to whatsapp button if functionable, target="_blank"-->
             </div>
         </div>
     </div>

@@ -45,15 +45,9 @@ body{
     min-height:1.5em;
     vertical-align:top;
 }
-/* .textarea{
-    z-index:0;
-    overflow-y:visible;
-    overflow-x:hidden;
-    resize:none;
-    outline:none;
-    min-height:24px;
-    height:24px;
-    font-size:14px;
-    letter-spacing:.2px;
-    line-height:20px;
-} */
+#uppercase{
+    text-transform:uppercase;
+}
+#uppercase::placeholder{
+    text-transform:none;
+}
