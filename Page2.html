@@ -13,303 +13,358 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-R9Trz5U6fdOvZwHKCp+IaP8uyA6fNdnQ0B2Pb+k9M4/4zSPk0Tj7hTPEHuMV8/E7r1alAr+JG7xu40Ht8s7zgQ==" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div id="listitem">
-        <div class="list-container">
-            <div>
-                <div style="color:yellowgreen;font-size:18px">Working Information</div>
-                <hr>
-            </div>
-            <div class="list-gap">
-                <div>Employment Status  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="employed">employed</option>
-                      <option value="self-employed">self-employed</option>
-                      <option value="student">student</option>
-                      <option value="unemployed">unemployed</option>
-                      <option value="other">other</option>
-                      <!--If pick either one, show another container for user to key in-->
-                    </select>
-                </div>
-            </div>
-            <div class="list-gap">
-                <div>Position  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="manager / supervisor">manager / supervisor</option>
-                      <option value="waiter / waitress">waiter / waitress</option>
-                      <option value="admin">admin</option>
-                      <option value="factory worker">factory worker</option>
-                      <option value="general worker">general worker</option>
-                      <option value="general manager / assistant general manager">general manager / assistant general manager</option>
-                      <option value="saleman / promoter">saleman / promoter</option>
-                      <option value="managing director">managing director</option>
-                      <option value="officer / executive">officer / executive</option>
-                      <option value="pensioner / retiree">pensioner / retiree</option>
-                      <option value="professional ( lawyer, doctor )">professional ( lawyer, doctor )</option>
-                      <option value="skill worker ( technician / nurse )">skill worker ( technician / nurse )</option>
-                      <option value="teacher / lecture">teacher / lecture</option>
-                      <option value="other">other</option>
-                      <!--If pick other, show another line for user to key in-->
-                    </select>
-                </div>
-            </div>
-            <div class="list-gap">
-                <div>Department  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="account">account</option>
-                      <option value="admin">admin</option>
-                      <option value="clerk">clerk</option>
-                      <option value="collection">collection</option>
-                      <option value="construction">construction</option>
-                      <option value="IT">IT</option>
-                      <option value="management">management</option>
-                      <option value="production">production</option>
-                      <option value="sales">sales</option>
-                      <option value="services">services</option>
-                      <option value="technical">technical</option>
-                      <option value="other">other</option>
-                      <!--If pick other, show another line for user to key in-->
-                    </select>
-                </div>
-            </div>
-            <div class="list-gap">
-                <div>Company/Self-Employed Business Nature  <span style="color:red;padding-left:0.25rem">*</span></div>
-                <div class="input-group mb-3">
-                    <select class="form-select" id="inputGroupSelect01">
-                      <option selected></option>
-                      <option value="administrator / support services">administrator / support services</option>
-                      <option value="agriculture">agriculture</option>
-                      <option value="arts / entertainment / recreation">arts / entertainment / recreation</option>
-                      <option value="banking / finance">banking / finance</option>
-                      <option value="construction">construction</option>
-                      <option value="education">education</option>
-                      <option value="extraterritorial organization and bodies">extraterritorial organization and bodies</option>
-                      <option value="healthcare">healthcare</option>
-                      <option value="investment">investment</option>
-                      <option value="IT / research / development">IT / research / development</option>
-                      <option value="logistic">logistic</option>
-                      <option value="manufacturing">manufacturing</option>
-                      <option value="mass media">mass media</option>
-                      <option value="mining / quarrying">mining / quarrying</option>
-                      <option value="electrical">electrical</option>
-                      <option value="other services activities">other services activities</option>
-                      <option value="production of domestic / personal services">production of domestic / personal services</option>
-                      <option value="retail / wholesale">retail / wholesale</option>
-                      <option value="government">government</option>
-                      <option value="service line ( hotel, restaurants )">service line ( hotel, restaurants )</option>
-                      <option value="water supply / sewerage / waste management">water supply / sewerage / waste management</option>
-                      <option value="other">other</option>
-                      <!--If pick other, show another line for user to key in-->
-                    </select>
+    <form class="g-3">
+        <div id="listitem">
+            <div class="list-container">
+                <form class="row g-3 needs-validation" novalidate>
+                <div>
+                    <div style="color:yellowgreen;font-size:18px">Working Information</div>
+                    <hr>
                 </div>
                 <div class="list-gap">
-                    <div>Company Name  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div style="font-size:14px;padding-top:8px">All in Caps and must be full name as per registered</div>
-                    <div class="abc">
-                        <div class="def">
-                            <input class="form-control" id="uppercase" placeholder="Your Answer"></input>
-                        </div>
-                    </div>
-                </div>
-                <div class="list-gap">
-                    <div>Company Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Employment Status  <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="country-code">Country Code</span>
-                        <select class="form-select" id="input-country-code">
-                          <option value="+60">+60</option>
-                          <option value="+65">+65</option>
+                        <select class="form-select" id="employment-status" required>
+                        <option selected></option>
+                        <option value="employed">employed</option>
+                        <option value="self-employed">self-employed</option>
+                        <option value="student">student</option>
+                        <option value="unemployed">unemployed</option>
+                        <option value="other">other</option>
                         </select>
-                        <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number" aria-describedby="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                     </div>
-                </div>
-                <div class="list-gap">
-                    <div>Working in Singapore  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="workinginsingapore" id="option14">
-                        <label class="form-check-label" for="option14">
-                            Yes
-                        </label>
+                    <div class="list-gap">
+                        <div class="form-group d-none card card-body" id="container-for-employed">
+                            <label for="add-container0">Employed Status  <span style="color:red;padding-left:0.25rem">*</span></label>
+                            <div style="font-size:14px;padding-top:8px">If you are Employed please click on an option</div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="employedstatus" id="option0">
+                                <label class="form-check-label" for="option0">
+                                    government employee
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="employedstatus" id="option1">
+                                <label class="form-check-label" for="option1">
+                                    private sector
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="workinginsingapore" id="option15">
-                        <label class="form-check-label" for="option15">
-                            No
-                        </label>
+                    <div class="list-gap">
+                        <div class="form-group d-none" id="container-for-race-option">
+                            <label for="add-container0">Self-Employed Status  <span style="color:red;padding-left:0.25rem">*</span></label>
+                            <input type="text" class="form-control" id="add-container0" name="add-container0" placeholder="Your Answer">
+                        </div>
                     </div>
-                </div>
-                <div class="list-gap">
-                    <div>Company Address  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div style="font-size:14px;padding-top:8px">Lot, Street, Postal, Town, State </div>
-                    <div class="abc">
-                        <div class="def">
-                            <input class="form-control" placeholder="Your Answer"></input>
+                    <div class="list-gap">
+                        <div class="form-group d-none" id="container-for-race-option">
+                            <label for="add-container0">Other Employment Status  <span style="color:red;padding-left:0.25rem">*</span></label>
+                            <input type="text" class="form-control" id="add-container0" name="add-container0" placeholder="Your Answer">
                         </div>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>When You Join the Company  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <form>
-                        <input class="form-control" type="datetime-local" placeholder="Select DateTime">
-                    </form>
-                </div>
-                <div class="list-gap">
-                    <div>Gross Salary  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div class="abc">
-                        <div class="def">
-                            <input class="form-control" placeholder="Your Answer"></input>
-                        </div>
-                    </div>
-                </div>
-                <div class="list-gap">
-                    <div>Salary Term  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div style="font-size:14px;padding-top:8px">Which day of the month is your salary issue</div>
-                    <div class="abc">
-                        <div class="def">
-                            <input class="form-control" placeholder="Your Answer"></input>
-                        </div>
-                    </div>
-                </div>
-                <div class="list-gap">
-                    <div>Existing Loans (estimate)</div>
+                    <div>Position  <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                          <option selected></option>
-                          <option value="1-5 years">1-5 years</option>
-                          <option value="6-10 years">6-10 years</option>
-                          <option value="11-15 years">11-15 years</option>
-                          <option value="16-20 years">16-20 years</option>
-                          <option value="More than 20 years">More than 20 years</option>
-                          <option value="No loan">No loan</option>
-                          <option value="Other">Other</option>
-                         <!--If pick other, show another line for user to key in-->
+                        <option selected></option>
+                        <option value="manager / supervisor">manager / supervisor</option>
+                        <option value="waiter / waitress">waiter / waitress</option>
+                        <option value="admin">admin</option>
+                        <option value="factory worker">factory worker</option>
+                        <option value="general worker">general worker</option>
+                        <option value="general manager / assistant general manager">general manager / assistant general manager</option>
+                        <option value="saleman / promoter">saleman / promoter</option>
+                        <option value="managing director">managing director</option>
+                        <option value="officer / executive">officer / executive</option>
+                        <option value="pensioner / retiree">pensioner / retiree</option>
+                        <option value="professional ( lawyer, doctor )">professional ( lawyer, doctor )</option>
+                        <option value="skill worker ( technician / nurse )">skill worker ( technician / nurse )</option>
+                        <option value="teacher / lecture">teacher / lecture</option>
+                        <option value="other">other</option>
+                        <!--If pick other, show another line for user to key in-->
                         </select>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Name of the Bank  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div style="font-size:14px;padding-top:8px">Which bank are you using?</div>
-                    <div class="abc">
-                        <div class="def">
-                            <input class="form-control" placeholder="Your Answer"></input>
+                    <div>Department  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="input-group mb-3">
+                        <select class="form-select" id="inputGroupSelect01">
+                        <option selected></option>
+                        <option value="account">account</option>
+                        <option value="admin">admin</option>
+                        <option value="clerk">clerk</option>
+                        <option value="collection">collection</option>
+                        <option value="construction">construction</option>
+                        <option value="IT">IT</option>
+                        <option value="management">management</option>
+                        <option value="production">production</option>
+                        <option value="sales">sales</option>
+                        <option value="services">services</option>
+                        <option value="technical">technical</option>
+                        <option value="other">other</option>
+                        <!--If pick other, show another line for user to key in-->
+                        </select>
+                    </div>
+                </div>
+                <div class="list-gap">
+                    <div>Company/Self-Employed Business Nature  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="input-group mb-3">
+                        <select class="form-select" id="inputGroupSelect01">
+                        <option selected></option>
+                        <option value="administrator / support services">administrator / support services</option>
+                        <option value="agriculture">agriculture</option>
+                        <option value="arts / entertainment / recreation">arts / entertainment / recreation</option>
+                        <option value="banking / finance">banking / finance</option>
+                        <option value="construction">construction</option>
+                        <option value="education">education</option>
+                        <option value="extraterritorial organization and bodies">extraterritorial organization and bodies</option>
+                        <option value="healthcare">healthcare</option>
+                        <option value="investment">investment</option>
+                        <option value="IT / research / development">IT / research / development</option>
+                        <option value="logistic">logistic</option>
+                        <option value="manufacturing">manufacturing</option>
+                        <option value="mass media">mass media</option>
+                        <option value="mining / quarrying">mining / quarrying</option>
+                        <option value="electrical">electrical</option>
+                        <option value="other services activities">other services activities</option>
+                        <option value="production of domestic / personal services">production of domestic / personal services</option>
+                        <option value="retail / wholesale">retail / wholesale</option>
+                        <option value="government">government</option>
+                        <option value="service line ( hotel, restaurants )">service line ( hotel, restaurants )</option>
+                        <option value="water supply / sewerage / waste management">water supply / sewerage / waste management</option>
+                        <option value="other">other</option>
+                        <!--If pick other, show another line for user to key in-->
+                        </select>
+                    </div>
+                    <div class="list-gap">
+                        <div>Company Name  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div style="font-size:14px;padding-top:8px">All in Caps and must be full name as per registered</div>
+                        <div class="abc">
+                            <div class="def">
+                                <input class="form-control uppercase" placeholder="Your Answer"></input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Company Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="country-code">Country Code</span>
+                            <select class="form-select" id="input-country-code">
+                            <option value="+60">+60</option>
+                            <option value="+65">+65</option>
+                            </select>
+                            <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number" aria-describedby="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Working in Singapore  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="workinginsingapore" id="option14">
+                            <label class="form-check-label" for="option14">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="workinginsingapore" id="option15">
+                            <label class="form-check-label" for="option15">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Company Address  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div style="font-size:14px;padding-top:8px">Lot, Street, Postal, Town, State </div>
+                        <div class="abc">
+                            <div class="def">
+                                <input class="form-control" placeholder="Your Answer" required></input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>When You Join the Company  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <form>
+                            <input class="form-control" type="datetime-local" placeholder="Select DateTime">
+                        </form>
+                    </div>
+                    <div class="list-gap">
+                        <div>Gross Salary  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div class="abc">
+                            <div class="def">
+                                <input class="form-control" placeholder="Your Answer"></input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Salary Term  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div style="font-size:14px;padding-top:8px">Which day of the month is your salary issue</div>
+                        <div class="abc">
+                            <div class="def">
+                                <input class="form-control" placeholder="Your Answer"></input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Existing Loans (estimate)</div>
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="inputGroupSelect01">
+                            <option selected></option>
+                            <option value="1-5 years">1-5 years</option>
+                            <option value="6-10 years">6-10 years</option>
+                            <option value="11-15 years">11-15 years</option>
+                            <option value="16-20 years">16-20 years</option>
+                            <option value="More than 20 years">More than 20 years</option>
+                            <option value="No loan">No loan</option>
+                            <option value="Other">Other</option>
+                            <!--If pick other, show another line for user to key in-->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Name of the Bank  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div style="font-size:14px;padding-top:8px">Which bank are you using?</div>
+                        <div class="abc">
+                            <div class="def">
+                                <input class="form-control" placeholder="Your Answer"></input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Bank Account Number  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div style="font-size:14px;padding-top:8px">Bank account number (without Dash)</div>
+                        <div class="abc">
+                            <div class="def">
+                                <input class="form-control" placeholder="Your Answer" type="text" pattern="[0-9]{12}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Type of Account  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="typeofaccount" id="option16">
+                            <label class="form-check-label" for="option16">
+                                Saving
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="typeofaccount" id="option17">
+                            <label class="form-check-label" for="option17">
+                                Current
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="typeofaccount" id="option18">
+                            <label class="form-check-label" for="option18">
+                                Other
+                            </label>
+                        </div>
+                        <!--If Other option is checked, show another container-->
+                    </div>
+                    <div class="list-gap">
+                        <div>NRIC/bank statement/payslip</div>
+                        <div style="font-size:14px;padding-top:8px">Payslip(1 to 3 months), bank statement  (address, account number, name , transactions) , NRIC</div>
+                        <div style="font-size:14px;padding-top:8px">File has to be rename to your name</div>
+                        <div class="mb-3">
+                            <input class="form-control" type="file" id="formFile">
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Best Time of Contact</div>
+                        <!--Prechecked the Anytime option first-->
+                        <div style="font-size:14px;padding-top:8px">For us to contact you in times of need</div>
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="inputGroupSelect01">
+                            <option></option>
+                            <option value="8am to 12pm">8am to 12pm</option>
+                            <option value="12pm to 4pm">12pm to 4pm</option>
+                            <option value="4pm to 8pm">4pm to 8pm</option>
+                            <option value="8pm to 12am">8pm to 12am</option>
+                            <option selected value="Anytime">Anytime</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="list-gap">
+                        <div>Motorcycle License  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motorcyclelicense" id="option19">
+                            <label class="form-check-label" for="option19">
+                                No License
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="motorcyclelicense" id="option20">
+                            <label class="form-check-label" for="option20">
+                                Has License
+                            </label>
+                        </div>
+                    </div>
+                    <!--If option Has License is checked, show this container-->
+                    <!--Attention, The License option should be displayed-->
+                    <!-- <div class="list-gap">
+                        <div>What type of License do you have  <span style="color:red;padding-left:0.25rem">*</span></div>
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="inputGroupSelect01">
+                            <option selected></option>
+                            <option value="1">B</option>
+                            <option value="2">B1</option>
+                            <option value="3">B2C</option>
+                            <option value="4">other</option>
+                            </select>
+                        </div>
+                    </div> -->
+                    <div class="list-gap">
+                        <div>How do you know Motosing</div>
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="inputGroupSelect01">
+                            <option selected></option>
+                            <option value="Google">Google</option>
+                            <option value="Facebook">Facebook</option>
+                            <option value="Instagram">Instagram</option>
+                            <option value="Telegram">Telegram</option>
+                            <option value="Friends">Friends</option>
+                            <option value="Tiktok">Tiktok</option>
+                            <option value="Youtube">Youtube</option>
+                            <option value="Other">Other</option>
+                            <!--If pick other, show another line for user to key in-->
+                            </select>
                         </div>
                     </div>
                 </div>
-                <div class="list-gap">
-                    <div>Bank Account Number  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div style="font-size:14px;padding-top:8px">Bank account number (without Dash)</div>
-                    <div class="abc">
-                        <div class="def">
-                            <input class="form-control" placeholder="Your Answer" type="text" pattern="[0-9]{12}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                        </div>
-                    </div>
+            </form>
+                <div class="d-grid gap-2 d-md-block">
+                    <a href="Page1.html" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Previous Page</button></a>
+                    <a href="#" style="color:white;text-decoration:none"><button class="btn btn-primary" type="submit">Submit</button></a>
+                    <a href="#" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Whatsapp Us</button></a>
                 </div>
-                <div class="list-gap">
-                    <div>Type of Account  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="typeofaccount" id="option16">
-                        <label class="form-check-label" for="option16">
-                            Saving
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="typeofaccount" id="option17">
-                        <label class="form-check-label" for="option17">
-                            Current
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="typeofaccount" id="option18">
-                        <label class="form-check-label" for="option18">
-                            Other
-                        </label>
-                    </div>
-                    <!--If Other option is checked, show another container-->
-                </div>
-                <div class="list-gap">
-                    <div>NRIC/bank statement/payslip</div>
-                    <div style="font-size:14px;padding-top:8px">Payslip(1 to 3 months), bank statement  (address, account number, name , transactions) , NRIC</div>
-                    <div style="font-size:14px;padding-top:8px">File has to be rename to your name</div>
-                    <div class="mb-3">
-                        <input class="form-control" type="file" id="formFile">
-                    </div>
-                </div>
-                <div class="list-gap">
-                    <div>Best Time of Contact</div>
-                    <!--Prechecked the Anytime option first-->
-                    <div style="font-size:14px;padding-top:8px">For us to contact you in times of need</div>
-                    <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
-                          <option></option>
-                          <option value="8am to 12pm">8am to 12pm</option>
-                          <option value="12pm to 4pm">12pm to 4pm</option>
-                          <option value="4pm to 8pm">4pm to 8pm</option>
-                          <option value="8pm to 12am">8pm to 12am</option>
-                          <option selected value="Anytime">Anytime</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="list-gap">
-                    <div>Motorcycle License  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="motorcyclelicense" id="option19">
-                        <label class="form-check-label" for="option19">
-                            No License
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="motorcyclelicense" id="option20">
-                        <label class="form-check-label" for="option20">
-                            Has License
-                        </label>
-                    </div>
-                </div>
-                <!--If option Has License is checked, show this container-->
-                <!--Attention, The License option should be displayed-->
-                <!-- <div class="list-gap">
-                    <div>What type of License do you have  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
-                          <option selected></option>
-                          <option value="1">B</option>
-                          <option value="2">B1</option>
-                          <option value="3">B2C</option>
-                          <option value="4">other</option>
-                        </select>
-                    </div>
-                </div> -->
-                <div class="list-gap">
-                    <div>How do you know Motosing</div>
-                    <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
-                          <option selected></option>
-                          <option value="Google">Google</option>
-                          <option value="Facebook">Facebook</option>
-                          <option value="Instagram">Instagram</option>
-                          <option value="Telegram">Telegram</option>
-                          <option value="Friends">Friends</option>
-                          <option value="Tiktok">Tiktok</option>
-                          <option value="Youtube">Youtube</option>
-                          <option value="Other">Other</option>
-                          <!--If pick other, show another line for user to key in-->
-                        </select>
-                    </div>
-                </div>
-            </div>
-            <div class="d-grid gap-2 d-md-block">
-                <a href="Page1.html" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Previous Page</button></a>
-                <a href="#" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Submit</button></a>
-                <a href="#" style="color:white;text-decoration:none"><button class="btn btn-primary" type="button">Whatsapp Us</button></a>
             </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        flatpickr("input[type=datetime-local]", {});
-    </script>
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        <script>
+            // Datepicker
+            flatpickr("input[type=datetime-local]", {});
+            // This Section for dropdown list, when OTHER is picked, show another box
+            let employedStatus = document.getElementById("employment-status");
+            let addbox0 = document.getElementById('container-for-employed');
+            let option0 = document.getElementById('option0');
+            let option1 = document.getElementById('option1');
+
+            employedStatus.addEventListener('change', () => {
+                if (employedStatus.value === "employed"){
+                    addbox0.classList.remove('d-none');
+                    option0.required = true;
+                    option1.required = true;
+                } else if (employedStatus.value !== "employed"){
+                    addbox0.classList.add('d-none');
+                    option0.required = false;
+                    option1.required = false;
+                }
+            })
+            option0.addEventListener('click', () =>{
+                option1.required = false;})
+            option1.addEventListener('click', () =>{
+                option0.required = false;})
+        </script>
+    </form>
 </body>
 </html>

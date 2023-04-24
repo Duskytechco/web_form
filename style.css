@@ -32,7 +32,7 @@ body{
     border-radius:8px;
 }
 .list-gap{
-    margin-bottom:30px;
+    margin-bottom:22px;
 }
 .abc{
     display:flex;
@@ -45,9 +45,9 @@ body{
     min-height:1.5em;
     vertical-align:top;
 }
-#uppercase{
+.uppercase{
     text-transform:uppercase;
 }
-#uppercase::placeholder{
+.uppercase::placeholder{
     text-transform:none;
 }
