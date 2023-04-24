@@ -74,15 +74,42 @@
                                 </label>
                                 <div class="form-group d-none card card-body" id="container-for-other-self-employed-status">
                                     <label>Other Self-Employed Status  <span style="color:red;padding-left:0.25rem">*</span></label>
-                                    <input type="text" class="form-control" id="other-container" name="other-container" placeholder="Your Answer">
+                                    <input type="text" class="form-control" id="other-container0" name="other-container0" placeholder="Your Answer">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="list-gap">
-                        <div class="form-group d-none" id="container-for-race-option">
-                            <label for="add-container0">Other Employment Status  <span style="color:red;padding-left:0.25rem">*</span></label>
-                            <input type="text" class="form-control" id="add-container0" name="add-container0" placeholder="Your Answer">
+                        <div class="form-group d-none card card-body" id="container-for-other-employment-status">
+                            <label for="add-container0">Other Income Source  <span style="color:red;padding-left:0.25rem">*</span></label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="otherincomesource" id="option5">
+                                <label class="form-check-label" for="option5">
+                                    insurance
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="otherincomesource" id="option6">
+                                <label class="form-check-label" for="option6">
+                                    direct selling
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="otherincomesource" id="option7">
+                                <label class="form-check-label" for="option7">
+                                    freelance
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="otherincomesource" id="option8">
+                                <label class="form-check-label" for="option8">
+                                    other
+                                </label>
+                            </div>
+                            <div class="form-group d-none card card-body" id="container-for-other-income-source">
+                                <label>Other than these 3: <span style="color:red;padding-left:0.25rem">*</span></label>
+                                <input type="text" class="form-control" id="other-container1" name="other-container1" placeholder="Your Answer">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -374,13 +401,25 @@
             let option2 = document.getElementById('option2');
             let option3 = document.getElementById('option3');
             let addbox2 = document.getElementById('container-for-other-self-employed-status');
-            let othercontainer = document.getElementById('other-container');
+            let othercontainer0 = document.getElementById('other-container0');
+            let option4 = document.getElementById('option4');
+            let option5 = document.getElementById('option5');
+            let option6 = document.getElementById('option6');
+            let option7 = document.getElementById('option7');
+            let option8 = document.getElementById('option8');
+            let othercontainer1 = document.getElementById('other-container1');
+            let addbox3 = document.getElementById('container-for-other-employment-status');
+            let addbox4 = document.getElementById('container-for-other-income-source');
             function required(){
                 option0.required = false;
                 option1.required = false;
                 option2.required = false;
                 option3.required = false;
                 option4.required = false;
+                option5.required = false;
+                option6.required = false;
+                option7.required = false;
+                option8.required = false;
             }
 
             employmentStatus.addEventListener('change', () => {
@@ -395,9 +434,18 @@
                     option2.required = true;
                     option3.required = true;
                     option4.required = true;
+                } else if (employmentStatus.value === "other"){
+                    addbox0.classList.add('d-none');
+                    addbox1.classList.add('d-none');
+                    addbox3.classList.remove('d-none');
+                    option5.required = true;
+                    option6.required = true;
+                    option7.required = true;
+                    option8.required = true;
                 } else {
                     addbox0.classList.add('d-none');
                     addbox1.classList.add('d-none');
+                    addbox3.classList.add('d-none');
                     required();
                 }
             })
@@ -411,19 +459,51 @@
                 option3.required = false;
                 option4.required = false;
                 addbox2.classList.add('d-none');
-                othercontainer.required = false;
+                othercontainer0.required = false;
             })
             option3.addEventListener('click', () =>{
                 option2.required = false;
                 option4.required = false;
                 addbox2.classList.add('d-none');
-                othercontainer.required = false;
+                othercontainer0.required = false;
             })
             option4.addEventListener('click', () =>{
                 option2.required = false;
                 option3.required = false;
                 addbox2.classList.remove('d-none');
-                othercontainer.required = true;
+                othercontainer0.required = true;
+            })
+            option5.addEventListener('click', () =>{
+                option6.required = false;
+                option7.required = false;
+                option8.required = false;
+                addbox3.classList.remove('d-none');
+                othercontainer1.required = false;
+                addbox4.classList.add('d-none');
+            })
+            option6.addEventListener('click', () =>{
+                option5.required = false;
+                option7.required = false;
+                option8.required = false;
+                addbox3.classList.remove('d-none');
+                othercontainer1.required = false;
+                addbox4.classList.add('d-none');
+            })
+            option7.addEventListener('click', () =>{
+                option5.required = false;
+                option6.required = false;
+                option8.required = false;
+                addbox3.classList.remove('d-none');
+                othercontainer1.required = false;
+                addbox4.classList.add('d-none');
+            })
+            option8.addEventListener('click', () =>{
+                option5.required = false;
+                option6.required = false;
+                option7.required = false;
+                addbox3.classList.remove('d-none');
+                othercontainer1.required = true;
+                addbox4.classList.remove('d-none');
             })
         </script>
     </form>
