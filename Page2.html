@@ -52,9 +52,31 @@
                         </div>
                     </div>
                     <div class="list-gap">
-                        <div class="form-group d-none" id="container-for-race-option">
+                        <div class="form-group d-none card card-body" id="container-for-self-employed">
                             <label for="add-container0">Self-Employed Status  <span style="color:red;padding-left:0.25rem">*</span></label>
-                            <input type="text" class="form-control" id="add-container0" name="add-container0" placeholder="Your Answer">
+                            <div style="font-size:14px;padding-top:8px">If you are Self-Employed please click on an option</div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="selfemployedstatus" id="option2">
+                                <label class="form-check-label" for="option2">
+                                    freelance
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="selfemployedstatus" id="option3">
+                                <label class="form-check-label" for="option3">
+                                    self employed
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="selfemployedstatus" id="option4">
+                                <label class="form-check-label" for="option4">
+                                    other
+                                </label>
+                                <div class="form-group d-none card card-body" id="container-for-other-self-employed-status">
+                                    <label>Other Self-Employed Status  <span style="color:red;padding-left:0.25rem">*</span></label>
+                                    <input type="text" class="form-control" id="other-container" name="other-container" placeholder="Your Answer">
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="list-gap">
@@ -344,26 +366,65 @@
             // Datepicker
             flatpickr("input[type=datetime-local]", {});
             // This Section for dropdown list, when OTHER is picked, show another box
-            let employedStatus = document.getElementById("employment-status");
+            let employmentStatus = document.getElementById("employment-status");
             let addbox0 = document.getElementById('container-for-employed');
             let option0 = document.getElementById('option0');
             let option1 = document.getElementById('option1');
+            let addbox1 = document.getElementById('container-for-self-employed');
+            let option2 = document.getElementById('option2');
+            let option3 = document.getElementById('option3');
+            let addbox2 = document.getElementById('container-for-other-self-employed-status');
+            let othercontainer = document.getElementById('other-container');
+            function required(){
+                option0.required = false;
+                option1.required = false;
+                option2.required = false;
+                option3.required = false;
+                option4.required = false;
+            }
 
-            employedStatus.addEventListener('change', () => {
-                if (employedStatus.value === "employed"){
+            employmentStatus.addEventListener('change', () => {
+                if (employmentStatus.value === "employed"){
                     addbox0.classList.remove('d-none');
+                    addbox1.classList.add('d-none');
                     option0.required = true;
                     option1.required = true;
-                } else if (employedStatus.value !== "employed"){
+                } else if (employmentStatus.value === "self-employed"){
+                    addbox1.classList.remove('d-none');
                     addbox0.classList.add('d-none');
-                    option0.required = false;
-                    option1.required = false;
+                    option2.required = true;
+                    option3.required = true;
+                    option4.required = true;
+                } else {
+                    addbox0.classList.add('d-none');
+                    addbox1.classList.add('d-none');
+                    required();
                 }
             })
             option0.addEventListener('click', () =>{
-                option1.required = false;})
+                option1.required = false;
+            })
             option1.addEventListener('click', () =>{
-                option0.required = false;})
+                option0.required = false;
+            })
+            option2.addEventListener('click', () =>{
+                option3.required = false;
+                option4.required = false;
+                addbox2.classList.add('d-none');
+                othercontainer.required = false;
+            })
+            option3.addEventListener('click', () =>{
+                option2.required = false;
+                option4.required = false;
+                addbox2.classList.add('d-none');
+                othercontainer.required = false;
+            })
+            option4.addEventListener('click', () =>{
+                option2.required = false;
+                option3.required = false;
+                addbox2.classList.remove('d-none');
+                othercontainer.required = true;
+            })
         </script>
     </form>
 </body>
