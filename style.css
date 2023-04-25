@@ -109,8 +109,12 @@ body {
     margin-bottom: 22px;
 }
 
+.hiddenInput,
+.employmentstatus {
+    display: none;
+}
+
 .abc {
-    display: flex;
     padding-top: 14px;
     padding-bottom: 8px;
     position: relative;

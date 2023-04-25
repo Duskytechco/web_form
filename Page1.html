@@ -19,6 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
         integrity="sha512-R9Trz5U6fdOvZwHKCp+IaP8uyA6fNdnQ0B2Pb+k9M4/4zSPk0Tj7hTPEHuMV8/E7r1alAr+JG7xu40Ht8s7zgQ=="
         crossorigin="anonymous"></script>
+    <script src="main.js"></script>
 </head>
 
 <body>
@@ -188,16 +189,18 @@
                     <div>Do you stay in registered address <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="stayinregisteredaddress" id="option5"
-                            checked>
+                            onchange="showingHiddenInput('option5')" checked>
                         <label class="form-check-label" for="option5">
                             Yes
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="stayinregisteredaddress" id="option6">
+                        <input class="form-check-input" type="radio" name="stayinregisteredaddress" id="option6"
+                            onchange="showingHiddenInput('option6')">
                         <label class="form-check-label" for="option6">
                             No
                         </label>
+                        <input class="form-control hiddenInput" type="text" name="stayinregisteredaddress-input">
                     </div>
                     <div class="list-gap">
                         <div class="form-group d-none" id="container-for-option6">
@@ -299,7 +302,7 @@
                     <div style="font-size:14px;padding-top:8px">Full Name as in NRIC</div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control" placeholder="Your Answer"></input>
+                            <input class="form-control uppercase" placeholder="Your Answer"></input>
                         </div>
                     </div>
                 </div>
@@ -320,7 +323,8 @@
                     <div>Do you stay with emergency contact (1) <span style="color:red;padding-left:0.25rem">*</span>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="staywithemergencycontact1" id="option10">
+                        <input class="form-check-input" type="radio" name="staywithemergencycontact1" id="option10"
+                            checked>
                         <label class="form-check-label" for="option10">
                             Yes
                         </label>
@@ -371,7 +375,7 @@
                     <div style="font-size:14px;padding-top:8px">Full Name as in NRIC</div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control" placeholder="Your Answer"></input>
+                            <input class="form-control uppercase" placeholder="Your Answer"></input>
                         </div>
                     </div>
                 </div>
@@ -392,7 +396,8 @@
                     <div>Do you stay with emergency contact (2) <span style="color:red;padding-left:0.25rem">*</span>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="staywithemergencycontact2" id="option12">
+                        <input class="form-check-input" type="radio" name="staywithemergencycontact2" id="option12"
+                            checked>
                         <label class="form-check-label" for="option12">
                             Yes
                         </label>
@@ -516,25 +521,40 @@
             }
         })
 
-
-        var radios = document.querySelectorAll('input[type=radio][name=newusedrecon]');
+        var radios = document.querySelectorAll("input[type=radio][name=newusedrecon]");
 
         radios.forEach(function (radio) {
-            radio.addEventListener('click', function () {
-                var collapsibles = document.querySelectorAll('.collapse');
+            radio.addEventListener("click", function () {
+                var collapsibles = document.querySelectorAll(".collapse");
                 collapsibles.forEach(function (collapsible) {
-                    collapsible.classList.remove('show');
+                    collapsible.classList.remove("show");
                 });
 
-                if (this.id === 'option8') {
-                    var usedCollapsible = document.querySelector('#collapse-container-used');
-                    usedCollapsible.classList.add('show');
-                } else if (this.id === 'option9') {
-                    var reconCollapsible = document.querySelector('#collapse-container-recon');
-                    reconCollapsible.classList.add('show');
+                if (this.id === "option8") {
+                    var usedCollapsible = document.querySelector(
+                        "#collapse-container-used"
+                    );
+                    usedCollapsible.classList.add("show");
+                } else if (this.id === "option9") {
+                    var reconCollapsible = document.querySelector(
+                        "#collapse-container-recon"
+                    );
+                    reconCollapsible.classList.add("show");
                 }
             });
         });
+
+        const showingHiddenInput = (id) => {
+            const hiddenInput = document.querySelector(".hiddenInput");
+            console.log(hiddenInput);
+
+            if (id == "option6") {
+                hiddenInput.style.display = "block";
+            } else {
+                hiddenInput.style.display = "none";
+            }
+        };
+
     </script>
 </body>
 
