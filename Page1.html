@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Form Page 1/2</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-1yJx7Gp58XzPf7+B+mnvHcI/Q+JeGZJqxSdeLjgbvEJQyAXlF+4gr4Jfv4A4w6+RuJRGZD+Y/ZTF/HdoJGBx6w==" crossorigin="anonymous" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+        integrity="sha512-1yJx7Gp58XzPf7+B+mnvHcI/Q+JeGZJqxSdeLjgbvEJQyAXlF+4gr4Jfv4A4w6+RuJRGZD+Y/ZTF/HdoJGBx6w=="
+        crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-R9Trz5U6fdOvZwHKCp+IaP8uyA6fNdnQ0B2Pb+k9M4/4zSPk0Tj7hTPEHuMV8/E7r1alAr+JG7xu40Ht8s7zgQ==" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+        integrity="sha512-R9Trz5U6fdOvZwHKCp+IaP8uyA6fNdnQ0B2Pb+k9M4/4zSPk0Tj7hTPEHuMV8/E7r1alAr+JG7xu40Ht8s7zgQ=="
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
     <!--Personal Info Part-->
     <form class="g-3" id="form">
@@ -21,57 +31,62 @@
                     <hr>
                 </div>
                 <div class="list-gap">
-                    <div>Name  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Name <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">Full Name according to NRIC (Caps Only)</div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control uppercase" id="name" name="name" type="text" placeholder="Your Answer"></input>
+                            <input class="form-control uppercase" id="name" name="name" type="text"
+                                placeholder="Your Answer"></input>
                         </div>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>NRIC  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">Numbers only ( no dash )</div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control" placeholder="Your Answer" type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
+                            <input class="form-control" placeholder="Your Answer" type="text"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
                         </div>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Phone Number <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="country-code">Country Code</span>
                         <select class="form-select" id="input-country-code">
-                        <option selected></option>
-                        <option value="+60">+60</option>
-                        <option value="+65">+65</option>
+                            <option selected></option>
+                            <option value="+60">+60</option>
+                            <option value="+65">+65</option>
                         </select>
-                        <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number" aria-describedby="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                        <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number"
+                            aria-describedby="phone-number"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Email  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Email <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control" id="email" name="email" type="email" placeholder="Your Answer"></input>
+                            <input class="form-control" id="email" name="email" type="email"
+                                placeholder="Your Answer"></input>
                         </div>
                     </div>
                 </div>
-                <div class="list-gap">
-                    <div>Title of person  <span style="color:red;padding-left:0.25rem">*</span></div>
+                <!-- div class="list-gap">
+                    <div>Title of person <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                        <option selected></option>
-                        <option value="MR">MR</option>
-                        <option value="MRS">MRS</option>
-                        <option value="MS">MS</option>
-                        <option value="MADAM">MADAM</option>
+                            <option selected></option>
+                            <option value="MR">MR</option>
+                            <option value="MRS">MRS</option>
+                            <option value="MS">MS</option>
+                            <option value="MADAM">MADAM</option>
                         </select>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Gender  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Gender <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="gender" id="option1">
                         <label class="form-check-label" for="option1">
@@ -84,39 +99,41 @@
                             Female
                         </label>
                     </div>
-                </div>
+                </div -->
                 <div class="list-gap">
-                    <label for="race-option">Race  <span style="color:red;padding-left:0.25rem">*</span></label>
+                    <label for="race-option">Race <span style="color:red;padding-left:0.25rem">*</span></label>
                     <div class="input-group mb-3">
                         <select class="form-select" id="race-option">
-                        <option selected></option>
-                        <option value="Malay">Malay</option>
-                        <option value="Chinese">Chinese</option>
-                        <option value="Indian">Indian</option>
-                        <option value="Other">Other</option>
+                            <option selected></option>
+                            <option value="Malay">Malay</option>
+                            <option value="Chinese">Chinese</option>
+                            <option value="Indian">Indian</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="list-gap">
                         <div class="form-group d-none" id="container-for-race-option">
-                            <label for="add-container0">Other Race  <span style="color:red;padding-left:0.25rem">*</span></label>
-                            <input type="text" class="form-control" id="add-container0" name="add-container0" placeholder="Your Answer">
+                            <label for="add-container0">Other Race <span
+                                    style="color:red;padding-left:0.25rem">*</span></label>
+                            <input type="text" class="form-control" id="add-container0" name="add-container0"
+                                placeholder="Your Answer">
                         </div>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Marital Status  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Marital Status <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                        <option selected></option>
-                        <option value="Single">Single</option>
-                        <option value="Married">Married</option>
-                        <option value="Widowed">Widowed</option>
-                        <option value="Divorced">Divorced</option>
+                            <option selected></option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Widowed">Widowed</option>
+                            <option value="Divorced">Divorced</option>
                         </select>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Bumi/Non  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Bumi/Non <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="bumiornon" id="option3">
                         <label class="form-check-label" for="option3">
@@ -124,15 +141,16 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="bumiornon" id="option4">
+                        <input class="form-check-input" type="radio" name="bumiornon" id="option4" checked>
                         <label class="form-check-label" for="option4">
                             Non-Bumi
                         </label>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Address  <span style="color:red;padding-left:0.25rem">*</span></div>
-                    <div style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal Included)</div>
+                    <div>Address <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal
+                        Included)</div>
                     <div class="abc">
                         <div class="def">
                             <input class="form-control" placeholder="Your Answer"></input>
@@ -140,36 +158,37 @@
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Number of year in residence  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Number of year in residence <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                        <option selected></option>
-                        <option value="1-2">1-2</option>
-                        <option value="3-4">3-4</option>
-                        <option value="5-6">5-6</option>
-                        <option value="6-7">6-7</option>
-                        <option value="8-9">8-9</option>
-                        <option value=">10">>10</option>
+                            <option selected></option>
+                            <option value="1-2">1-2</option>
+                            <option value="3-4">3-4</option>
+                            <option value="5-6">5-6</option>
+                            <option value="6-7">6-7</option>
+                            <option value="8-9">8-9</option>
+                            <option value=">10">>10</option>
                         </select>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Ownership status  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Ownership status <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                        <option selected></option>
-                        <option value="employer quarters">employer quarters</option>
-                        <option value="family home">family home</option>
-                        <option value="parents home">parents home</option>
-                        <option value="own mortgaged">own mortgaged</option>
-                        <option value="rented">rented</option>
+                            <option selected></option>
+                            <option value="employer quarters">employer quarters</option>
+                            <option value="family home">family home</option>
+                            <option value="parents home">parents home</option>
+                            <option value="own mortgaged">own mortgaged</option>
+                            <option value="rented">rented</option>
                         </select>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Do you stay in registered address  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Do you stay in registered address <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="stayinregisteredaddress" id="option5" checked>
+                        <input class="form-check-input" type="radio" name="stayinregisteredaddress" id="option5"
+                            checked>
                         <label class="form-check-label" for="option5">
                             Yes
                         </label>
@@ -182,8 +201,10 @@
                     </div>
                     <div class="list-gap">
                         <div class="form-group d-none" id="container-for-option6">
-                            <label for="add-container1">Registered Address  <span style="color:red;padding-left:0.25rem">*</span></label>
-                            <input type="text" class="form-control" id="add-container1" name="add-container1" placeholder="Your Answer">
+                            <label for="add-container1">Registered Address <span
+                                    style="color:red;padding-left:0.25rem">*</span></label>
+                            <input type="text" class="form-control" id="add-container1" name="add-container1"
+                                placeholder="Your Answer">
                         </div>
                     </div>
                 </div>
@@ -198,20 +219,20 @@
                 <!--If else js, for Mailing address option No, will need to fill in the actual address-->
                 <!--Javascript work here-->
                 <div class="list-gap">
-                    <div>Product type  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Product type <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                        <option selected></option>
-                        <option value="scooter (below 200cc)">scooter (below 200cc)</option>
-                        <option value="scooter (200cc above)">scooter (200cc above)</option>
-                        <option value="moped (200cc and below)">moped (200cc and below)</option>
-                        <option value="bigbike (1000cc and below)">bigbike (1000cc and below)</option>
-                        <option value="superbike (1000cc and above)">superbike (1000cc and above)</option>
+                            <option selected></option>
+                            <option value="scooter (below 200cc)">scooter (below 200cc)</option>
+                            <option value="scooter (200cc above)">scooter (200cc above)</option>
+                            <option value="moped (200cc and below)">moped (200cc and below)</option>
+                            <option value="bigbike (1000cc and below)">bigbike (1000cc and below)</option>
+                            <option value="superbike (1000cc and above)">superbike (1000cc and above)</option>
                         </select>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>New/Used/Recon  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>New/Used/Recon <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="newusedrecon" id="option7">
                         <label class="form-check-label" for="option7">
@@ -219,26 +240,30 @@
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="option8" data-bs-target="#collapse-container-used" data-bs-toggle="collapse" name="newusedrecon">
+                        <input class="form-check-input" type="radio" id="option8"
+                            data-bs-target="#collapse-container-used" data-bs-toggle="collapse" name="newusedrecon">
                         <label class="form-check-label" for="option8">
                             Used
                         </label>
                         <div class="collapse" id="collapse-container-used">
                             <div class="card card-body">
-                                <div>Number Plate  <span style="color:red;padding-left:0.25rem">*</span></div>
-                                <input class="form-control" id="addcontainer0" placeholder="Your Answer" required></input>                     
+                                <div>Number Plate <span style="color:red;padding-left:0.25rem">*</span></div>
+                                <input class="form-control" id="addcontainer0" placeholder="Your Answer"
+                                    required></input>
                             </div>
                         </div>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" id="option9" data-bs-target="#collapse-container-recon" data-bs-toggle="collapse" name="newusedrecon">
+                        <input class="form-check-input" type="radio" id="option9"
+                            data-bs-target="#collapse-container-recon" data-bs-toggle="collapse" name="newusedrecon">
                         <label class="form-check-label" for="option9">
                             Recon
                         </label>
                         <div class="collapse" id="collapse-container-recon">
                             <div class="card card-body">
-                                <div>Number Plate  <span style="color:red;padding-left:0.25rem">*</span></div>
-                                <input class="form-control" id="addcontainer1" placeholder="Your Answer" required></input>                     
+                                <div>Number Plate <span style="color:red;padding-left:0.25rem">*</span></div>
+                                <input class="form-control" id="addcontainer1" placeholder="Your Answer"
+                                    required></input>
                             </div>
                         </div>
                     </div>
@@ -246,17 +271,17 @@
                     <!--IF radio used and recon checked, show another container title is Number Plate-->
                 </div>
                 <div class="list-gap">
-                    <div>Tenure  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Tenure <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">How long do you wish to loan (months)</div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                        <option selected></option>
-                        <option value="12 month (1 year)">12 month (1 year)</option>
-                        <option value="24 months (2 years)">24 months (2 years)</option>
-                        <option value="36 months (3 years)">36 months (3 years)</option>
-                        <option value="48 months (4 years)">48 months (4 years)</option>
-                        <option value="60 months (5 years)">60 months (5 years)</option>
-                        <!-- 72 and 84 months only for superbike (1000cc and above)
+                            <option selected></option>
+                            <option value="12 month (1 year)">12 month (1 year)</option>
+                            <option value="24 months (2 years)">24 months (2 years)</option>
+                            <option value="36 months (3 years)">36 months (3 years)</option>
+                            <option value="48 months (4 years)">48 months (4 years)</option>
+                            <option value="60 months (5 years)">60 months (5 years)</option>
+                            <!-- 72 and 84 months only for superbike (1000cc and above)
                         <option value="6">72 months (6 years)</option>
                         <option value="7">84 months (7 years)</option> -->
                         </select>
@@ -270,7 +295,7 @@
                     <hr>
                 </div>
                 <div class="list-gap">
-                    <div>Emergency Contact Name (1)  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Emergency Contact Name (1) <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">Full Name as in NRIC</div>
                     <div class="abc">
                         <div class="def">
@@ -279,18 +304,21 @@
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Phone Number <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="country-code">Country Code</span>
                         <select class="form-select" id="input-country-code">
-                        <option value="+60">+60</option>
-                        <option value="+65">+65</option>
+                            <option value="+60">+60</option>
+                            <option value="+65">+65</option>
                         </select>
-                        <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number" aria-describedby="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                        <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number"
+                            aria-describedby="phone-number"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Do you stay with emergency contact (1)  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Do you stay with emergency contact (1) <span style="color:red;padding-left:0.25rem">*</span>
+                    </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="staywithemergencycontact1" id="option10">
                         <label class="form-check-label" for="option10">
@@ -305,8 +333,10 @@
                     </div>
                     <div class="list-gap">
                         <div class="form-group" id="container-for-option11" style="display:none">
-                            <label for="add-container2">Own Address  <span style="color:red;padding-left:0.25rem">*</span></label>
-                            <input type="text" class="form-control" id="add-container2" name="add-container2" placeholder="Your Answer">
+                            <label for="add-container2">Own Address <span
+                                    style="color:red;padding-left:0.25rem">*</span></label>
+                            <input type="text" class="form-control" id="add-container2" name="add-container2"
+                                placeholder="Your Answer">
                         </div>
                     </div>
                 </div>
@@ -320,23 +350,24 @@
                     </div>
                 </div> -->
                 <div class="list-gap">
-                    <div>How are you related to Emergency Contact (1)  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>How are you related to Emergency Contact (1) <span
+                            style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                        <option selected></option>
-                        <option value="spouse">spouse</option>
-                        <option value="parents">parents</option>
-                        <option value="siblings">siblings</option>
-                        <option value="relatives">relatives</option>
-                        <option value="friends">friends</option>
-                        <option value="children">children</option>
+                            <option selected></option>
+                            <option value="spouse">spouse</option>
+                            <option value="parents">parents</option>
+                            <option value="siblings">siblings</option>
+                            <option value="relatives">relatives</option>
+                            <option value="friends">friends</option>
+                            <option value="children">children</option>
                         </select>
                     </div>
                 </div>
                 <!--Emergency Contact Info-->
                 <!--Emergency Contact 2-->
                 <div class="list-gap">
-                    <div>Emergency Contact Name (2)  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Emergency Contact Name (2) <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">Full Name as in NRIC</div>
                     <div class="abc">
                         <div class="def">
@@ -345,18 +376,21 @@
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Phone Number  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Phone Number <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="country-code">Country Code</span>
                         <select class="form-select" id="input-country-code">
-                        <option value="+60">+60</option>
-                        <option value="+65">+65</option>
+                            <option value="+60">+60</option>
+                            <option value="+65">+65</option>
                         </select>
-                        <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number" aria-describedby="phone-number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                        <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number"
+                            aria-describedby="phone-number"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Do you stay with emergency contact (2)  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Do you stay with emergency contact (2) <span style="color:red;padding-left:0.25rem">*</span>
+                    </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="staywithemergencycontact2" id="option12">
                         <label class="form-check-label" for="option12">
@@ -381,37 +415,39 @@
                     </div>
                 </div> -->
                 <div class="list-gap">
-                    <div>How are you related to Emergency Contact (2)  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>How are you related to Emergency Contact (2) <span
+                            style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
                         <select class="form-select" id="inputGroupSelect01">
-                        <option selected></option>
-                        <option value="spouse">spouse</option>
-                        <option value="parents">parents</option>
-                        <option value="siblings">siblings</option>
-                        <option value="relatives">relatives</option>
-                        <option value="friends">friends</option>
-                        <option value="children">children</option>
+                            <option selected></option>
+                            <option value="spouse">spouse</option>
+                            <option value="parents">parents</option>
+                            <option value="siblings">siblings</option>
+                            <option value="relatives">relatives</option>
+                            <option value="friends">friends</option>
+                            <option value="children">children</option>
                         </select>
                     </div>
                 </div>
                 <div class="d-grid gap-2 d-md-block">
                     <button class="btn btn-primary" type="submit" id="submitBtn">Next Page</button>
-                    <a href="#" rel="noopener noreferrer"><button class="btn btn-primary"><i class="fab fa-whatsapp"></i>Whatsapp Us</button></a>
+                    <a href="#" rel="noopener noreferrer"><button class="btn btn-primary"><i
+                                class="fab fa-whatsapp"></i>Whatsapp Us</button></a>
                     <!--Add this to whatsapp button if functionable, target="_blank"-->
                 </div>
             </div>
         </div>
     </form>
     <script>
-        document.getElementById("submitBtn").addEventListener("click", function(event) {
-        event.preventDefault();
-        const form = document.getElementById("form");
-        if (form.checkValidity()) {
-        window.location.href = "Page2.html";
-        } else {
-        alert("Please fill in all required fields.");
-        }
-    });
+        document.getElementById("submitBtn").addEventListener("click", function (event) {
+            event.preventDefault();
+            const form = document.getElementById("form");
+            if (form.checkValidity()) {
+                window.location.href = "Page2.html";
+            } else {
+                alert("Please fill in all required fields.");
+            }
+        });
         //This section for used/recon, showing another box
         let option7 = document.getElementById("option7");
         let option8 = document.getElementById("option8");
@@ -451,34 +487,55 @@
         let option10 = document.getElementById('option10');
         let option11 = document.getElementById('option11');
 
-        raceOption.addEventListener('change', function() {
-        if (this.value === 'Other') {
-            newContainer0.classList.remove('d-none');
-            required0.required = true;
-        } else {
-            newContainer0.classList.add('d-none');
-            required0.required = false;
-        }
+        raceOption.addEventListener('change', function () {
+            if (this.value === 'Other') {
+                newContainer0.classList.remove('d-none');
+                required0.required = true;
+            } else {
+                newContainer0.classList.add('d-none');
+                required0.required = false;
+            }
         });
 
-        option6.addEventListener('change', function (){
-        if (option6.checked){
-            newContainer1.classList.remove('d-none');
-            required1.required = true;
-        } else if (option5.checked) {
-            newContainer1.classList.add('d-none');
-            required1.required = false;
+        option6.addEventListener('change', function () {
+            if (option6.checked) {
+                newContainer1.classList.remove('d-none');
+                required1.required = true;
+            } else if (option5.checked) {
+                newContainer1.classList.add('d-none');
+                required1.required = false;
             }
         })
-        option11.addEventListener('change', function (){
-        if (option11.checked){
-            newContainer2.style.display = 'block';
-            required2.required = true;
-        } else if (option10.checked){
-            newContainer2.style.display = 'none';
-            required2.required = false;
-        }
+        option11.addEventListener('change', function () {
+            if (option11.checked) {
+                newContainer2.style.display = 'block';
+                required2.required = true;
+            } else if (option10.checked) {
+                newContainer2.style.display = 'none';
+                required2.required = false;
+            }
         })
+
+
+        var radios = document.querySelectorAll('input[type=radio][name=newusedrecon]');
+
+        radios.forEach(function (radio) {
+            radio.addEventListener('click', function () {
+                var collapsibles = document.querySelectorAll('.collapse');
+                collapsibles.forEach(function (collapsible) {
+                    collapsible.classList.remove('show');
+                });
+
+                if (this.id === 'option8') {
+                    var usedCollapsible = document.querySelector('#collapse-container-used');
+                    usedCollapsible.classList.add('show');
+                } else if (this.id === 'option9') {
+                    var reconCollapsible = document.querySelector('#collapse-container-recon');
+                    reconCollapsible.classList.add('show');
+                }
+            });
+        });
     </script>
 </body>
+
 </html>
