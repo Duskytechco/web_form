@@ -387,17 +387,21 @@
                         <div class="list-gap">
                             <div>Motorcycle License <span style="color:red;padding-left:0.25rem">*</span></div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="motorcyclelicense" id="option19">
+                                <input class="form-check-input" type="radio" name="motorcyclelicense" id="option19"
+                                    onchange="checkLicense('option19')">
                                 <label class="form-check-label" for="option19">
                                     No License
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="motorcyclelicense" id="option20">
+                                <input class="form-check-input" type="radio" name="motorcyclelicense" id="option20"
+                                    onchange="checkLicense('option20')">
                                 <label class="form-check-label" for="option20">
                                     Has License
                                 </label>
                             </div>
+                            <input type="text" name="licenseType" class="form-control licenseType"
+                                placeholder="What is your license type">
                         </div>
                         <!--If option Has License is checked, show this container-->
                         <!--Attention, The License option should be displayed-->
@@ -559,6 +563,11 @@
                 othercontainer1.required = true;
                 addbox4.classList.remove('d-none');
             })
+
+            const checkLicense = (id) => {
+                const licenseType = document.querySelector('.form-control.licenseType');
+                id === 'option20' ? licenseType.style.display = 'block' : licenseType.style.display = 'none'
+            }
         </script>
     </form>
 </body>

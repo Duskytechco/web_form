@@ -19,7 +19,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
         integrity="sha512-R9Trz5U6fdOvZwHKCp+IaP8uyA6fNdnQ0B2Pb+k9M4/4zSPk0Tj7hTPEHuMV8/E7r1alAr+JG7xu40Ht8s7zgQ=="
         crossorigin="anonymous"></script>
-    <script src="main.js"></script>
 </head>
 
 <body>
@@ -47,7 +46,8 @@
                     <div class="abc">
                         <div class="def">
                             <input class="form-control" placeholder="Your Answer" type="text"
-                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);"
+                                onchange="autoSelectGender(event)">
                         </div>
                     </div>
                 </div>
@@ -70,14 +70,14 @@
                     <div class="abc">
                         <div class="def">
                             <input class="form-control" id="email" name="email" type="email"
-                                placeholder="Your Answer"></input>
+                                onchange="validateEmail(event)" placeholder="Your Answer"></input>
                         </div>
                     </div>
                 </div>
-                <!-- div class="list-gap">
+                <div class="list-gap">
                     <div>Title of person <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
+                        <select class="form-select titleOfPerson" id="inputGroupSelect01">
                             <option selected></option>
                             <option value="MR">MR</option>
                             <option value="MRS">MRS</option>
@@ -89,18 +89,18 @@
                 <div class="list-gap">
                     <div>Gender <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="option1">
+                        <input class="form-check-input" type="radio" name="gender" id="option1" disabled>
                         <label class="form-check-label" for="option1">
                             Male
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="gender" id="option2">
+                        <input class="form-check-input" type="radio" name="gender" id="option2" disabled>
                         <label class="form-check-label" for="option2">
                             Female
                         </label>
                     </div>
-                </div -->
+                </div>
                 <div class="list-gap">
                     <label for="race-option">Race <span style="color:red;padding-left:0.25rem">*</span></label>
                     <div class="input-group mb-3">
@@ -154,7 +154,8 @@
                         Included)</div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control" placeholder="Your Answer"></input>
+                            <input class="form-control" placeholder="Your Answer"
+                                onchange="validateAddress(event)"></input>
                         </div>
                     </div>
                 </div>
@@ -224,7 +225,7 @@
                 <div class="list-gap">
                     <div>Product type <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
+                        <select class="form-select" id="inputGroupSelect01" onchange="checkTenureType(event)">
                             <option selected></option>
                             <option value="scooter (below 200cc)">scooter (below 200cc)</option>
                             <option value="scooter (200cc above)">scooter (200cc above)</option>
@@ -277,7 +278,7 @@
                     <div>Tenure <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">How long do you wish to loan (months)</div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
+                        <select class="form-select tenure" id="inputGroupSelect01">
                             <option selected></option>
                             <option value="12 month (1 year)">12 month (1 year)</option>
                             <option value="24 months (2 years)">24 months (2 years)</option>
@@ -554,6 +555,51 @@
                 hiddenInput.style.display = "none";
             }
         };
+
+        const validateEmail = (event) => {
+            const email = event.target.value
+            let emailRe = /\S+@\S+\.\S+/;
+            !emailRe.test(email) ? alert("Please enter a valid email address") : ''
+        }
+
+        const autoSelectGender = (event) => {
+            const NRIC = parseInt(event.target.value)
+            const titleOfPerson = document.querySelector('.titleOfPerson')
+            if (NRIC % 2 === 0) {
+                document.querySelector('#option2').checked = true;
+            } else {
+                document.querySelector('#option1').checked = true;
+                titleOfPerson.value = titleOfPerson.querySelector("option[value='MR']").value
+            }
+        }
+
+        const validateAddress = (event) => {
+            const address = event.target.value;
+            /* const addressRe = /^(\d{1,5})(?:\s*[-\/]\s*(\d{1,5}))?\s*,\s*([\w\s]+)\s*,\s*(\d{5})\s+(.*)$/i; */
+            const addressRe = /^(\d{1,5})\s*,\s*(.*?)\s*,\s*(\d{5})\s*(.*?)$/i
+
+            !addressRe.test(address) ? alert('Please enter a valid address') : '';
+        }
+
+        const checkTenureType = (event) => {
+            const bikeType = event.target.value
+            const lastOption = document.querySelector('.tenure option:last-child')
+
+            if (bikeType.includes('superbike')) {
+                const selectTag = document.querySelector('.tenure')
+                let newOption = document.createElement('option')
+                newOption.textContent = '72 months (6 years)';
+                newOption.value = '72 months (6 years)'
+                selectTag.appendChild(newOption)
+
+                let newOption1 = document.createElement('option')
+                newOption1.textContent = '84 months (7 years)';
+                newOption1.value = '84 months (7 years)'
+                selectTag.appendChild(newOption1)
+            } else if (!lastOption.textContent.includes('60')) {
+                document.querySelectorAll('.tenure option:nth-last-child(-n+2)').forEach((element) => element.remove())
+            }
+        }
 
     </script>
 </body>

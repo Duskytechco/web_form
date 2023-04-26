@@ -110,7 +110,8 @@ body {
 }
 
 .hiddenInput,
-.employmentstatus {
+.employmentstatus,
+.licenseType {
     display: none;
 }
 
