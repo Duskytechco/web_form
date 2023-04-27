@@ -56,8 +56,7 @@
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="country-code">Country Code</span>
                         <select class="form-select" id="input-country-code">
-                            <option selected></option>
-                            <option value="+60">+60</option>
+                            <option value="+60" selected>+60</option>
                             <option value="+65">+65</option>
                         </select>
                         <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number"
@@ -71,8 +70,7 @@
                     <div class="abc">
                         <div class="def">
                             <input class="form-control" id="email" name="email" type="email"
-                                onchange="validateEmail(event)" placeholder="Your Answer" data-question="4"
-                                disabled></input>
+                                onchange="validateEmail(event)" placeholder="Your Answer" data-question="4" disabled />
                         </div>
                     </div>
                 </div>
@@ -155,10 +153,12 @@
                     <div>Address <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal
                         Included)</div>
+                    <div style="font-size:14px;padding-top:8px">Lot, Street, Taman, Postal Code, District, State</div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control" placeholder="Your Answer" onchange="validateAddress(event)"
-                                data-question="8" disabled />
+                            <!-- input class="form-control" placeholder="Your Answer" onchange="validateAddress(event)"
+                                data-question="8" disabled / -->
+                            <input class="form-control" placeholder="Your Answer" data-question="8" disabled />
                         </div>
                     </div>
                 </div>
@@ -214,6 +214,8 @@
                         <div class="form-group d-none" id="container-for-option6">
                             <label for="add-container1">Registered Address <span
                                     style="color:red;padding-left:0.25rem">*</span></label>
+                            <div style="font-size:14px;padding-top:8px">Lot, Street, Taman, Postal Code, District, State
+                            </div>
                             <input type="text" class="form-control" id="add-container1" name="add-container1"
                                 placeholder="Your Answer">
                         </div>
@@ -614,9 +616,14 @@
         questions.forEach((question) => {
             question.addEventListener('change', (event) => {
                 let currentQuestion = parseInt(event.target.getAttribute('data-question'));
+                let currentQuestionAnswer = event.target.value
                 questions.forEach((input) => {
                     let questionNum = parseInt(input.getAttribute('data-question'))
-                    questionNum - currentQuestion > 1 ? input.disabled = true : input.disabled = false
+                    if (questionNum - currentQuestion > 2 && input.target.value != '') {
+                        input.disabled = true
+                    } else {
+                        input.disabled = false
+                    }
                 })
             })
         })
