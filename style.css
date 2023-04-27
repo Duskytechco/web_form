@@ -93,7 +93,7 @@ body {
 
 #listitem {
     margin: auto;
-    width: 640px;
+    width: 60rem;
     display: flex;
     flex-direction: column;
 }
@@ -111,7 +111,8 @@ body {
 
 .hiddenInput,
 .employmentstatus,
-.licenseType {
+.licenseType,
+.typeOfAccount {
     display: none;
 }
 
@@ -133,4 +134,14 @@ body {
 
 .uppercase::placeholder {
     text-transform: none;
+}
+
+.btn-container {
+    display: flex !important;
+    justify-content: space-between;
+}
+
+.btn-green {
+    background-color: #25D366;
+    color: white;
 }

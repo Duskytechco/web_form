@@ -36,7 +36,7 @@
                     <div class="abc">
                         <div class="def">
                             <input class="form-control uppercase" id="name" name="name" type="text"
-                                placeholder="Your Answer"></input>
+                                placeholder="Your Answer" data-question="1"></input>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                         <div class="def">
                             <input class="form-control" placeholder="Your Answer" type="text"
                                 oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);"
-                                onchange="autoSelectGender(event)">
+                                onchange="autoSelectGender(event)" data-question="2" disabled>
                         </div>
                     </div>
                 </div>
@@ -62,7 +62,8 @@
                         </select>
                         <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number"
                             aria-describedby="phone-number"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="3"
+                            disabled>
                     </div>
                 </div>
                 <div class="list-gap">
@@ -70,7 +71,8 @@
                     <div class="abc">
                         <div class="def">
                             <input class="form-control" id="email" name="email" type="email"
-                                onchange="validateEmail(event)" placeholder="Your Answer"></input>
+                                onchange="validateEmail(event)" placeholder="Your Answer" data-question="4"
+                                disabled></input>
                         </div>
                     </div>
                 </div>
@@ -104,7 +106,7 @@
                 <div class="list-gap">
                     <label for="race-option">Race <span style="color:red;padding-left:0.25rem">*</span></label>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="race-option">
+                        <select class="form-select" id="race-option" data-question="5" disabled>
                             <option selected></option>
                             <option value="Malay">Malay</option>
                             <option value="Chinese">Chinese</option>
@@ -124,7 +126,7 @@
                 <div class="list-gap">
                     <div>Marital Status <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
+                        <select class="form-select" id="inputGroupSelect01" data-question="6" disabled>
                             <option selected></option>
                             <option value="Single">Single</option>
                             <option value="Married">Married</option>
@@ -136,7 +138,8 @@
                 <div class="list-gap">
                     <div>Bumi/Non <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="bumiornon" id="option3">
+                        <input class="form-check-input" type="radio" name="bumiornon" id="option3" data-question="7"
+                            disabled>
                         <label class="form-check-label" for="option3">
                             Bumi
                         </label>
@@ -154,15 +157,15 @@
                         Included)</div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control" placeholder="Your Answer"
-                                onchange="validateAddress(event)"></input>
+                            <input class="form-control" placeholder="Your Answer" onchange="validateAddress(event)"
+                                data-question="8" disabled />
                         </div>
                     </div>
                 </div>
                 <div class="list-gap">
                     <div>Number of year in residence <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
+                        <select class="form-select" id="inputGroupSelect01" data-question="9" disabled>
                             <option selected></option>
                             <option value="1-2">1-2</option>
                             <option value="3-4">3-4</option>
@@ -176,7 +179,7 @@
                 <div class="list-gap">
                     <div>Ownership status <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
+                        <select class="form-select" id="inputGroupSelect01" data-question="10" disabled>
                             <option selected></option>
                             <option value="employer quarters">employer quarters</option>
                             <option value="family home">family home</option>
@@ -201,7 +204,11 @@
                         <label class="form-check-label" for="option6">
                             No
                         </label>
-                        <input class="form-control hiddenInput" type="text" name="stayinregisteredaddress-input">
+                        <div class="hiddenInput form-floating">
+                            <input class="form-control" type="text" name="stayinregisteredaddress-input"
+                                id="mailingAddress">
+                            <label for="mailingAddress">Mailing Address</label>
+                        </div>
                     </div>
                     <div class="list-gap">
                         <div class="form-group d-none" id="container-for-option6">
@@ -225,7 +232,8 @@
                 <div class="list-gap">
                     <div>Product type <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01" onchange="checkTenureType(event)">
+                        <select class="form-select" id="inputGroupSelect01" onchange="checkTenureType(event)"
+                            data-question="11" disabled>
                             <option selected></option>
                             <option value="scooter (below 200cc)">scooter (below 200cc)</option>
                             <option value="scooter (200cc above)">scooter (200cc above)</option>
@@ -278,7 +286,7 @@
                     <div>Tenure <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">How long do you wish to loan (months)</div>
                     <div class="input-group mb-3">
-                        <select class="form-select tenure" id="inputGroupSelect01">
+                        <select class="form-select tenure" id="inputGroupSelect01" data-question="12" disabled>
                             <option selected></option>
                             <option value="12 month (1 year)">12 month (1 year)</option>
                             <option value="24 months (2 years)">24 months (2 years)</option>
@@ -291,19 +299,22 @@
                         </select>
                     </div>
                 </div>
-                <!--Emergency Contact Info-->
-                <!--Emergency Contact 1-->
-                <!--If got spouse, spouse must at Emergency Contact 1-->
+                <!--Reference Contact Info-->
+                <!--Reference Contact 1-->
+                <!--If got spouse, spouse must at Reference Contact 1-->
                 <div>
-                    <div style="color:yellowgreen;font-size:18px">Emergency Contact Information</div>
+                    <div style="color:yellowgreen;font-size:18px">Reference Contact Information</div>
                     <hr>
                 </div>
                 <div class="list-gap">
-                    <div>Emergency Contact Name (1) <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Reference Contact Name (1) <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">Full Name as in NRIC</div>
+                    <br>
+                    <p style="font-size: 12px;">HIGHLY RECOMMENDED TO BE FAMILY MEMBER</p>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control uppercase" placeholder="Your Answer"></input>
+                            <input class="form-control uppercase" placeholder="Your Answer" data-question="13"
+                                disabled />
                         </div>
                     </div>
                 </div>
@@ -317,11 +328,12 @@
                         </select>
                         <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number"
                             aria-describedby="phone-number"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="14"
+                            disabled>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Do you stay with emergency contact (1) <span style="color:red;padding-left:0.25rem">*</span>
+                    <div>Do you stay with Reference Contact (1) <span style="color:red;padding-left:0.25rem">*</span>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="staywithemergencycontact1" id="option10"
@@ -346,7 +358,7 @@
                     </div>
                 </div>
                 <!-- <div class="list-gap">
-                    <div>Address of Emergency Contact (1) <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Address of Reference Contact (1) <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal Included)</div>
                     <div class="abc">
                         <div class="def">
@@ -355,10 +367,10 @@
                     </div>
                 </div> -->
                 <div class="list-gap">
-                    <div>How are you related to Emergency Contact (1) <span
+                    <div>How are you related to Reference Contact (1) <span
                             style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
+                        <select class="form-select" id="inputGroupSelect01" data-question="15" disabled>
                             <option selected></option>
                             <option value="spouse">spouse</option>
                             <option value="parents">parents</option>
@@ -369,14 +381,15 @@
                         </select>
                     </div>
                 </div>
-                <!--Emergency Contact Info-->
-                <!--Emergency Contact 2-->
+                <!--Reference Contact Info-->
+                <!--Reference Contact 2-->
                 <div class="list-gap">
-                    <div>Emergency Contact Name (2) <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Reference Contact Name (2) <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">Full Name as in NRIC</div>
                     <div class="abc">
                         <div class="def">
-                            <input class="form-control uppercase" placeholder="Your Answer"></input>
+                            <input class="form-control uppercase" placeholder="Your Answer" data-question="16"
+                                disabled />
                         </div>
                     </div>
                 </div>
@@ -390,11 +403,12 @@
                         </select>
                         <input type="tel" class="form-control" placeholder="Your Answer" aria-label="Phone number"
                             aria-describedby="phone-number"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="17"
+                            disabled>
                     </div>
                 </div>
                 <div class="list-gap">
-                    <div>Do you stay with emergency contact (2) <span style="color:red;padding-left:0.25rem">*</span>
+                    <div>Do you stay with Reference Contact (2) <span style="color:red;padding-left:0.25rem">*</span>
                     </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="staywithemergencycontact2" id="option12"
@@ -412,7 +426,7 @@
                     <!--If No, show another container for fill in new address-->
                 </div>
                 <!-- <div class="list-gap">
-                    <div>Address of Emergency Contact (2)  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div>Address of Reference Contact (2)  <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal Included)</div>
                     <div class="abc">
                         <div class="def">
@@ -421,10 +435,10 @@
                     </div>
                 </div> -->
                 <div class="list-gap">
-                    <div>How are you related to Emergency Contact (2) <span
+                    <div>How are you related to Reference Contact (2) <span
                             style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="input-group mb-3">
-                        <select class="form-select" id="inputGroupSelect01">
+                        <select class="form-select" id="inputGroupSelect01" data-question="18" disabled>
                             <option selected></option>
                             <option value="spouse">spouse</option>
                             <option value="parents">parents</option>
@@ -435,9 +449,9 @@
                         </select>
                     </div>
                 </div>
-                <div class="d-grid gap-2 d-md-block">
+                <div class="d-flex gap-2 d-md-block btn-container">
                     <button class="btn btn-primary" type="submit" id="submitBtn">Next Page</button>
-                    <a href="#" rel="noopener noreferrer"><button class="btn btn-primary"><i
+                    <a href="#" rel="noopener noreferrer"><button class="btn btn-green"><i
                                 class="fab fa-whatsapp"></i>Whatsapp Us</button></a>
                     <!--Add this to whatsapp button if functionable, target="_blank"-->
                 </div>
@@ -547,13 +561,8 @@
 
         const showingHiddenInput = (id) => {
             const hiddenInput = document.querySelector(".hiddenInput");
-            console.log(hiddenInput);
 
-            if (id == "option6") {
-                hiddenInput.style.display = "block";
-            } else {
-                hiddenInput.style.display = "none";
-            }
+            id === 'option6' ? hiddenInput.style.display = 'block' : hiddenInput.style.display = 'none';
         };
 
         const validateEmail = (event) => {
@@ -600,6 +609,17 @@
                 document.querySelectorAll('.tenure option:nth-last-child(-n+2)').forEach((element) => element.remove())
             }
         }
+
+        let questions = document.querySelectorAll("input[data-question], select[data-question]")
+        questions.forEach((question) => {
+            question.addEventListener('change', (event) => {
+                let currentQuestion = parseInt(event.target.getAttribute('data-question'));
+                questions.forEach((input) => {
+                    let questionNum = parseInt(input.getAttribute('data-question'))
+                    questionNum - currentQuestion > 1 ? input.disabled = true : input.disabled = false
+                })
+            })
+        })
 
     </script>
 </body>
