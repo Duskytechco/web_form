@@ -38,7 +38,7 @@
 </head>
 
 <body>
-    <form class="g-3" method="POST" action="{{ url_for('submit') }}" enctype="multipart/form-data">
+    <form class="g-3" id="secondForm" method="POST" action="{{ url_for('submit') }}" enctype="multipart/form-data">
         <div id="listitem">
             <div class="list-container">
                 <form class="row g-3 needs-validation" novalidate>
@@ -271,14 +271,14 @@
                         <div class="list-gap">
                             <div>Working in Singapore <span style="color:red;padding-left:0.25rem">*</span></div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="workinginsingapore" value="yes"
+                                <input class="form-check-input" type="radio" name="workinginsingapore" value="Yes"
                                     id="option14">
                                 <label class="form-check-label" for="option14">
                                     Yes
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="workinginsingapore" value="no"
+                                <input class="form-check-input" type="radio" name="workinginsingapore" value="No"
                                     id="option15" checked>
                                 <label class="form-check-label" for="option15">
                                     No
@@ -313,7 +313,8 @@
                                         <input class="form-control" data-question="7" type="number"
                                             name="grossSalary" />
                                         <span class="input-group-text block">.</span>
-                                        <input class="form-control" type="number" name="grossSalaryDecimal" />
+                                        <input class="form-control" type="number" name="grossSalaryDecimal"
+                                            maxlength="2" max="99" />
                                     </div>
                                 </div>
                             </div>
@@ -423,6 +424,7 @@
                                             <option value="FINEXUS CARDS SND BHD">FINEXUS CARDS SND BHD</option>
                                         </optgroup>
                                         <optgroup label="H">
+                                            <option value="HONG LEONG BANK">HONG LEONG BANK</option>
                                             <option value="HSBC BANK MALAYSIA BERHAD">HSBC BANK MALAYSIA BERHAD</option>
                                         </optgroup>
                                         <optgroup label="I">
@@ -476,8 +478,9 @@
                             <div class="abc">
                                 <div class="def">
                                     <input class="form-control" placeholder="Your Answer" type="text"
-                                        pattern="[0-9]{12}" oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-                                        data-question="11" disabled>
+                                        name="backAccountNumber"
+                                        oninput="this.value = this.value.replace(/[^0-9]/g, '')" data-question="11"
+                                        disabled>
                                 </div>
                             </div>
                         </div>
@@ -594,8 +597,9 @@
                 </form>
                 <div class="gap-2 d-md-block btn-container">
                     <div>
-                        <a href="Page1.html" style="color:white;text-decoration:none"><button class="btn btn-primary"
-                                type="button">Previous Page</button></a>
+                        <button class="btn btn-primary" type="button" onclick="sendInfo()">Previous Page</button>
+                        <!-- <a href="/" style="color:white;text-decoration:none"><button class="btn btn-primary" -->
+                        <!--         type="button" onclick="sendInfo()">Previous Page</button></a> -->
                         <a href="#" style="color:white;text-decoration:none"><button class="btn btn-danger"
                                 type="submit">Submit</button></a>
                     </div>
@@ -747,7 +751,7 @@
                     let currentQuestionAnswer = event.target.value
                     questions.forEach((input) => {
                         let questionNum = parseInt(input.getAttribute('data-question'))
-                        if (questionNum - currentQuestion > 2) {
+                        if (questionNum - currentQuestion > 2 && input.value == '') {
                             input.disabled = true
                         } else {
                             input.disabled = false
@@ -756,6 +760,41 @@
                 })
             })
 
+            const sendInfo = () => {
+                let formData = new FormData(document.querySelector('#secondForm'))
+                let formDataString = {}
+                formData.forEach((value, key) => {
+                    if (value != '') {
+                        formDataString[key] = value
+                    }
+                })
+                let xhr = new XMLHttpRequest();
+                xhr.open('POST', '/saveSecond');
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify(formDataString));
+                window.location.href = '/'
+            }
+
+            let url = "{{ url_for('getSecondPageData') }}";
+            let xhr = new XMLHttpRequest();
+
+            xhr.open('POST', url);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                    let data = JSON.parse(xhr.responseText);
+                    for (let key in data) {
+                        let input = document.querySelector(`[name=${key}]`);
+                        if (input.type === 'radio') {
+                            let radio = document.querySelector(`[name=${key}][value=${data[key]}]`);
+                            radio.checked = true;
+                        } else {
+                            input.value = data[key];
+                        }
+                    }
+                }
+            }
+            xhr.send();
         </script>
     </form>
 </body>

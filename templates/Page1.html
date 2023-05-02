@@ -88,13 +88,13 @@
                 <div class="list-gap">
                     <div>Gender <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="male" id="option1" disabled>
+                        <input class="form-check-input" type="radio" name="gender" value="Male" id="option1" disabled>
                         <label class="form-check-label" for="option1">
                             Male
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="female" id="option2" disabled>
+                        <input class="form-check-input" type="radio" name="gender" value="Female" id="option2" disabled>
                         <label class="form-check-label" for="option2">
                             Female
                         </label>
@@ -136,15 +136,14 @@
                 <div class="list-gap">
                     <div>Bumi/Non <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="bumiornon" value="bumi" id="option3"
+                        <input class="form-check-input" type="radio" name="bumiornon" value="Yes" id="option3"
                             data-question="7" disabled>
                         <label class="form-check-label" for="option3">
                             Bumi
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="bumiornon" value="non-bumi" id="option4"
-                            checked>
+                        <input class="form-check-input" type="radio" name="bumiornon" value="No" id="option4" checked>
                         <label class="form-check-label" for="option4">
                             Non-Bumi
                         </label>
@@ -195,14 +194,14 @@
                 <div class="list-gap">
                     <div>Do you stay in registered address <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="stayRegisterAddress" value="yes" id="option5"
+                        <input class="form-check-input" type="radio" name="stayRegisterAddress" value="Yes" id="option5"
                             onchange="showingHiddenInput('option5')" checked>
                         <label class="form-check-label" for="option5">
                             Yes
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="stayRegisterAddress" value="no" id="option6"
+                        <input class="form-check-input" type="radio" name="stayRegisterAddress" value="No" id="option6"
                             onchange="showingHiddenInput('option6')">
                         <label class="form-check-label" for="option6">
                             No
@@ -249,7 +248,7 @@
                 <div class="list-gap">
                     <div>New/Used/Recon <span style="color:red;padding-left:0.25rem">*</span></div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="newusedrecon" value="newUser" id="option7">
+                        <input class="form-check-input" type="radio" name="newusedrecon" value="New" id="option7">
                         <label class="form-check-label" for="option7">
                             New
                         </label>
@@ -257,7 +256,7 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" id="option8"
                             data-bs-target="#collapse-container-used" data-bs-toggle="collapse" name="newusedrecon"
-                            value="used">
+                            value="Used">
                         <label class="form-check-label" for="option8">
                             Used
                         </label>
@@ -272,7 +271,7 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" id="option9"
                             data-bs-target="#collapse-container-recon" data-bs-toggle="collapse" name="newusedrecon"
-                            value="recon">
+                            value="Recon">
                         <label class="form-check-label" for="option9">
                             Recon
                         </label>
@@ -341,15 +340,14 @@
                     <div>Do you stay with Reference Contact (1) <span style="color:red;padding-left:0.25rem">*</span>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="staywithemergencycontact1" value="yes"
-                            id="option10" checked>
+                        <input class="form-check-input" type="radio" name="stayWithReference1" value="yes" id="option10"
+                            checked>
                         <label class="form-check-label" for="option10">
                             Yes
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="staywithemergencycontact1" value="no"
-                            id="option11">
+                        <input class="form-check-input" type="radio" name="stayWithReference1" value="no" id="option11">
                         <label class="form-check-label" for="option11">
                             No
                         </label>
@@ -416,15 +414,14 @@
                     <div>Do you stay with Reference Contact (2) <span style="color:red;padding-left:0.25rem">*</span>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="staywithemergencycontact2" value="yes"
-                            id="option12" checked>
+                        <input class="form-check-input" type="radio" name="stayWithReference2" value="yes" id="option12"
+                            checked>
                         <label class="form-check-label" for="option12">
                             Yes
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="staywithemergencycontact2" value="no"
-                            id="option13">
+                        <input class="form-check-input" type="radio" name="stayWithReference2" value="no" id="option13">
                         <label class="form-check-label" for="option13">
                             No
                         </label>
@@ -569,53 +566,58 @@
         const showingHiddenInput = (id) => {
             const hiddenInput = document.querySelector(".hiddenInput");
 
-            id === 'option6' ? hiddenInput.style.display = 'block' : hiddenInput.style.display = 'none';
+            id === "option6"
+                ? (hiddenInput.style.display = "block")
+                : (hiddenInput.style.display = "none");
         };
 
         const validateEmail = (event) => {
-            const email = event.target.value
+            const email = event.target.value;
             let emailRe = /\S+@\S+\.\S+/;
-            !emailRe.test(email) ? alert("Please enter a valid email address") : ''
-        }
+            !emailRe.test(email) ? alert("Please enter a valid email address") : "";
+        };
 
         const autoSelectGender = (event) => {
-            const NRIC = parseInt(event.target.value)
-            const titleOfPerson = document.querySelector('.titleOfPerson')
+            const NRIC = parseInt(event.target.value);
+            const titleOfPerson = document.querySelector(".titleOfPerson");
             if (NRIC % 2 === 0) {
-                document.querySelector('#option2').checked = true;
+                document.querySelector("#option2").checked = true;
             } else {
-                document.querySelector('#option1').checked = true;
-                titleOfPerson.value = titleOfPerson.querySelector("option[value='MR']").value
+                document.querySelector("#option1").checked = true;
+                titleOfPerson.value =
+                    titleOfPerson.querySelector("option[value='MR']").value;
             }
-        }
+        };
 
         const validateAddress = (event) => {
             const address = event.target.value;
             /* const addressRe = /^(\d{1,5})(?:\s*[-\/]\s*(\d{1,5}))?\s*,\s*([\w\s]+)\s*,\s*(\d{5})\s+(.*)$/i; */
-            const addressRe = /^(\d{1,5})\s*,\s*(.*?)\s*,\s*(\d{5})\s*(.*?)$/i
+            const addressRe = /^(\d{1,5})\s*,\s*(.*?)\s*,\s*(\d{5})\s*(.*?)$/i;
 
-            !addressRe.test(address) ? alert('Please enter a valid address') : '';
-        }
+            !addressRe.test(address) ? alert("Please enter a valid address") : "";
+        };
 
         const checkTenureType = (event) => {
-            const bikeType = event.target.value
-            const lastOption = document.querySelector('.tenure option:last-child')
+            const bikeType = event.target.value;
+            const lastOption = document.querySelector(".tenure option:last-child");
 
-            if (bikeType.includes('superbike')) {
-                const selectTag = document.querySelector('.tenure')
-                let newOption = document.createElement('option')
-                newOption.textContent = '72 months (6 years)';
-                newOption.value = '72 months (6 years)'
-                selectTag.appendChild(newOption)
+            if (bikeType.includes("superbike")) {
+                const selectTag = document.querySelector(".tenure");
+                let newOption = document.createElement("option");
+                newOption.textContent = "72 months (6 years)";
+                newOption.value = "72 months (6 years)";
+                selectTag.appendChild(newOption);
 
-                let newOption1 = document.createElement('option')
-                newOption1.textContent = '84 months (7 years)';
-                newOption1.value = '84 months (7 years)'
-                selectTag.appendChild(newOption1)
-            } else if (!lastOption.textContent.includes('60')) {
-                document.querySelectorAll('.tenure option:nth-last-child(-n+2)').forEach((element) => element.remove())
+                let newOption1 = document.createElement("option");
+                newOption1.textContent = "84 months (7 years)";
+                newOption1.value = "84 months (7 years)";
+                selectTag.appendChild(newOption1);
+            } else if (!lastOption.textContent.includes("60")) {
+                document
+                    .querySelectorAll(".tenure option:nth-last-child(-n+2)")
+                    .forEach((element) => element.remove());
             }
-        }
+        };
 
         let questions = document.querySelectorAll("input[data-question], select[data-question]")
         questions.forEach((question) => {
@@ -624,7 +626,7 @@
                 let currentQuestionAnswer = event.target.value
                 questions.forEach((input) => {
                     let questionNum = parseInt(input.getAttribute('data-question'))
-                    if (questionNum - currentQuestion > 2) {
+                    if (questionNum - currentQuestion > 2 && input.value == '') {
                         input.disabled = true
                     } else {
                         input.disabled = false
@@ -633,6 +635,26 @@
             })
         })
 
+        let url = "{{ url_for('getFirstPageData') }}";
+        let xhr = new XMLHttpRequest();
+
+        xhr.open('POST', url);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                let data = JSON.parse(xhr.responseText);
+                for (let key in data) {
+                    let input = document.querySelector(`[name=${key}]`);
+                    if (input.type === 'radio') {
+                        let radio = document.querySelector(`[name=${key}][value=${data[key]}]`);
+                        radio.checked = true;
+                    } else {
+                        input.value = data[key];
+                    }
+                }
+            }
+        }
+        xhr.send();
     </script>
 </body>
 
