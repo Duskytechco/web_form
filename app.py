@@ -10,8 +10,10 @@ class MyApp(Flask):
         self.firstPageData = {}  # Dict that storing first page info
         self.secondPageData = {}  # Dict that storing second page info
         self.pdf = ''  # Storing pdf file path / binary data
+        """ self.db = mysql.connector.connect( """
+        """     host='localhost', user='root', port='3306', password='Chong8182!', database='webform') """
         self.db = mysql.connector.connect(
-            host='localhost', user='root', password='dbpass', database='webform')  # Connect to database
+            host='mysql', user='root', password='root', database='webform', port='3306')  # Connect to database
         self.cursor = self.db.cursor()
         self.personalInfo = ""  # Storing personal info
         self.referenceContacts = []  # A list of reference contacts
@@ -147,4 +149,5 @@ class MyApp(Flask):
 
 app = MyApp(__name__)
 if __name__ == '__main__':
-    app.run(root_path=os.path.dirname(os.path.abspath(__file__)))
+    app.run(host='0.0.0.0')
+    """ app.run(root_path=os.path.dirname(os.path.abspath(__file__))) """

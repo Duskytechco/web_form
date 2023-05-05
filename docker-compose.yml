@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  webform:
+    build: .
+    command: sh -c "sleep 10s ; python3 ./app.py"
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mysql
+        
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'webform'
+      MYSQL_ROOT_PASSWORD: 'root'
+    volumes:
+      - ./webform.sql:/docker-entrypoint-initdb.d/webform.sql
+    ports:
+      - '3306:3306'
