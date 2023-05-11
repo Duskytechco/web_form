@@ -113,7 +113,9 @@ body {
 .employmentstatus,
 .licenseType,
 .typeOfAccount,
-.others {
+.others,
+.form-floating.option10,
+.form-floating.option12 {
     display: none;
 }
 

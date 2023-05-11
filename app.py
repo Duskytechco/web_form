@@ -3,6 +3,8 @@ import mysql.connector
 import os
 
 
+# TODO: UPDATE BUSINESS OF Nature
+# TODO: UPDATE TYPE OF OCCUPATION 
 class MyApp(Flask):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -10,10 +12,10 @@ class MyApp(Flask):
         self.firstPageData = {}  # Dict that storing first page info
         self.secondPageData = {}  # Dict that storing second page info
         self.pdf = ''  # Storing pdf file path / binary data
-        """ self.db = mysql.connector.connect( """
-        """     host='localhost', user='root', port='3306', password='Chong8182!', database='webform') """
         self.db = mysql.connector.connect(
-            host='mysql', user='root', password='root', database='webform', port='3306')  # Connect to database
+            host='localhost', user='root', port='3306', password='Chong8182!', database='webform')
+        # self.db = mysql.connector.connect(
+        #     host='mysql', user='root', password='root', database='webform', port='3306')  # Connect to database
         self.cursor = self.db.cursor()
         self.personalInfo = ""  # Storing personal info
         self.referenceContacts = []  # A list of reference contacts
@@ -107,11 +109,11 @@ class MyApp(Flask):
     # Restructure First Page Data into a string
     def restructureFirstPageInfo(self):
         data = self.firstPageData
-        self.personalInfo = f"'{data['NRIC']}', '{data['name']}', '{data['countryCode'] + data['phoneNumber']}', '{data['email']}', '{data['title']}', '{data['gender']}', '{data['race'] if data['race'] != '' else data['otherRace']}', '{data['maritalStatus']}', '{data['bumiornon']}', '{data['address']}', '{data['numOfYear']}', '{data['ownership']}', '{data['stayRegisterAddress']}', '{data['noStayRegisterAddress'] if data['stayRegisterAddress'] == 'No' else 'None'}', '{data['productType']}', '{data['newusedrecon']}', '{data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None'}', '{data['tenure']}'"
+        self.personalInfo = f"'{data['NRIC']}', '{data['name']}', '{data['countryCode'] + data['phoneNumber']}', '{data['email']}', '{data['title']}', '{data['gender']}', '{data['race'] if data['race'] != '' else data['otherRace']}', '{data['maritalStatus']}', '{data['bumiornon']}', '{data['address']}', '{data['numOfYear']}', '{data['ownership']}', '{data['stayRegisterAddress']}', '{data['noStayRegisterAddress'] if data['stayRegisterAddress'] == 'No' else 'None'}', '{data['productType']}', '{data['brand']}', '{data['modal']}', '{data['newusedrecon']}', '{data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None'}', '{data['tenure']}'"
 
-        referenceContact1 = f"'{data['NRIC']}', '{data['referenceName1']}', '{data['referenceCountryCode1'] + data['referencePhoneNum1']}', '{data['stayWithReference1']}', '{data['referenceRelation1']}'"
+        referenceContact1 = f"'{data['NRIC']}', '{data['referenceName1']}', '{data['referenceCountryCode1'] + data['referencePhoneNum1']}', '{data['stayWithReference1']}', '{data['notStayWithApplicant1'] if data['stayWithReference1'] == 'no' else 'None'}', '{data['referenceRelation1']}'"
 
-        referenceContact2 = f"'{data['NRIC']}', '{data['referenceName2']}', '{data['referenceCountryCode2'] + data['referencePhoneNum2']}', '{data['stayWithReference2']}', '{data['referenceRelation2']}'"
+        referenceContact2 = f"'{data['NRIC']}', '{data['referenceName2']}', '{data['referenceCountryCode2'] + data['referencePhoneNum2']}', '{data['stayWithReference2']}', '{data['notStayWithApplicant2'] if data['stayWithReference2'] == 'no' else 'None'}', '{data['referenceRelation2']}'"
 
         self.referenceContacts.append(referenceContact1)
         self.referenceContacts.append(referenceContact2)
