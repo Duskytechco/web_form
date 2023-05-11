@@ -35,8 +35,8 @@ CREATE TABLE `Banking Info` (
   `How user know Motosing` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `NRIC` (`NRIC`),
-  CONSTRAINT `Banking Info_ibfk_1` FOREIGN KEY (`NRIC`) REFERENCES `Personal Info` (`NRIC`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `Banking Info_ibfk_1` FOREIGN KEY (`NRIC`) REFERENCES `Personal Info` (`NRIC`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,6 +45,8 @@ CREATE TABLE `Banking Info` (
 
 LOCK TABLES `Banking Info` WRITE;
 /*!40000 ALTER TABLE `Banking Info` DISABLE KEYS */;
+INSERT INTO `Banking Info` VALUES
+(2,'030726080765','HONG LEONG BANK','1231231212','Saving','./pdfFiles/Assignment (AAPP004-4-2-JP).pdf','Anytime','Yes','None','Other');
 /*!40000 ALTER TABLE `Banking Info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -71,6 +73,8 @@ CREATE TABLE `Personal Info` (
   `Stay in registered address` enum('Yes','No') DEFAULT NULL,
   `Where user stay(If not stay in registered address)` varchar(100) NOT NULL DEFAULT 'None',
   `Product Type` varchar(50) DEFAULT NULL,
+  `Brand` varchar(255) DEFAULT NULL,
+  `Modal` varchar(255) DEFAULT NULL,
   `User Type` varchar(20) DEFAULT NULL,
   `Number Plate` varchar(20) DEFAULT NULL,
   `Tenure` varchar(20) DEFAULT NULL,
@@ -84,6 +88,8 @@ CREATE TABLE `Personal Info` (
 
 LOCK TABLES `Personal Info` WRITE;
 /*!40000 ALTER TABLE `Personal Info` DISABLE KEYS */;
+INSERT INTO `Personal Info` VALUES
+('030726080765','chong mun seong','0186662127','alfred@gmail.com','MR','Male','Chinese','Single','No','1, testing road, 31350, ipoh, perak','1-2','parents home','Yes','None','bigbike (1000cc and below)','GPX','DEMON GR150R','New','None','60 months (5 years)');
 /*!40000 ALTER TABLE `Personal Info` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -100,11 +106,12 @@ CREATE TABLE `Reference Contact` (
   `Name` varchar(50) NOT NULL,
   `Phone Number` varchar(15) NOT NULL,
   `Stay with user` enum('Yes','No') DEFAULT NULL,
+  `Stay where(If no)` varchar(100) NOT NULL,
   `Relation to user` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `NRIC` (`NRIC`),
-  CONSTRAINT `Reference Contact_ibfk_1` FOREIGN KEY (`NRIC`) REFERENCES `Personal Info` (`NRIC`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `Reference Contact_ibfk_1` FOREIGN KEY (`NRIC`) REFERENCES `Personal Info` (`NRIC`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -113,6 +120,9 @@ CREATE TABLE `Reference Contact` (
 
 LOCK TABLES `Reference Contact` WRITE;
 /*!40000 ALTER TABLE `Reference Contact` DISABLE KEYS */;
+INSERT INTO `Reference Contact` VALUES
+(9,'030726080765','test','+601231231231','Yes','None','parents'),
+(10,'030726080765','test1','+601243241231','No','123, test road, 31350, ipoh, perak','parents');
 /*!40000 ALTER TABLE `Reference Contact` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -140,8 +150,8 @@ CREATE TABLE `Working Info` (
   `Salary Term` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `NRIC` (`NRIC`),
-  CONSTRAINT `Working Info_ibfk_1` FOREIGN KEY (`NRIC`) REFERENCES `Personal Info` (`NRIC`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  CONSTRAINT `Working Info_ibfk_1` FOREIGN KEY (`NRIC`) REFERENCES `Personal Info` (`NRIC`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -150,6 +160,8 @@ CREATE TABLE `Working Info` (
 
 LOCK TABLES `Working Info` WRITE;
 /*!40000 ALTER TABLE `Working Info` DISABLE KEYS */;
+INSERT INTO `Working Info` VALUES
+(4,'030726080765','self-employed','freeLance','general worker','IT','IT / research / development','test','+601234123123','No','789, testing road, 31350. ipoh. perak','2022-01','RM 10000.21','7');
 /*!40000 ALTER TABLE `Working Info` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -162,4 +174,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-05-04 12:58:47
+-- Dump completed on 2023-05-11 14:53:54
