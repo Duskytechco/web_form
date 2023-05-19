@@ -1,17 +1,20 @@
 from flask import Flask, request, render_template, redirect, url_for
+from reportlab.pdfgen import canvas
+from PyPDF2 import PdfMerger
 import mysql.connector
+import zipfile
+import json
 import os
 
+# TODO:UPDATE BUSINESS OF NATURE
+# TODO:UPDATE TYPE OF OCCUPATION 
 
-# TODO: UPDATE BUSINESS OF Nature
-# TODO: UPDATE TYPE OF OCCUPATION 
 class MyApp(Flask):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.config['UPLOAD_FOLDER'] = './pdfFiles'
         self.firstPageData = {}  # Dict that storing first page info
         self.secondPageData = {}  # Dict that storing second page info
-        self.pdf = ''  # Storing pdf file path / binary data
         self.db = mysql.connector.connect(
             host='localhost', user='root', port='3306', password='Chong8182!', database='webform')
         # self.db = mysql.connector.connect(
@@ -37,6 +40,7 @@ class MyApp(Flask):
             '/firstPage', view_func=self.getFirstPageData, methods=['POST'])  # Bind self.getFirstPageData to /firstPage
         self.add_url_rule(
             '/secondPage', view_func=self.getSecondPageData, methods=['POST'])  # Bind self.getSecondPageData to /secondPage
+        self.add_url_rule('/testing', view_func=self.testing, methods=['GET', 'POST'])
 
     # Main Page
     def index(self):
@@ -59,8 +63,34 @@ class MyApp(Flask):
 
     # Submit Second Page Handler
     def submit(self):
+        pdfFiles = request.files.getlist('pdfFiles')
+        zipFileName = f"./pdfFiles/{self.firstPageData['NRIC']}.zip"
+
+        capturedPhoto = json.loads(request.form.get('capturedPhoto'))
+
+        for i, photo_data_uri in enumerate(capturedPhoto):
+            photo_pdf_path = f"./pdfFiles/photo_{i}.pdf"
+            c = canvas.Canvas(photo_pdf_path)
+            c.drawImage(photo_data_uri, 0, 0, 200, 200)
+            c.save()
+
+        pdfFiles.append(open(photo_pdf_path, 'rb'))
+
+        merger = PdfMerger()
+
+        for file in pdfFiles:
+            merger.append(file)
+
+        mergedPdfPath = f"./pdfFiles/{self.firstPageData['NRIC']}.pdf"
+        merger.write(mergedPdfPath)
+        merger.close()
+
+        with zipfile.ZipFile(zipFileName, 'w') as zf:
+            zf.write(mergedPdfPath, f"{self.firstPageData['NRIC']}.pdf")
+
+        os.system('rm -rf ./pdfFiles/*.pdf')
+
         self.secondPageData = request.form
-        self.uploadFile()
         self.restructureSecondPageInfo()
         query = f"INSERT INTO `Personal Info` VALUES ({self.personalInfo})"
         try:
@@ -71,21 +101,18 @@ class MyApp(Flask):
         try:
             for i in self.referenceContacts:
                 queryX = f"INSERT INTO `Reference Contact` (`NRIC`, `Name`, `Phone Number`, `Stay with user`, `Relation to user`) VALUES ({i})"
-                print(queryX)
                 self.cursor.execute(queryX)
         except mysql.connector.Error as e:
             print(f'MySQL Error Second Query: {e}')
 
         try:
             query2 = f"INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`, `Gross Salary`, `Salary Term`) VALUES ({self.workingInfo})"
-            print(query2)
             self.cursor.execute(query2)
         except mysql.connector.Error as e:
             print(f'MySQL Error Third Query: {e}')
 
         try:
             query3 = f"INSERT INTO `Banking Info` (`NRIC`, `Bank Name`, `Bank Account Number`, `Type Of Account`, `pdfFilePath`, `Best time to contact`, `Have license or not`, `License Type`, `How user know Motosing`) VALUES ({self.bankingInfo})"
-            print(query3)
             self.cursor.execute(query3)
         except mysql.connector.Error as e:
             print(f'Mysql Error Forth Query: {e}')
@@ -138,16 +165,7 @@ class MyApp(Flask):
 
         self.workingInfo = f"'{self.firstPageData['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position'] if data['employmentStatus'] != 'student' else 'None'}', '{data['department'] if data['employmentStatus'] != 'student' else 'None'}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['grossSalary'] + '.' + data['grossSalaryDecimal']}', '{data['salaryTerm']}'"
 
-        self.bankingInfo = f"'{self.firstPageData['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', '{self.filePath}' , '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'hasLicense' else 'None'}', '{data['howToKnowMotosing']}'"
-
-    # Download PDF file to ./pdfFiles
-    def uploadFile(self):
-        file = request.files['pdfFile']
-        if file:
-            filename = file.filename
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            self.filePath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-
+        self.bankingInfo = f"'{self.firstPageData['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{self.firstPageData['NRIC']}.zip' , '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'hasLicense' else 'None'}', '{data['howToKnowMotosing']}'"
 
 app = MyApp(__name__)
 if __name__ == '__main__':
