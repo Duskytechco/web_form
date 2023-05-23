@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.9'
 
 services:
   webform:
@@ -8,7 +8,13 @@ services:
       - "5000:5000"
     depends_on:
       - mysql
-        
+    environment:
+      - FLASK_ENV=production
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - MYSQL_DB=webform
   mysql:
     image: mysql:latest
     restart: always
@@ -18,4 +24,5 @@ services:
     volumes:
       - ./webform.sql:/docker-entrypoint-initdb.d/webform.sql
     ports:
-      - '3306:3306'
+      - '3307:3306'  # Map MySQL service to a different local port (3307) to avoid conflicts
+
