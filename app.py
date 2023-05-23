@@ -40,7 +40,6 @@ class MyApp(Flask):
             '/firstPage', view_func=self.getFirstPageData, methods=['POST'])  # Bind self.getFirstPageData to /firstPage
         self.add_url_rule(
             '/secondPage', view_func=self.getSecondPageData, methods=['POST'])  # Bind self.getSecondPageData to /secondPage
-        self.add_url_rule('/testing', view_func=self.testing, methods=['GET', 'POST'])
 
     # Main Page
     def index(self):
