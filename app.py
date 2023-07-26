@@ -1,11 +1,16 @@
 from flask import Flask, request, render_template, redirect, url_for
 from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from PIL import Image
 from PyPDF2 import PdfMerger
 import mysql.connector
 import zipfile
 import json
+import io
 import os
 from datetime import datetime 
+import traceback
+
 
 # TODO:UPDATE BUSINESS OF NATURE
 # TODO:UPDATE TYPE OF OCCUPATION
@@ -14,9 +19,9 @@ from datetime import datetime
 class MyApp(Flask):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.config['UPLOAD_FOLDER'] = './pdfFiles'
-        self.firstPageData = {}  # Dict that storing first page info
-        self.secondPageData = {}  # Dict that storing second page info
+        self.config['UPLOAD_FOLDER'] = 'webform'
+        self.secondPageData = {}  # Dict that storing first page info
+        self.thirdPageData = {}  # Dict that storing second page info
         self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db', port='3306')  # Connect to database
         self.cursor = self.db.cursor()
         self.personalInfo = ""  # Storing personal info
@@ -25,14 +30,19 @@ class MyApp(Flask):
         self.workingInfo = ""  # Storing working info
         self.bankingInfo = ""  # Storing bank info
         self.extraInfo = "" # Storing extra info
+        self.photos = [] # Array that stores the photos
+        self.pdfFiles = [] # Array that stores the pdfFiles
         self.add_url_rule('/', view_func=self.index,
                           methods=['GET', 'POST'])  # Bind self.index to /
         # Bind self.page2 to /page2
         self.add_url_rule('/page2', view_func=self.page2)
-        self.add_url_rule('/submitFirstPage', view_func=self.submitFirstPage,
-                          methods=['POST'])  # Bind self.submitFirstPage to /submitFirstPage
+        self.add_url_rule('/page3', view_func=self.page3)
+        self.add_url_rule('/submitSecondPage', view_func=self.submitSecondPage,
+                          methods=['POST'])  # Bind self.submitSecondPage to /submitSecondPage
         self.add_url_rule('/submit', view_func=self.submit,
                           methods=['POST'])  # Bind self.submit to /submit
+        self.add_url_rule('/uploadFiles', view_func=self.uploadFiles,
+                          methods=['POST']) # Bind self.uploadFiles tp /uploadFiles
 
     # Main Page
     def index(self):
@@ -41,17 +51,49 @@ class MyApp(Flask):
     # Second page
     def page2(self):
         return render_template('Page2.html')
-
-    # Submit First Page Handler
-    def submitFirstPage(self):
+    
+    def page3(self):
+        return render_template('Page3.html')
+    
+    # upload files POST from page 1 
+    # Submit button for page 1
+    def uploadFiles(self):
         try:
-            self.firstPageData = dict(request.form)
-            self.firstPageData['gender'] = 'Male'
-            if int( self.firstPageData['NRIC']) % 2 == 0:
-                self.firstPageData['gender'] = 'Female'
-            self.restructureFirstPageInfo()
+            # will not save in server yet, will just be in array
+            print("Saving Files . . .", flush =True)
+            if "pdfFiles" not in request.files:
+                print("No PDF Files found", flush=True)
+            else:
+                # assign to array
+                self.pdfFiles.clear()
+                self.pdfFiles = request.files.getlist('pdfFiles')
+            
+            if "photo" not in request.files:
+                print("No photo found",flush=True)
+            else:
+                # assign to array
+                self.photos.clear()
+                self.photos = request.files.getlist('photo')
+                
+            self.processFiles()
+            print("Files Saved", flush=True)
+            
             print("Submitted first page . . .", flush=True)
             return redirect(url_for('page2'))
+        except Exception as e:
+            print(e, flush=True)
+    
+    
+    # Submit First Page Handler
+    def submitSecondPage(self):
+        try:
+            self.secondPageData = dict(request.form)
+            self.secondPageData['gender'] = 'Male'
+            if int( self.secondPageData['NRIC']) % 2 == 0:
+                self.secondPageData['gender'] = 'Female'
+            self.restructureSecondPageInfo()
+            print("Submitted second page . . .", flush=True)
+            return redirect(url_for('page3'))
         except Exception as e:
             print(e, flush=True)
 
@@ -59,41 +101,11 @@ class MyApp(Flask):
     def submit(self):
         print("Submitting form. . .", flush=True)
         try:
-        # try:
-        #     capturedPhoto = json.loads(request.form.get('capturedPhoto'))
-
-        #     for i, photo_data_uri in enumerate(capturedPhoto):
-        #         photo_pdf_path = f"./pdfFiles/photo_{i}.pdf"
-        #         c = canvas.Canvas(photo_pdf_path)
-        #         c.drawImage(photo_data_uri, 0, 0, 200, 200)
-        #         c.save()
-
-        #     pdfFiles.append(open(photo_pdf_path, 'rb'))
-        # except Exception as e:
-        #     print(e)
-        #     pass
-            pdfFiles = request.files.getlist('pdfFiles')
-            zipFileName = f"./pdfFiles/{self.firstPageData['NRIC']}.zip"
-            print("PDF Files", pdfFiles, flush=True)
-
-            merger = PdfMerger()
-
-            for file in pdfFiles:
-                # check if the file has any content to avoid merging empty file
-                if file.content_length > 0:
-                    merger.append(file)
-
-            mergedPdfPath = f"./pdfFiles/{self.firstPageData['NRIC']}.pdf"
-            merger.write(mergedPdfPath)
-            merger.close()
-
-            with zipfile.ZipFile(zipFileName, 'w') as zf:
-                zf.write(mergedPdfPath, f"{self.firstPageData['NRIC']}.pdf")
-
-            os.system('rm -rf ./pdfFiles/*.pdf')
-
-            self.secondPageData = dict(request.form)
-            self.restructureSecondPageInfo()
+            # create the zip file with the NRIC
+            self.createZipFile()
+            
+            self.thirdPageData = dict(request.form)
+            self.restructureThirdPageInfo()
 
             flag1 = flag2 = flag3 = flag4 = flag5 = flag6 = False
         except Exception as e:
@@ -163,11 +175,74 @@ class MyApp(Flask):
             print("Flag detected, not committing to database", flush=True)
 
         return '<h1>Submitted, please wait</h1>'
-
-    # Restructure First Page Data into a string
-    def restructureFirstPageInfo(self):
+        
+    def processFiles(self):
         try:
-            data = self.firstPageData
+            # get files
+            pdfFiles = self.pdfFiles
+            photos = self.photos
+            
+            # save and append the files to merger
+            merger = PdfMerger()
+            for file in pdfFiles:
+                file.save(os.path.join(self.config['UPLOAD_FOLDER'], file.filename))
+                merger.append(file)
+
+            # merge the image file if there is any
+            if photos:
+                for photo in photos:
+                    image = Image.open(photo.stream)
+                    image = image.resize((400, 300))
+                
+                    # create and write into pdf file
+                    pdf_bytes = io.BytesIO()
+                    image.save(pdf_bytes, format='PDF')
+                    pdf_bytes.seek(0)
+                    
+                    # append the pdf file of the image into merger
+                    merger.append(pdf_bytes)
+                    image.close()
+            
+            # write the merged files into a new pdf
+            mergedPdfPath = os.path.join(self.config['UPLOAD_FOLDER'],f"merged.pdf")
+            with open(mergedPdfPath, 'wb') as combined_pdf_file:
+                merger.write(combined_pdf_file)    
+            
+            # remove saved files
+            for file in pdfFiles:
+                os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file.filename))
+            
+            print("Merged PDF file has been created",flush=True)
+        except Exception as e:
+            print("Process Files Failed",flush=True)
+            traceback.print_exc()
+            print(e,flush=True)
+            
+    def createZipFile(self):
+        try:
+            # Rename Merged pdf file with NRIC
+            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], f"merged.pdf")
+            renamedFile = os.path.join(self.config['UPLOAD_FOLDER'], f"{self.secondPageData['NRIC']}.pdf")
+            os.rename(pdfFile, renamedFile)
+
+            # save the merged pdf into a zip
+            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{self.secondPageData['NRIC']}.zip")
+            with zipfile.ZipFile(zipFilePath, 'w') as zf:
+                zf.write(renamedFile, "merged.pdf")
+
+            # remove merged pdf
+            os.remove(renamedFile)
+            
+            print("Zip file has been created",flush=True)
+        except Exception as e:
+            print("Zip File Creation Failed",flush=True)
+            traceback.print_exc()
+            print(e,flush=True)
+    
+    # Restructure First Page Data into a string
+    def restructureSecondPageInfo(self):
+        try:
+            data = self.secondPageData
             
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -182,16 +257,16 @@ class MyApp(Flask):
             self.referenceContacts.clear()
             self.referenceContacts.append(referenceContact1)
             self.referenceContacts.append(referenceContact2)
-            print("Finish Restructure First Page Info", flush=True)
+            print("Finish Restructure second Page Info", flush=True)
         except Exception as e:
-            print("Error in Restructure First Page Info", flush=True)
+            print("Error in Restructure second Page Info", flush=True)
             print(e, flush=True)
             return f"<h1>{e}<h1>"
 
     # Restructure Second Page Data into a string
-    def restructureSecondPageInfo(self):
+    def restructureThirdPageInfo(self):
         try: 
-            data = self.secondPageData
+            data = self.thirdPageData
             employmentStatus = data['employmentStatus']
             status = ''
             if employmentStatus == 'employed':
@@ -210,11 +285,11 @@ class MyApp(Flask):
             else:
                 status = data['selfEmployedOther']
             
-            self.workingInfo = f"'{self.firstPageData['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + data['netSalaryDecimal']}', 'RM {data['grossSalary'] + '.' + data['grossSalaryDecimal']}', '{data['efpGross']}', '{data['salaryTerm']}'"
+            self.workingInfo = f"'{self.secondPageData['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + data['netSalaryDecimal']}', 'RM {data['grossSalary'] + '.' + data['grossSalaryDecimal']}', '{data['efpGross']}', '{data['salaryTerm']}'"
 
-            self.bankingInfo = f"'{self.firstPageData['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{self.firstPageData['NRIC']}.zip'"
+            self.bankingInfo = f"'{self.secondPageData['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{self.secondPageData['NRIC']}.zip'"
 
-            self.extraInfo = f"'{self.firstPageData['NRIC']}', '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'Yes' else 'None'}', '{data['howToKnowMotosing']}'"
+            self.extraInfo = f"'{self.secondPageData['NRIC']}', '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'Yes' else 'None'}', '{data['howToKnowMotosing']}'"
             print("Finish Restructure Second Page Info", flush=True)
         except Exception as e:
             print("Error in Restructure Second Page Info", flush=True)
