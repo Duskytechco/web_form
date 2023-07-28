@@ -75,6 +75,7 @@ class MyApp(Flask):
                 self.photos.clear()
                 self.photos = request.files.getlist('photo')
                 
+            # call the process files function to save the files into local
             self.processFiles()
             print("Files Saved", flush=True)
             
@@ -204,7 +205,7 @@ class MyApp(Flask):
                     image.close()
             
             # write the merged files into a new pdf
-            mergedPdfPath = os.path.join(self.config['UPLOAD_FOLDER'],f"merged.pdf")
+            mergedPdfPath = os.path.join(self.config['UPLOAD_FOLDER'],"merged.pdf")
             with open(mergedPdfPath, 'wb') as combined_pdf_file:
                 merger.write(combined_pdf_file)    
             
@@ -222,16 +223,17 @@ class MyApp(Flask):
         try:
             # Rename Merged pdf file with NRIC
             pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], f"merged.pdf")
-            renamedFile = os.path.join(self.config['UPLOAD_FOLDER'], f"{self.secondPageData['NRIC']}.pdf")
-            os.rename(pdfFile, renamedFile)
+            # renamedFile = os.path.join(self.config['UPLOAD_FOLDER'], f"{self.secondPageData['NRIC']}.pdf")
+            # os.rename(pdfFile, renamedFile)
 
             # save the merged pdf into a zip
             zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{self.secondPageData['NRIC']}.zip")
             with zipfile.ZipFile(zipFilePath, 'w') as zf:
-                zf.write(renamedFile, "merged.pdf")
+                # write merge.pdf as NRIC.pdf
+                zf.write(pdfFile, f"{self.secondPageData['NRIC']}.pdf" )
 
             # remove merged pdf
-            os.remove(renamedFile)
+            os.remove(pdfFile)
             
             print("Zip file has been created",flush=True)
         except Exception as e:
@@ -290,9 +292,9 @@ class MyApp(Flask):
             self.bankingInfo = f"'{self.secondPageData['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{self.secondPageData['NRIC']}.zip'"
 
             self.extraInfo = f"'{self.secondPageData['NRIC']}', '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'Yes' else 'None'}', '{data['howToKnowMotosing']}'"
-            print("Finish Restructure Second Page Info", flush=True)
+            print("Finish Restructure Third Page Info", flush=True)
         except Exception as e:
-            print("Error in Restructure Second Page Info", flush=True)
+            print("Error in Restructure Third Page Info", flush=True)
             print(e, flush = True)
             return f"<h1>{e}<h1>"
 
