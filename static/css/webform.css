@@ -1,0 +1,228 @@
+* {
+    box-sizing: border-box;
+}
+
+a,
+abbr,
+acronym,
+address,
+applet,
+b,
+big,
+blockquote,
+body,
+button,
+caption,
+center,
+cite,
+code,
+dd,
+del,
+dfn,
+div,
+dl,
+dt,
+em,
+fieldset,
+font,
+footer,
+form,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header,
+html,
+i,
+iframe,
+img,
+ins,
+kbd,
+label,
+legend,
+li,
+nav,
+object,
+ol,
+p,
+pre,
+q,
+s,
+samp,
+section,
+small,
+span,
+strike,
+strong,
+sub,
+sup,
+table,
+tbody,
+td,
+tfoot,
+th,
+thead,
+title,
+tr,
+tt,
+u,
+ul,
+var {
+    background: transparent;
+    border: 0;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+@viewport {
+    width: auto;
+    height: auto;
+}
+
+html {
+    display: block;
+}
+
+body {
+    background-image: url("../motosing_bg_blurred.jpg");
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+#listitem {
+    margin: auto;
+    /* width: 60rem; */
+    display: flex;
+    flex-direction: column;
+}
+
+.list-container {
+    background-color: rgb(218, 220, 224, 0.9);
+    /* padding: 24px; */
+    border: 1px solid black;
+    border-radius: 8px;
+    margin-top: clamp(20px, 50px, 60px);
+    height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 24px;
+}
+
+.list-gap {
+    margin-bottom: 22px;
+}
+
+.hiddenInput,
+.employmentstatus,
+.licenseType,
+.typeOfAccount,
+.others,
+.otherPosition,
+.form-floating.option10,
+.form-floating.option12 {
+    display: none;
+}
+
+.abc {
+    padding-top: 14px;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.def {
+    position: relative;
+    min-height: 1.5em;
+    vertical-align: top;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.uppercase::placeholder {
+    text-transform: none;
+}
+
+.btn-container {
+    display: flex !important;
+    justify-content: space-between;
+}
+
+.btn-green {
+    background-color: #25D366;
+    color: white;
+}
+
+.text-sm {
+    font-size: 14px;
+    margin-bottom: 14px;
+}
+
+.custom-file-label {
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  display: inline-block;
+  background-color: #f5f5f5;
+}
+
+#fileList {
+  list-style-type: none;
+  padding: 0;
+}
+
+#fileList li {
+  margin-bottom: 5px;
+}
+
+#previewContainer img {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  margin-right: 10px;
+}
+
+@media screen and (min-width : 575px) {
+    .list-container{
+        padding: 24px;
+    }
+}
+
+
+.form-container {
+    background-color: rgb(218, 220, 224, 0.9);
+    border: 1px solid black;
+    border-radius: 25px;
+    margin-top: clamp(10px, 40px, 50px);
+}
+
+#form-overflow {
+    height: 99% !important
+}
+
+.image {
+    transform:scale(3)
+}
+
+.form-control {
+    border : 1px solid black !important;
+    border-radius: 50px;
+}
+
+.form-select {
+    border : 1px solid black !important;
+    border-radius: 50px;
+}
+
+.row {
+    margin-bottom: 2rem;
+}

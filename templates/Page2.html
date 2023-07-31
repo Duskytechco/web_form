@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motosing Webform 2/3</title>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+    integrity="sha512-1yJx7Gp58XzPf7+B+mnvHcI/Q+JeGZJqxSdeLjgbvEJQyAXlF+4gr4Jfv4A4w6+RuJRGZD+Y/ZTF/HdoJGBx6w=="
+    crossorigin="anonymous" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/webform.css' )}}" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"
+    integrity="sha512-R9Trz5U6fdOvZwHKCp+IaP8uyA6fNdnQ0B2Pb+k9M4/4zSPk0Tj7hTPEHuMV8/E7r1alAr+JG7xu40Ht8s7zgQ=="
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <!--Personal Info Part-->
+  <form class="g-3" id="form" action="{{ url_for('submitSecondPage') }}" method="POST">
+    <div id="listitem">
+      <div class="list-container container">
+        <div class="d-flex align-items-center w-100 justify-content-center mt-5">
+          <img class="img-fluid image" height="100" width="100" src="../static/motosing_logo.png" alt="logo">
+        </div>
+        <div class="row">
+          <div class="col-sm-5 text-center">
+              <h2 class="fw-bold">Personal Information</h2>
+          </div>
+          <div class="col-sm-7">
+              <hr style="height: 5px;background-color: black;opacity: 1;" class="rounded">
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Name <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="fs-6" style="font-size:14px;padding-top:8px">Full Name according to NRIC (Caps Only)</div>
+          <div class="abc">
+            <div class="def">
+              <input class="form-control" id="name" name="name" type="text" placeholder="Your Answer"
+                data-question="1">
+            </div>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="fs-6" style="font-size:14px;padding-top:8px">Numbers only ( no dash )</div>
+          <div class="abc">
+            <div class="def">
+              <input class="form-control" placeholder="Your Answer" type="text" name="NRIC"
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);"
+                onchange="autoSelectGender(event)" data-question="2" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Phone Number <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <!-- <span class="input-group-text" id="country-code">Country Code</span> -->
+            <select class="form-select" id="input-country-code" name="countryCode">
+              <option value="+60" selected>+60</option>
+              <option value="+65">+65</option>
+            </select>
+            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="phoneNumber"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="3" disabled>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Email <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="abc">
+            <div class="def">
+              <input class="form-control" id="email" name="email" type="email" onchange="validateEmail(event)"
+                placeholder="Your Answer" data-question="4" disabled />
+            </div>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Title of person <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select titleOfPerson" id="inputGroupSelect01" name="title">
+              <option selected></option>
+              <option value="MR">MR</option>
+              <option value="MRS">MRS</option>
+              <option value="MS">MS</option>
+              <option value="MADAM">MADAM</option>
+            </select>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Gender <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" value="Male" id="option1" disabled>
+            <label class="form-check-label" for="option1">
+              Male
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="gender" value="Female" id="option2" disabled>
+            <label class="form-check-label" for="option2">
+              Female
+            </label>
+          </div>
+        </div>
+        <div class="list-gap">
+          <label class="fs-5" for="race-option">Race <span style="color:red;padding-left:0.25rem">*</span></label>
+          <div class="input-group mb-3">
+            <select class="form-select" id="race-option" name="race" data-question="5" disabled>
+              <option selected></option>
+              <option value="Malay">Malay</option>
+              <option value="Chinese">Chinese</option>
+              <option value="Indian">Indian</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="list-gap">
+            <div class="form-group d-none" id="container-for-race-option">
+              <label class="fs-5" for="add-container0">Other Race <span style="color:red;padding-left:0.25rem">*</span></label>
+              <input type="text" class="form-control" id="add-container0" name="otherRace" placeholder="Your Answer">
+            </div>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Marital Status <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select" id="inputGroupSelect01" name="maritalStatus" data-question="6" disabled>
+              <option selected></option>
+              <option value="Single">Single</option>
+              <option value="Married">Married</option>
+              <option value="Widowed">Widowed</option>
+              <option value="Divorced">Divorced</option>
+            </select>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Bumi/Non <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="bumiornon" value="Yes" id="option3" data-question="7"
+              disabled>
+            <label class="form-check-label" for="option3">
+              Bumi
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="bumiornon" value="No" id="option4" checked>
+            <label class="form-check-label" for="option4">
+              Non-Bumi
+            </label>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Address <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="fs-6" style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal
+            Included)</div>
+          <div class="fs-6" style="font-size:14px;padding-top:8px">Lot, Street, Postal Code, District, State</div>
+          <div class="abc">
+            <div class="def">
+              <!-- input class="form-control" placeholder="Your Answer" onchange="validateAddress(event)"
+                                data-question="8" disabled / -->
+              <input class="form-control" name="address" placeholder="Your Answer" data-question="8" disabled />
+            </div>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Number of year in residence <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select" id="inputGroupSelect01" name="numOfYear" data-question="9" disabled>
+              <option selected></option>
+              <option value="1-2">1-2</option>
+              <option value="3-4">3-4</option>
+              <option value="5-6">5-6</option>
+              <option value="6-7">6-7</option>
+              <option value="8-9">8-9</option>
+              <option value=">10">>10</option>
+            </select>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Ownership status <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select" id="inputGroupSelect01" name="ownership" data-question="10" disabled>
+              <option selected></option>
+              <option value="employer quarters">employer quarters</option>
+              <option value="family home">family home</option>
+              <option value="parents home">parents home</option>
+              <option value="own mortgaged">own mortgaged</option>
+              <option value="rented">rented</option>
+            </select>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Do you stay in registered address <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="stayRegisterAddress" value="Yes" id="option5"
+              onchange="showingHiddenInput('option5')" checked>
+            <label class="form-check-label" for="option5">
+              Yes
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="stayRegisterAddress" value="No" id="option6"
+              onchange="showingHiddenInput('option6')">
+            <label class="form-check-label" for="option6">
+              No
+            </label>
+            <div class="hiddenInput form-floating">
+              <input class="form-control" type="text" name="noStayRegisterAddress" id="mailingAddress">
+              <label for="mailingAddress">Mailing Address</label>
+            </div>
+          </div>
+          <div class="list-gap">
+            <div class="form-group d-none" id="container-for-option6">
+              <label for="add-container1">Registered Address <span
+                  style="color:red;padding-left:0.25rem">*</span></label>
+              <div class="fs-5" style="font-size:14px;padding-top:8px">Lot, Street, Postal Code, District, State
+              </div>
+              <input type="text" class="form-control" id="add-container1" placeholder="Your Answer">
+            </div>
+          </div>
+        </div>
+        <!-- <div class="list-gap">
+                    <div>Mailing Address  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div> -->
+        <!--If else js, for Mailing address option No, will need to fill in the actual address-->
+        <div class="list-gap">
+          <div class="fs-5">Brand<span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select" id="inputGroupSelect01" name="brand" data-question="11"
+              onchange="showDynamically(this.value)">
+              <option selected></option>
+              <option value="ZONTES">ZONTES</option>
+              <option value="KAWASAKI">KAWASAKI</option>
+              <option value="ROYAL ALLOY">ROYAL ALLOY</option>
+              <option value="BMW">BMW</option>
+              <option value="GLORIOUS HOME">GLORIOUS HOME</option>
+              <option value="ZONGSHEN">ZONGSHEN</option>
+              <option value="GPX">GPX</option>
+              <option value="KYMCO">KYMCO</option>
+              <option value="KTM">KTM</option>
+              <option value="KTNS">KTNS</option>
+              <option value="APRILIA">APRILIA</option>
+              <option value="HONDA">HONDA</option>
+              <option value="YAMAHA">YAMAHA</option>
+              <option value="SUZUKI">SUZUKI</option>
+              <option value="MODENAS">MODENAS</option>
+              <option value="SYM">SYM</option>
+              <option value="BENELLI">BENELLI</option>
+              <option value="WMOTO">WMOTO</option>
+              <option value="KEEWAY">KEEWAY</option>
+              <option value="SM SPORT">SM SPORT</option>
+              <option value="BRIXTON">BRIXTON</option>
+              <option value="AVETA">AVETA</option>
+              <option value="VESPA">VESPA</option>
+              <option value="MOTO MORINI">MOTO MORINI</option>
+              <option value="QJ MOTOR">QJ MOTOR</option>
+              <option value="DUCATI">DUCATI</option>
+              <option value="CFMOTO">CFMOTO</option>
+              <option value="DEMAK">DEMAK</option>
+            </select>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Model<span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select" id="modal" name="modal" data-question="11">
+            </select>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Product type <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select" id="inputGroupSelect01" name="productType" onchange="checkTenureType(event)"
+              data-question="11" disabled>
+              <option selected></option>
+              <option value="scooter (below 200cc)">scooter (below 200cc)</option>
+              <option value="scooter (200cc above)">scooter (200cc above)</option>
+              <option value="moped (200cc and below)">moped (200cc and below)</option>
+              <option value="bigbike (1000cc and below)">bigbike (1000cc and below)</option>
+              <option value="superbike (1000cc and above)">superbike (1000cc and above)</option>
+            </select>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">New/Used/Recon <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="newusedrecon" value="New" id="option7">
+            <label class="form-check-label" for="option7">
+              New
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="option8" data-bs-target="#collapse-container-used"
+              data-bs-toggle="collapse" name="newusedrecon" value="Used">
+            <label class="form-check-label" for="option8">
+              Used
+            </label>
+            <div class="collapse" id="collapse-container-used">
+              <div class="card card-body">
+                <div>Number Plate <span style="color:red;padding-left:0.25rem">*</span></div>
+                <input class="form-control" id="addcontainer0" name="usedNumberPlate" placeholder="Your Answer"
+                  required>
+              </div>
+            </div>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" id="option9" data-bs-target="#collapse-container-recon"
+              data-bs-toggle="collapse" name="newusedrecon" value="Recon">
+            <label class="form-check-label" for="option9">
+              Recon
+            </label>
+            <div class="collapse" id="collapse-container-recon">
+              <div class="card card-body">
+                <div>Number Plate <span style="color:red;padding-left:0.25rem">*</span></div>
+                <input class="form-control" id="addcontainer1" name="reconNumberPlate" placeholder="Your Answer"
+                  required>
+              </div>
+            </div>
+          </div>
+          <!--Only for Used and Recon-->
+          <!--IF radio used and recon checked, show another container title is Number Plate-->
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Tenure <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="fs-5" style="font-size:14px;padding-top:8px">How long do you wish to loan (months)</div>
+          <div class="input-group mb-3">
+            <select class="form-select tenure" id="inputGroupSelect01" name="tenure" data-question="12" disabled>
+              <option selected></option>
+              <option value="12 month (1 year)">12 month (1 year)</option>
+              <option value="24 months (2 years)">24 months (2 years)</option>
+              <option value="36 months (3 years)">36 months (3 years)</option>
+              <option value="48 months (4 years)">48 months (4 years)</option>
+              <option value="60 months (5 years)">60 months (5 years)</option>
+              <!-- 72 and 84 months only for superbike (1000cc and above)
+                        <option value="6">72 months (6 years)</option>
+                        <option value="7">84 months (7 years)</option> -->
+            </select>
+          </div>
+        </div>
+        <!--Reference Contact Info-->
+        <!--Reference Contact 1-->
+        <!--If got spouse, spouse must at Reference Contact 1-->
+        <div class="row my-4">
+          <div class="col-sm-6">
+              <hr style="height: 5px;background-color: black;opacity: 1;" class="rounded">
+          </div>
+          <div class="col-sm-6 text-center">
+              <h2 class="fw-bold">Reference Contact Information</h2>
+          </div>
+        </div>
+        <p class="fs-5" style="font-size: 12px;">HIGHLY RECOMMENDED TO BE FAMILY MEMBER</p>
+        <div class="list-gap mt-4">
+          <div class="fs-4">Reference Contact Name (1) </div>
+          <div class="fs-5" style="font-size:14px;padding-top:8px">Full Name as in NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="abc">
+            <div class="def">
+              <input class="form-control uppercase" name="referenceName1" placeholder="Your Answer" data-question="14" disabled />
+            </div>
+          </div>
+          <div class="fs-5" style="font-size:14px;padding-top:8px">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="abc">
+            <div class="def">
+              <input class="form-control uppercase" type="text" name="referenceNric1" placeholder="NRIC">
+            </div>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Phone Number <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <!-- <span class="input-group-text" id="country-code">Country Code</span> -->
+            <select class="form-select" id="input-country-code" name="referenceCountryCode1">
+              <option value="+60">+60</option>
+              <option value="+65">+65</option>
+            </select>
+            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="referencePhoneNum1"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="15" disabled>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Do you stay with Reference Contact (1) <span style="color:red;padding-left:0.25rem">*</span>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="stayWithReference1" value="Yes" id="option10"
+              onchange="showHidden('yes', 'option10')" checked>
+            <label class="form-check-label" for="option10">
+              Yes
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="stayWithReference1" value="No" id="option11" onchange="showHidden('no', 'option10')">
+                        <label class=" form-check-label" for="option11">
+            No
+            </label>
+          </div>
+          <div class="form-floating option10">
+            <input type="text" name="notStayWithApplicant1" class="form-control" id="notStayWithApplicant" />
+            <label for="notStayWithApplicant">Where reference contact stay</label>
+          </div>
+        </div>
+        <!-- <div class="list-gap">
+                    <div>Address of Reference Contact (1) <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="fs-5" style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal Included)</div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div> -->
+        <div class="list-gap">
+          <div class="fs-5">How are you related to Reference Contact (1) <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select" id="inputGroupSelect01" name="referenceRelation1" data-question="16" disabled>
+              <option selected></option>
+              <option value="spouse">spouse</option>
+              <option value="parents">parents</option>
+              <option value="siblings">siblings</option>
+              <option value="relatives">relatives</option>
+              <option value="friends">friends</option>
+              <option value="children">children</option>
+            </select>
+          </div>
+        </div>
+        <!--Reference Contact Info-->
+        <!--Reference Contact 2-->
+        <div class="list-gap">
+          <div class="fs-4">Reference Contact Name (2) </div>
+          <div class="fs-5" style="font-size:14px;padding-top:8px">Full Name as in NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="abc">
+            <div class="def">
+              <input class="form-control uppercase" name="referenceName2" placeholder="Your Answer" data-question="17" disabled />
+            </div>
+          </div>
+          <div class="fs-5" style="font-size:14px;padding-top:8px">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="abc">
+            <div class="def">
+              <input class="form-control uppercase" type="text" name="referenceNric2" placeholder="NRIC">
+            </div>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Phone Number <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <!-- <span class="input-group-text" id="country-code">Country Code</span> -->
+            <select class="form-select" id="input-country-code" name="referenceCountryCode2">
+              <option value="+60">+60</option>
+              <option value="+65">+65</option>
+            </select>
+            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="referencePhoneNum2"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="18" disabled>
+          </div>
+        </div>
+        <div class="list-gap">
+          <div class="fs-5">Do you stay with Reference Contact (2) <span style="color:red;padding-left:0.25rem">*</span>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="stayWithReference2" value="Yes" id="option12"
+              onchange="showHidden('yes', 'option12')" checked>
+            <label class="form-check-label" for="option12">
+              Yes
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="stayWithReference2" value="No" id="option13"
+              onchange="showHidden('no', 'option12')">
+            <label class="form-check-label" for="option13">
+              No
+            </label>
+          </div>
+          <div class="form-floating option12">
+            <input type="text" name="notStayWithApplicant2" class="form-control" id="notStayWithApplicant2" />
+            <label for="notStayWithApplicant2">Where reference contact stay</label>
+          </div>
+          <!--If No, show another container for fill in new address-->
+        </div>
+        <!-- <div class="list-gap">
+                    <div>Address of Reference Contact (2)  <span style="color:red;padding-left:0.25rem">*</span></div>
+                    <div class="fs-5" style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal Included)</div>
+                    <div class="abc">
+                        <div class="def">
+                            <input class="form-control" placeholder="Your Answer"></input>
+                        </div>
+                    </div>
+                </div> -->
+        <div class="list-gap">
+          <div class="fs-5">How are you related to Reference Contact (2) <span style="color:red;padding-left:0.25rem">*</span></div>
+          <div class="input-group mb-3">
+            <select class="form-select" id="inputGroupSelect01" name="referenceRelation2" data-question="19" disabled>
+              <option selected></option>
+              <option value="spouse">spouse</option>
+              <option value="parents">parents</option>
+              <option value="siblings">siblings</option>
+              <option value="relatives">relatives</option>
+              <option value="friends">friends</option>
+              <option value="children">children</option>
+            </select>
+          </div>
+        </div>
+        <div class="d-flex gap-2 d-md-block btn-container">
+          <button class="btn btn-primary" type="submit" id="submitBtn">Next Page</button>
+          <a href="#" rel="noopener noreferrer"><button class="btn btn-green"><i class="fab fa-whatsapp"></i>Whatsapp
+              Us</button></a>
+          <!--Add this to whatsapp button if functionable, target="_blank"-->
+        </div>
+      </div>
+    </div>
+  </form>
+  <script>
+    /* document.getElementById("submitBtn").addEventListener("click", function (event) { */
+    /*     event.preventDefault(); */
+    /*     const form = document.getElementById("form"); */
+    /*     if (form.checkValidity()) { */
+    /*         window.location.href = "Page2.html"; */
+    /*     } else { */
+    /*         alert("Please fill in all required fields."); */
+    /*     } */
+    /* }); */
+    //This section for used/recon, showing another box
+    let option7 = document.getElementById("option7");
+    let option8 = document.getElementById("option8");
+    let option9 = document.getElementById("option9");
+    let addcontainer0 = document.getElementById("addcontainer0");
+    let addcontainer1 = document.getElementById("addcontainer1");
+    // option7.addEventListener("click", () => {
+    //     addcontainer0.required = false;
+    //     addcontainer1.required = false;
+    // });
+    // option8.addEventListener("click", () => {
+    //     addcontainer1.required = false;
+    // });
+    // option9.addEventListener("click", () => {
+    //     addcontainer0.required = false;
+    // });
+    option7.addEventListener("click", () => {
+      addcontainer0.value = "N/A";
+      addcontainer1.value = "N/A";
+    });
+    option8.addEventListener("click", () => {
+      addcontainer1.value = "N/A";
+    });
+    option9.addEventListener("click", () => {
+      addcontainer0.value = "N/A";
+    });
+    // This Section for dropdown list, when OTHER is picked, show another box
+    let raceOption = document.getElementById('race-option');
+    let newContainer0 = document.getElementById('container-for-race-option');
+    // let newContainer1 = document.getElementById('container-for-option6');
+    // let newContainer2 = document.getElementById('container-for-option11');
+    let required0 = document.getElementById('add-container0');
+    let required1 = document.getElementById('add-container1');
+    let required2 = document.getElementById('add-container2');
+    let option5 = document.getElementById('option5');
+    let option6 = document.getElementById('option6');
+    let option10 = document.getElementById('option10');
+    let option11 = document.getElementById('option11');
+
+    raceOption.addEventListener('change', function () {
+      if (this.value === 'Other') {
+        newContainer0.classList.remove('d-none');
+        required0.required = true;
+      } else {
+        newContainer0.classList.add('d-none');
+        required0.required = false;
+      }
+    });
+
+    option6.addEventListener('change', function () {
+      if (option6.checked) {
+        newContainer1.classList.remove('d-none');
+        required1.required = true;
+      } else if (option5.checked) {
+        newContainer1.classList.add('d-none');
+        required1.required = false;
+      }
+    })
+    option11.addEventListener('change', function () {
+      if (option11.checked) {
+        newContainer2.style.display = 'block';
+        required2.required = true;
+      } else if (option10.checked) {
+        newContainer2.style.display = 'none';
+        required2.required = false;
+      }
+    })
+
+    var radios = document.querySelectorAll("input[type=radio][name=newusedrecon]");
+
+    radios.forEach(function (radio) {
+      radio.addEventListener("click", function () {
+        var collapsibles = document.querySelectorAll(".collapse");
+        collapsibles.forEach(function (collapsible) {
+          collapsible.classList.remove("show");
+        });
+
+        if (this.id === "option8") {
+          var usedCollapsible = document.querySelector(
+            "#collapse-container-used"
+          );
+          usedCollapsible.classList.add("show");
+        } else if (this.id === "option9") {
+          var reconCollapsible = document.querySelector(
+            "#collapse-container-recon"
+          );
+          reconCollapsible.classList.add("show");
+        }
+      });
+    });
+
+    const showingHiddenInput = (id) => {
+      const hiddenInput = document.querySelector(".hiddenInput");
+
+      id === "option6"
+        ? (hiddenInput.style.display = "block")
+        : (hiddenInput.style.display = "none");
+    };
+
+    const showHidden = (option, id) => {
+      const hiddenDiv = document.querySelector(`.form-floating.${id}`)
+
+      option === 'no' ? (hiddenDiv.style.display = 'block') : (hiddenDiv.style.display = 'none');
+    }
+
+    const validateEmail = (event) => {
+      const email = event.target.value;
+      let emailRe = /\S+@\S+\.\S+/;
+      !emailRe.test(email) ? alert("Please enter a valid email address") : "";
+    };
+
+    const autoSelectGender = (event) => {
+      const NRIC = parseInt(event.target.value);
+      const titleOfPerson = document.querySelector(".titleOfPerson");
+      if (NRIC % 2 === 0) {
+        document.querySelector("#option2").checked = true;
+      } else {
+        document.querySelector("#option1").checked = true;
+        titleOfPerson.value =
+          titleOfPerson.querySelector("option[value='MR']").value;
+      }
+    };
+
+    const validateAddress = (event) => {
+      const address = event.target.value;
+      /* const addressRe = /^(\d{1,5})(?:\s*[-\/]\s*(\d{1,5}))?\s*,\s*([\w\s]+)\s*,\s*(\d{5})\s+(.*)$/i; */
+      const addressRe = /^(\d{1,5})\s*,\s*(.*?)\s*,\s*(\d{5})\s*(.*?)$/i;
+
+      !addressRe.test(address) ? alert("Please enter a valid address") : "";
+    };
+
+    const checkTenureType = (event) => {
+      const bikeType = event.target.value;
+      const lastOption = document.querySelector(".tenure option:last-child");
+
+      if (bikeType.includes("superbike")) {
+        const selectTag = document.querySelector(".tenure");
+        let newOption = document.createElement("option");
+        newOption.textContent = "72 months (6 years)";
+        newOption.value = "72 months (6 years)";
+        selectTag.appendChild(newOption);
+
+        let newOption1 = document.createElement("option");
+        newOption1.textContent = "84 months (7 years)";
+        newOption1.value = "84 months (7 years)";
+        selectTag.appendChild(newOption1);
+      } else if (!lastOption.textContent.includes("60")) {
+        document
+          .querySelectorAll(".tenure option:nth-last-child(-n+2)")
+          .forEach((element) => element.remove());
+      }
+    };
+
+    const showDynamically = (choose) => {
+      selectTag = document.querySelector('#modal')
+      if (choose == 'ZONTES') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="155G">155G</option>
+              <option value="ZT 155-U">ZT 155-U</option>
+              <option value="155U1">155U1</option>`
+      } else if (choose == 'KAWASAKI') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="Z300 ABS">Z300 ABS</option>
+              <option value = "ZX600-R"> ZX600 - R</option>
+              <option value="Z250 SL">Z250 SL</option>
+              <option value="D TRACKER X">D TRACKER X</option>
+              <option value="VERSYS - X 250">VERSYS - X 250</option>
+              <option value="NINJA 250R">NINJA 250R</option>
+              <option value="NINJA 250 SL WSBK">NINJA 250 SL WSBK</option>
+              <option value="Z250">Z250</option>
+              <option value="Z250 ABS">Z250 ABS</option>
+              <option value="KLX 250">KLX 250</option>
+              <option value="KLE650-C">KLE650-C</option>
+              <option value="NINJA 250 ABS SE">NINJA 250 ABS SE</option>
+              <option value="NINJA 250 SL">NINJA 250 SL</option>
+              <option value="NINJA 300 ABS">NINJA 300 ABS</option>
+              <option value="NINJA 650 SE ABS">NINJA 650 SE ABS</option>
+              <option value="ZR800-A">ZR800-A</option>
+              <option value="NINJA 250">NINJA 250</option>
+              <option value="J300 ABS">J300 ABS</option>
+              <option value="Z800">Z800</option>
+              <option value="NINJA 400 ABS SE">NINJA 400 ABS SE</option>
+              <option value="NINJA 650 SE ABS">NINJA 650 SE ABS</option>
+              <option value="BR125-H">BR125-H</option>
+              <option value="KL110-E">KL110-E</option>
+              <option value="ER650-E">ER650-E</option>
+              <option value="ZR900-BA">ZR900-BA</option>
+              <option value="KLE650-E">KLE650-E</option>
+              <option value="ZR1000-F">ZR1000-F</option>
+              <option value="ZR1000-D">ZR1000-D</option>
+              <option value="NINJA KRR ZX150">NINJA KRR ZX150</option> `
+      } else if (choose == 'ROYAL ALLOY') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="GP 125">GP 125</option>
+              <option value="TG 250">TG 250</option>
+              <option value="GP 180">GP 180</option> `
+      } else if (choose == 'BMW') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="G310GS">G310GS</option> `
+      } else if (choose == 'ZONGSHEN') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="ZS 250GY-3">ZS 250GY-3</option>`
+      } else if (choose == 'GPX') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="GR200RR">GR200RR</option>
+              <option value="GENTLEMENT">GENTLEMENT</option>
+              <option value="LEGEND 150 S">LEGEND 150 S</option>
+              <option value="LEGEND 250">LEGEND 250</option>
+              <option value="GR200RR SE">GR200RR SE</option>
+              <option value="POPZ 110">POPZ 110</option>
+              <option value="DEMON GR150R">DEMON GR150R</option>`
+      } else if (choose == 'KYMCO') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="NMS400K">NMS400K</option> `
+      } else if (choose == 'KTM') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="390 ADVENTURE">390 ADVENTURE</option>
+              <option value="DUKE 200 ABS">DUKE 200 ABS</option>
+              <option value="DUKE 390 ABS">DUKE 390 ABS</option>
+              <option value="RC 200 ABS">RC 200 ABS</option>
+              <option value="DUKE 250 ABS">DUKE 250 ABS</option>
+              <option value="DUKE 200 STD">DUKE 200 STD</option>
+              <option value="RC 390">RC 390</option>
+              <option value="690 DUKE R - CKD">690 DUKE R - CKD</option>
+              <option value="RC250">RC250</option>
+              <option value="250 ADVENTURE">250 ADVENTURE</option>
+              <option value="450 EXC - F">450 EXC - F</option> `
+      } else if (choose == 'KTNS') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="RA2">RA2</option>
+              <option value="RHINO">RHINO</option>
+              <option value="CF MOTO 250SR SE">CF MOTO 250SR SE</option>
+              <option value="CF MOTO 250NK SE">CF MOTO 250NK SE</option>
+              <option value="CLASSIC 125GP">CLASSIC 125GP</option>
+              <option value="MT07 689CC">MT07 689CC</option> `
+      } else if (choose == 'APRILIA') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="SHIVER 750">SHIVER 750</option> `
+      } else if (choose == 'HONDA') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="VARIO 150 (SELF/DISC/CAST) - ACB150CBT/ ACB150CBTK/M">VARIO 150 (SELF/DISC/CAST) - ACB150CBT/ ACB150CBTK/M</option>
+              <option value="VARIO 150 REPSOL (SELF/DISC/CAST) - ACB150CBT3/ ACB150CBTK3/M3">VARIO 150 REPSOL (SELF/DISC/CAST) - ACB150CBT3/ ACB150CBTK3/M3</option>
+              <option value="WAVE 125I (SELF/2DISC/CAST) AFS125MCRH/M">WAVE 125I (SELF/2DISC/CAST) AFS125MCRH/M</option>
+              <option value="RS-X FS150FA/FS150FA2 ABS">RS-X FS150FA/FS150FA2 ABS</option>
+              <option value="VARIO 160 SE">VARIO 160 SE</option>
+              <option value="ADV 150A/ADV150A2 (SELF/2DISC/CAST)">ADV 150A/ADV150A2 (SELF/2DISC/CAST)</option>
+              <option value="CBR150R">CBR150R</option>
+              <option value="RS150R">RS150R</option>
+              <option value="RS150R REPSOL">RS150R REPSOL</option>
+              <option value="BEAT ACH110CBFH/FJ/FL/FN">BEAT ACH110CBFH/FJ/FL/FN</option>
+              <option value="VARIO 160">VARIO 160</option>
+              <option value="CBR150R REPSOL">CBR150R REPSOL</option>
+              <option value="DASH 125I R">DASH 125I R</option>
+              <option value="CBR250RR">CBR250RR</option>
+              <option value="EX5">EX5</option>
+              <option value="WAVE 125I (SELF/DISC/CAST) AFS125MCSH/K">WAVE 125I (SELF/DISC/CAST) AFS125MCSH/K</option>
+              <option value="WAVE ALPHA (SELF/DISC/CAST) AFS110MCSG/H/J/L">WAVE ALPHA (SELF/DISC/CAST) AFS110MCSG/H/J/L</option>
+              <option value="WAVE ALPHA (SELF/DRUM/SPOKE)AFS110MDG/H/J/L">WAVE ALPHA (SELF/DRUM/SPOKE)AFS110MDG/H/J/L</option>
+              <option value="RS-X FS150FA3/FS150FAN3 REPSOL">RS-X FS150FA3/FS150FAN3 REPSOL</option>
+              <option value="DASH 125">DASH 125</option>
+              <option value="PCX WW150 2">PCX WW150 2</option>
+              <option value="CB650F">CB650F</option>
+              <option value="CBR650F">CBR650F</option>
+              <option value="FORZA 250">FORZA 250</option>
+              <option value="ADV160 / ADV160A">ADV160 / ADV160A</option>
+              <option value="WAVE ALPHA AFS110MCSG/H/J/L">WAVE ALPHA AFS110MCSG/H/J/L</option>
+              <option value="EX5 110 FI">EX5 110 FI</option>
+              <option value="FS150FJ 2">FS150FJ 2</option>
+              <option value="VARIO 125 ACB125CBT">VARIO 125 ACB125CBT</option>
+              <option value="WAVE ALPHA AFS110MCS">WAVE ALPHA AFS110MCS</option>
+              <option value="WAVE DASH FI AFP110CSFG/H">WAVE DASH FI AFP110CSFG/H</option>
+              <option value="ALFA FI">ALFA FI</option>
+              <option value="WAVE DASH FI AFP110CRFG2/H2">WAVE DASH FI AFP110CRFG2/H2</option>
+              <option value="RS-X (FS150FAP)/(FS150FAP2)">RS-X (FS150FAP)/(FS150FAP2)</option>
+              <option value="CB 250 R">CB 250 R</option>
+              <option value="RS150R FS150FL2">RS150R FS150FL2</option>
+              <option value="FS150FJ">FS150FJ</option>
+              <option value="WAVE DASH FI AFP110CRFG/H">WAVE DASH FI AFP110CRFG/H</option>
+              <option value="WAVE ALPHA (SELF/DISC/CAST) AFS110MCSG/H/J/L/N)">WAVE ALPHA (SELF/DISC/CAST) AFS110MCSG/H/J/L/N)</option>
+              <option value="FS150FH2">FS150FH2</option>
+              <option value="CBR150RA9">CBR150RA9</option>
+              <option value="DASH 110">DASH 110</option>
+              <option value="MT07 689CC">MT07 689CC</option> `
+      } else if (choose == 'YAMAHA') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="MT-25 (MTN250-A)">MT-25 (MTN250-A)</option>
+              <option value="R25">R25</option>
+              <option value="MT-25">MT-25</option>
+              <option value="XMAX">XMAX</option>
+              <option value="YZF R25">YZF R25</option>
+              <option value="MT - 25">MT - 25</option>
+              <option value="R25-(YZFR25)">R25-(YZFR25)</option>
+              <option value="SR400">SR400</option>
+              <option value="TMAX 560">TMAX 560</option>
+              <option value="135LC FI SE">135LC FI SE</option>
+              <option value="135LC FI STANDARD">135LC FI STANDARD</option>
+              <option value="135LC SPECIAL EDITION">135LC SPECIAL EDITION</option>
+              <option value="135LC-AUTO CLUTCH">135LC-AUTO CLUTCH</option>
+              <option value="EGO AVANTIZ">EGO AVANTIZ</option>
+              <option value="EGO GEAR (LNP125)">EGO GEAR (LNP125)</option>
+              <option value="EGO SOLARIZ">EGO SOLARIZ</option>
+              <option value="FZ150I (NEW DESIGN)/FZ150I (S)">FZ150I (NEW DESIGN)/FZ150I (S)</option>
+              <option value="LAGENDA 115Z (E/EI/UE15)">LAGENDA 115Z (E/EI/UE15)</option>
+              <option value="LAGENDA 115Z GP EDITION 115CC">LAGENDA 115Z GP EDITION 115CC</option>
+              <option value="LAGENDA 115ZR/ZRI 115CC">LAGENDA 115ZR/ZRI 115CC</option>
+              <option value="MT-15 (BHM3)">MT-15 (BHM3)</option>
+              <option value="MT-15 (MTN-155)">MT-15 (MTN-155)</option>
+              <option value="NMAX - 155CC">NMAX - 155CC</option>
+              <option value="NVX ( GP EDITION ) - 155CC">NVX ( GP EDITION ) - 155CC</option>
+              <option value="NVX ( SG48 ) - 155CC">NVX ( SG48 ) - 155CC</option>
+              <option value="NVX ( SG48 ) ABS - 155CC">NVX ( SG48 ) ABS - 155CC</option>
+              <option value="NVX DOXOU SPORTS FASHION EDITION">NVX DOXOU SPORTS FASHION EDITION</option>
+              <option value="NVX STANDARD - 155CC">NVX STANDARD - 155CC</option>
+              <option value="NVX ABS - 155CC">NVX ABS - 155CC</option>
+              <option value="Y15ZR - 150CC">Y15ZR - 150CC</option>
+              <option value="Y15ZR ( GP EDITION )">Y15ZR ( GP EDITION )</option>
+              <option value="Y16ZR">Y16ZR</option>
+              <option value="Y16ZR (DOXOU)">Y16ZR (DOXOU)</option>
+              <option value="Y16ZR (WGP)">Y16ZR (WGP)</option>
+              <option value="YZF-R15 (YZF155)">YZF-R15 (YZF155)</option>
+              <option value="YZF-R15 MONSTER">YZF-R15 MONSTER</option>
+              <option value="YZF-R15M">YZF-R15M</option>
+              <option value="XJ6 DIVERSION F">XJ6 DIVERSION F</option>
+              <option value="Y125ZR">Y125ZR</option>
+              <option value="YZF R25 GP EDITION">YZF R25 GP EDITION</option>
+              <option value="135LC (FI) 5MRO">135LC (FI) 5MRO</option>
+              <option value="EZ 115">EZ 115</option>
+              <option value="MT-09">MT-09</option>
+              <option value="NOUVO LC">NOUVO LC</option>
+              <option value="R25M">R25M</option>
+              <option value="MT09 890CC">MT09 890CC</option>
+              <option value="EGO SI">EGO SI</option>
+              <option value="135LC ES">135LC ES</option>
+              <option value="MT07 689CC">MT07 689CC</option> `
+      } else if (choose == 'SUZUKI') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="RAIDER R150FI GP SPECIAL EDITION">RAIDER R150FI GP SPECIAL EDITION</option>
+              <option value="GSX-R150 (GSX-R150RFX)">GSX-R150 (GSX-R150RFX)</option>
+              <option value="GSX-S150 (GSX-S150RFX)">GSX-S150 (GSX-S150RFX)</option>
+              <option value="RAIDER R150FI(FU150MFX)">RAIDER R150FI(FU150MFX)</option>
+              <option value="RAIDER R150FI AS25">RAIDER R150FI AS25</option>
+              <option value="VSTROM 650 XT">VSTROM 650 XT</option> `
+      } else if (choose == 'MODENAS') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="ELEGAN 250 ABS">ELEGAN 250 ABS</option>
+              <option value="DOMINAR D400UG">DOMINAR D400UG</option>
+              <option value="CT115S">CT115S</option>
+              <option value="KARISMA 125S">KARISMA 125S</option>
+              <option value="KRISS 110">KRISS 110</option>
+              <option value="KRISS 110 DISC BRAKE">KRISS 110 DISC BRAKE</option>
+              <option value="KRISS MR2">KRISS MR2</option>
+              <option value="PULSAR NS160">PULSAR NS160</option>
+              <option value="PULSAR NS200">PULSAR NS200</option>
+              <option value="PULSAR NS200 FI ABS">PULSAR NS200 FI ABS</option>
+              <option value="PULSAR RS200">PULSAR RS200</option>
+              <option value="DINAMIK 120">DINAMIK 120</option>
+              <option value="ELEGAN 250 EX">ELEGAN 250 EX</option>
+              <option value="NINJA 250 OHLINS">NINJA 250 OHLINS</option>
+              <option value="NINJA 250">NINJA 250</option>
+              <option value="NINJA 250 ABS">NINJA 250 ABS</option>
+              <option value="Z250">Z250</option> `
+      } else if (choose == 'SYM') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="BONUS 110 (SR)">BONUS 110 (SR)</option>
+              <option value="BONUS 110(SR) EURO 3">BONUS 110(SR) EURO 3</option>
+              <option value="BONUS 110 SR">BONUS 110 SR</option>
+              <option value="E BONUS 110">E BONUS 110</option>
+              <option value="E BONUS 110H">E BONUS 110H</option>
+              <option value="JET 14 125I">JET 14 125I</option>
+              <option value="JET 14 200I">JET 14 200I</option>
+              <option value="JET X">JET X</option>
+              <option value="JET X(SE)">JET X(SE)</option>
+              <option value="MIO 110">MIO 110</option>
+              <option value="SPORT RIDER 125I">SPORT RIDER 125I</option>
+              <option value="SPORT RIDER 125I(N2)">SPORT RIDER 125I(N2)</option>
+              <option value="SPORT RIDER 125I SE">SPORT RIDER 125I SE</option>
+              <option value="VF3I 185">VF3I 185</option>
+              <option value="VF3I 185(N2)">VF3I 185(N2)</option>
+              <option value="VF3I 185 LE">VF3I 185 LE</option>
+              <option value="VF3I 185 LE(PRO)">VF3I 185 LE(PRO)</option>
+              <option value="VF3I 185 SE">VF3I 185 SE</option>
+              <option value="MAXSYM TL 500">MAXSYM TL 500</option> `
+      } else if (choose == 'BENELLI') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="TNT249SE">TNT249SE</option>
+              <option value="PANAREA 125">PANAREA 125</option>
+              <option value="TRK251 SE ABS">TRK251 SE ABS</option>
+              <option value="IMPERIALE 400">IMPERIALE 400</option>
+              <option value="249S">249S</option>
+              <option value="TRK251">TRK251</option>
+              <option value="TRK251 SE (N1)">TRK251 SE (N1)</option>
+              <option value="150 S">150 S</option>
+              <option value="150 S (SE)">150 S (SE)</option>
+              <option value="R18I">R18I</option>
+              <option value="R18I (SE)">R18I (SE)</option>
+              <option value="TNT249SE">TNT249SE</option>
+              <option value="RFS 150I LE">RFS 150I LE</option>
+              <option value="RFS 150I SE">RFS 150I SE</option>
+              <option value="RFS 150I STD">RFS 150I STD</option>
+              <option value="TNT 135I">TNT 135I</option>
+              <option value="TNT 135I LE">TNT 135I LE</option>
+              <option value="TNT 135I SE">TNT 135I SE</option>
+              <option value="VZ 125I">VZ 125I</option>
+              <option value="VZ 125I SE">VZ 125I SE</option>
+              <option value="TNT 25">TNT 25</option>
+              <option value="TNT 249S">TNT 249S</option>
+              <option value="TNT 300">TNT 300</option>
+              <option value="LEONCINO 250">LEONCINO 250</option>
+              <option value="IMPERIALE 400 SE">IMPERIALE 400 SE</option>
+              <option value="TNT249S">TNT249S</option>
+              <option value="LEONCINO 250 SE ABS">LEONCINO 250 SE ABS</option>
+              <option value="TNT249S (BJ250GS-3-SE)">TNT249S (BJ250GS-3-SE)</option>
+              <option value="250SE">250SE</option>
+              <option value="302R">302R</option>
+              <option value="TRK502 LE">TRK502 LE</option>
+              <option value="LEONCINO 500 (BJ500)">LEONCINO 500 (BJ500)</option>
+              <option value="TNT 600 S">TNT 600 S</option>
+              <option value="ES125 SE">ES125 SE</option>
+              <option value="ES125 STD">ES125 STD</option>
+              <option value="VSTROM 650 XT">VSTROM 650 XT</option> `
+      } else if (choose == 'WMOTO') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="XDV 250 PX">XDV 250 PX</option>
+              <option value="RT3S">RT3S</option>
+              <option value="ES250I">ES250I</option>
+              <option value="RT3">RT3</option>
+              <option value="XDV250">XDV250</option>
+              <option value="V16">V16</option>
+              <option value="CUB CLASSIC 110">CUB CLASSIC 110</option>
+              <option value="CUB CLASSIC SE">CUB CLASSIC SE</option>
+              <option value="ES125 SE">ES125 SE</option>
+              <option value="ES125 STD">ES125 STD</option>
+              <option value="F-15I">F-15I</option>
+              <option value="VE1-110E">VE1-110E</option>
+              <option value="VE1-110E (N1)">VE1-110E (N1)</option>
+              <option value="VE1-110H (N1)">VE1-110H (N1)</option>
+              <option value="VE1-R">VE1-R</option>
+              <option value="VE1-R N1">VE1-R N1</option>
+              <option value="WM110">WM110</option>
+              <option value="EXTREME 150I SE">EXTREME 150I SE</option>
+              <option value="EXTREME 150I STD">EXTREME 150I STD</option>
+              <option value="SX2 300">SX2 300</option>
+              <option value="F15">F15</option>
+              <option value="V16 250">V16 250</option>
+              <option value="ES250">ES250</option> `
+      } else if (choose == 'KEEWAY') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="PATAGONIA 250">PATAGONIA 250</option>
+              <option value="CAFE RACER 152">CAFE RACER 152</option>
+              <option value="K-LIGHT 202">K-LIGHT 202</option> `
+      } else if (choose == 'SM SPORT') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="SM SPORT 110E">SM SPORT 110E</option>
+              <option value="SM SPORT 110R">SM SPORT 110R</option>
+              <option value="SM SPORT 110E (N1)">SM SPORT 110E (N1)</option>
+              <option value="SM SPORT 110E (N2)">SM SPORT 110E (N2)</option>
+              <option value="SM SPORT 110R (N1)">SM SPORT 110R (N1)</option>
+              <option value="SM SPORT 110R (N2)">SM SPORT 110R (N2)</option> `
+      } else if (choose == 'BRIXTON') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="CAFE RACER 150I">CAFE RACER 150I</option>
+              <option value="CLASSIC 150I">CLASSIC 150I</option>
+              <option value="SCRAMBLER 150I">SCRAMBLER 150I</option> `
+      } else if (choose == 'AVETA') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="RANGER 110">RANGER 110</option>
+              <option value="RX110">RX110</option>
+              <option value="SVR180">SVR180</option>
+              <option value="V13R">V13R</option>
+              <option value="VS110">VS110</option>
+              <option value="VS110 DISC BRAKE">VS110 DISC BRAKE</option>
+              <option value="DY90">DY90</option>
+              <option value="EURO 3">EURO 3</option>
+              <option value="VZR250">VZR250</option> `
+      } else if (choose == 'CMC') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="DAYTONA CAFE RACER 250">DAYTONA CAFE RACER 250</option>
+              <option value="ITALJET BUCCANEER 250I">ITALJET BUCCANEER 250I</option> `
+      } else if (choose == 'VESPA') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="GTS 300  SUPER SPORT ABS">GTS 300  SUPER SPORT ABS</option>
+              <option value="SPRINT 150 ABS">SPRINT 150 ABS</option>
+              <option value="GTS 150 (70TH ANNIVERSARY)">GTS 150 (70TH ANNIVERSARY)</option>
+              <option value="LXV 150IE">LXV 150IE</option>
+              <option value="PRIMAVERA 150 (70TH ANNIVERSARY)">PRIMAVERA 150 (70TH ANNIVERSARY)</option>
+              <option value="PRIMAVERA 150 50TH ANNIVERSARY EDITION">PRIMAVERA 150 50TH ANNIVERSARY EDITION</option>
+              <option value="PRIMAVERA 150 75TH ABS">PRIMAVERA 150 75TH ABS</option>
+              <option value="GTS 150">GTS 150</option>
+              <option value="LT 150">LT 150</option>
+              <option value="LX 150">LX 150</option>
+              <option value="PRIMAVERA 150 ABS">PRIMAVERA 150 ABS</option>
+              <option value="GTS 300 SUPER TECH ABS">GTS 300 SUPER TECH ABS</option> `
+      } else if (choose == 'MOTO MORINI') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="X-CAPE 650">X-CAPE 650</option>
+              <option value="X-CAPE 650X">X-CAPE 650X</option> `
+      } else if (choose == 'QJ MOTOR') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="SRK 250 RR">SRK 250 RR</option>
+              <option value="SRV 250">SRV 250</option>
+              <option value="SRK 250">SRK 250</option>
+              <option value="SRT 800X">SRT 800X</option>
+              <option value="SRT 800">SRT 800</option> `
+      } else if (choose == 'DUCATI') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="SCRAMBLER DESSERT SLED">SCRAMBLER DESSERT SLED</option> `
+      } else if (choose == 'CFMOTO') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="800MT">800MT</option>
+              <option value="NK 250 STD">NK 250 STD</option>
+              <option value="700 CL-X HERITAGE">700 CL-X HERITAGE</option>
+              <option value="650GT">650GT</option>
+              <option value="650MT">650MT</option>
+              <option value="DAIICHI CF650TR">DAIICHI CF650TR</option> `
+      } else if (choose == 'DEMAK') {
+        selectTag.innerHTML = `<option selected></option>
+              <option value="SKYLINE 200">SKYLINE 200</option> `
+      } else {
+        selectTag.innerHTML = `<option selected></option>`
+      }
+    }
+    let questions = document.querySelectorAll("input[data-question], select[data-question]")
+    questions.forEach((question) => {
+      question.addEventListener('change', (event) => {
+        let currentQuestion = parseInt(event.target.getAttribute('data-question'));
+        let currentQuestionAnswer = event.target.value
+        questions.forEach((input) => {
+          let questionNum = parseInt(input.getAttribute('data-question'))
+          if (questionNum - currentQuestion > 2 && input.value == '') {
+            input.disabled = true
+          } else {
+            input.disabled = false
+          }
+        })
+      })
+    })
+
+  </script>
+</body>
+
+</html>
