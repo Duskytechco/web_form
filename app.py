@@ -20,6 +20,7 @@ class MyApp(Flask):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.config['UPLOAD_FOLDER'] = 'webform'
+        self.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
         self.secondPageData = {}  # Dict that storing first page info
         self.thirdPageData = {}  # Dict that storing second page info
         self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db', port='3306')  # Connect to database
@@ -75,9 +76,10 @@ class MyApp(Flask):
                 self.photos.clear()
                 self.photos = request.files.getlist('photo')
                 
-            # call the process files function to save the files into local
-            self.processFiles()
-            print("Files Saved", flush=True)
+            if "pdfFiles" in request.files or "photo" in request.files:
+                # call the process files function to save the files into local
+                self.processFiles()
+                print("Files Saved", flush=True)
             
             print("Submitted first page . . .", flush=True)
             return redirect(url_for('page2'))
@@ -170,9 +172,11 @@ class MyApp(Flask):
                 print("COMMITED INTO DB", flush=True)
                 print("Submit complete", flush=True)
             except Exception as e:
+                self.db.rollback()
                 print(e, flush=True)
                 return f"<h1>{e}<h1>"
         else:
+            self.db.rollback()
             print("Flag detected, not committing to database", flush=True)
 
         return '<h1>Submitted, please wait</h1>'
@@ -185,12 +189,13 @@ class MyApp(Flask):
             
             # save and append the files to merger
             merger = PdfMerger()
-            for file in pdfFiles:
-                file.save(os.path.join(self.config['UPLOAD_FOLDER'], file.filename))
-                merger.append(file)
+            if len(pdfFiles) > 0:
+                for file in pdfFiles:
+                    file.save(os.path.join(self.config['UPLOAD_FOLDER'], file.filename))
+                    merger.append(file)
 
             # merge the image file if there is any
-            if photos:
+            if len(photos) > 0:
                 for photo in photos:
                     image = Image.open(photo.stream)
                     image = image.resize((400, 300))
@@ -227,8 +232,7 @@ class MyApp(Flask):
             # save the merged pdf into a zip
             zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{self.secondPageData['NRIC']}.zip")
             with zipfile.ZipFile(zipFilePath, 'w') as zf:
-                # write merge.pdf as NRIC.pdf
-                zf.write(pdfFile, f"{self.secondPageData['NRIC']}.pdf" )
+                zf.write(pdfFile, f"{self.secondPageData['NRIC']}.zip")
 
             # remove merged pdf
             os.remove(pdfFile)
@@ -243,6 +247,7 @@ class MyApp(Flask):
     def restructureSecondPageInfo(self):
         try:
             data = self.secondPageData
+            print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
             
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -267,6 +272,7 @@ class MyApp(Flask):
     def restructureThirdPageInfo(self):
         try: 
             data = self.thirdPageData
+            print("DEBUGGING THIRD PAGE DATA : ",data,flush=True)
             employmentStatus = data['employmentStatus']
             status = ''
             if employmentStatus == 'employed':
@@ -284,8 +290,16 @@ class MyApp(Flask):
                 status = data['selfEmployedStatus']
             else:
                 status = data['selfEmployedOther']
+                
+            netDecimal = data['netSalaryDecimal']
+            grossDecimal = data['grossSalaryDecimal']
             
-            self.workingInfo = f"'{self.secondPageData['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + data['netSalaryDecimal']}', 'RM {data['grossSalary'] + '.' + data['grossSalaryDecimal']}', '{data['efpGross']}', '{data['salaryTerm']}'"
+            if not netDecimal:
+                netDecimal = "00"
+            if not grossDecimal:
+                grossDecimal = "00"
+            
+            self.workingInfo = f"'{self.secondPageData['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data['efpGross']}', '{data['salaryTerm']}'"
 
             self.bankingInfo = f"'{self.secondPageData['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{self.secondPageData['NRIC']}.zip'"
 
