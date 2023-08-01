@@ -22,6 +22,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"
     integrity="sha512-MgYeYFj8R3S6rvZHiJ1xA9cM/VDGcT4eRRFQwGA7qDP7NHbnWKNmAm28z0LVjOuUqjD0T9JxpDMdVqsZOSHaSA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
     
 </head>
 <body>
@@ -62,7 +64,7 @@
                   <p class="fs-3">Only in PDF format. Multiple File Selection is supported</p>
                   <!-- <div style="font-size:14px;padding-top:8px">File has to be rename to your name</div> -->
                   <div class="mb-3">
-                      <input class="form-control " type="file" id="pdfFiles" name="pdfFiles" multiple data-question="12" accept="application/pdf"/>
+                      <input class="form-control" type="file" id="pdfFiles" name="pdfFiles" multiple accept="application/pdf"/>
                   </div>
               </div>
               <div class="list-gap">
@@ -87,8 +89,8 @@
     let displayPhoto = null
     let formData = new FormData()
 
-    Dropzone.autoDiscover = false;
-    const myDropzone = new Dropzone("#pdfFiles", {
+    /* Dropzone.autoDiscover = false;
+    const myDropzone = new Dropzone("#", {
         url: "/uploadFiles",
         chunking: true,
         chunkSize: 1000000, // 1MB chunk size (adjust as needed)
@@ -103,10 +105,12 @@
                 console.log(response);
             });
         },
-    });
+    }); 
+    */
 
     // Function to capture a photo
     function capturePhoto() {
+        statusMessage.innerHTML = "<p class='fs-4 text-success'></p>";
         const reader = new FileReader();
 
         reader.onload = function() {

@@ -44,6 +44,8 @@ class MyApp(Flask):
                           methods=['POST'])  # Bind self.submit to /submit
         self.add_url_rule('/uploadFiles', view_func=self.uploadFiles,
                           methods=['POST']) # Bind self.uploadFiles tp /uploadFiles
+        # self.add_url_rule('/uploadChunkFiles', view_func=self.uploadChunkedPDF,
+        #                   methods=['POST'])
 
     # Main Page
     def index(self):
@@ -56,6 +58,18 @@ class MyApp(Flask):
     def page3(self):
         return render_template('Page3.html')
     
+    # def uploadChunkedPDF(self):
+    #     try:
+    #         print("Uploading Chunked PDF",flush=True)
+    #         pdfFiles = request.files['files']
+    #         print("PDFFiles :",pdfFiles, flush=True)
+    #         self.pdfFiles = pdfFiles.filename
+    #         for file in pdfFiles:
+    #             file.save(os.path.join(self.config['UPLOAD_FOLDER'], file.filename))
+                
+    #     except Exception as e:
+    #         print(e,flush=True)
+            
     # upload files POST from page 1 
     # Submit button for page 1
     def uploadFiles(self):
@@ -68,7 +82,7 @@ class MyApp(Flask):
                 # assign to array
                 self.pdfFiles.clear()
                 self.pdfFiles = request.files.getlist('pdfFiles')
-            
+                 
             if "photo" not in request.files:
                 print("No photo found",flush=True)
             else:
@@ -119,7 +133,7 @@ class MyApp(Flask):
         try:
             query = f"INSERT INTO `Personal Info` VALUES ({self.personalInfo})"
             self.cursor.execute(query)
-            print(f"Inserted {self.personalInfo}" , flush=True)
+            print(f"Inserted Personal Info :{self.personalInfo}" , flush=True)
             flag1 = True
         except mysql.connector.Error as e:
             print(f"MySQL Error First Query: {e}", flush=True)
@@ -129,6 +143,7 @@ class MyApp(Flask):
             for i in self.referenceContacts:
                 queryX = f"INSERT INTO `Reference Contact` (`NRIC`, `Name`,`Reference Contact NRIC`, `Phone Number`, `Stay with user`,`Stay where(If no)`, `Relation to user`) VALUES ({i})"
                 self.cursor.execute(queryX)
+                print(f"Inserted Reference Contact :{i}" , flush=True)
             flag2 = True
         except mysql.connector.Error as e:
             print(f'MySQL Error Second Query: {e}', flush=True)
@@ -137,6 +152,7 @@ class MyApp(Flask):
         try:
             query2 = f"INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`,`Net Salary` , `Gross Salary`, `Have EPF`, `Salary Term`) VALUES ({self.workingInfo})"
             self.cursor.execute(query2)
+            print(f"Inserted Working Info :{self.workingInfo}" , flush=True)
             flag3 = True
         except mysql.connector.Error as e:
             print(f'MySQL Error Third Query: {e}', flush=True)
@@ -145,6 +161,7 @@ class MyApp(Flask):
         try:
             query3 = f"INSERT INTO `Banking Info` (`NRIC`, `Bank Name`, `Bank Account Number`, `Type Of Account`, `pdfFilePath`) VALUES ({self.bankingInfo})"
             self.cursor.execute(query3)
+            print(f"Inserted Banking Info :{self.bankingInfo}" , flush=True)
             flag4 = True
         except mysql.connector.Error as e:
             print(f'Mysql Error Forth Query: {e}', flush=True)
@@ -153,6 +170,7 @@ class MyApp(Flask):
         try:
             query4 = f"INSERT INTO `Product Info` (`NRIC`, `Product Type`, `Brand`, `Model`, `Number Plate`, `Tenure`) VALUES ({self.productInfo})"
             self.cursor.execute(query4)
+            print(f"Inserted Product Info :{self.productInfo}" , flush=True)
             flag5 = True
         except mysql.connector.Error as e:
             print(f'Mysql Error Fifth Query: {e}', flush=True)
@@ -161,6 +179,7 @@ class MyApp(Flask):
         try:
             query5 = f"INSERT INTO `Extra Info` (`NRIC`, `Best time to contact`, `Have license or not`, `License Type`, `How user know Motosing`) VALUES ({self.extraInfo})"
             self.cursor.execute(query5)
+            print(f"Inserted Extra Info :{self.extraInfo}" , flush=True)
             flag6 = True
         except mysql.connector.Error as e:
             print(f'Mysql Error Sixth Query: {e}', flush=True)
@@ -178,6 +197,7 @@ class MyApp(Flask):
         else:
             self.db.rollback()
             print("Flag detected, not committing to database", flush=True)
+            return '<h1>Something is wrong with the data</h1>'
 
         return '<h1>Submitted, please wait</h1>'
         
@@ -191,7 +211,7 @@ class MyApp(Flask):
             merger = PdfMerger()
             if len(pdfFiles) > 0:
                 for file in pdfFiles:
-                    file.save(os.path.join(self.config['UPLOAD_FOLDER'], file.filename))
+                    # file.save(os.path.join(self.config['UPLOAD_FOLDER'], file.filename))
                     merger.append(file)
 
             # merge the image file if there is any
@@ -232,7 +252,7 @@ class MyApp(Flask):
             # save the merged pdf into a zip
             zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{self.secondPageData['NRIC']}.zip")
             with zipfile.ZipFile(zipFilePath, 'w') as zf:
-                zf.write(pdfFile, f"{self.secondPageData['NRIC']}.zip")
+                zf.write(pdfFile, f"{self.secondPageData['NRIC']}.pdf")
 
             # remove merged pdf
             os.remove(pdfFile)
@@ -247,7 +267,7 @@ class MyApp(Flask):
     def restructureSecondPageInfo(self):
         try:
             data = self.secondPageData
-            print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
+            # print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
             
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
@@ -272,7 +292,7 @@ class MyApp(Flask):
     def restructureThirdPageInfo(self):
         try: 
             data = self.thirdPageData
-            print("DEBUGGING THIRD PAGE DATA : ",data,flush=True)
+            # print("DEBUGGING THIRD PAGE DATA : ",data,flush=True)
             employmentStatus = data['employmentStatus']
             status = ''
             if employmentStatus == 'employed':
@@ -299,7 +319,7 @@ class MyApp(Flask):
             if not grossDecimal:
                 grossDecimal = "00"
             
-            self.workingInfo = f"'{self.secondPageData['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data['efpGross']}', '{data['salaryTerm']}'"
+            self.workingInfo = f"'{self.secondPageData['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
 
             self.bankingInfo = f"'{self.secondPageData['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{self.secondPageData['NRIC']}.zip'"
 
