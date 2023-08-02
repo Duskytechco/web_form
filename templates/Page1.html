@@ -89,25 +89,6 @@
     let displayPhoto = null
     let formData = new FormData()
 
-    /* Dropzone.autoDiscover = false;
-    const myDropzone = new Dropzone("#", {
-        url: "/uploadFiles",
-        chunking: true,
-        chunkSize: 1000000, // 1MB chunk size (adjust as needed)
-        forceChunking: true,
-        parallelChunkUploads: true,
-        retryChunks: true,
-        retryChunksLimit: 3,
-        maxFilesize: 50, // Maximum file size in MB (adjust as needed)
-        acceptedFiles: ".pdf",
-        init: function () {
-            this.on("success", function (file, response) {
-                console.log(response);
-            });
-        },
-    }); 
-    */
-
     // Function to capture a photo
     function capturePhoto() {
         statusMessage.innerHTML = "<p class='fs-4 text-success'></p>";
@@ -138,10 +119,24 @@
     }
 
     // Function to submit a fetch api to backend
-    function submit() {
+    async function submit() {
         const files = pdfFilesInput.files;
+        const chunkSize = 1024 * 1024;
         for (const file of files) {
-            formData.append("pdfFiles", file, file.filename)
+            let start = 0;
+            let chunkNumber = 0;
+            const totalChunks = Math.ceil(file.size / chunkSize);
+            while (start < file.size) {
+                const chunk = file.slice(start, start+chunkSize);
+                const data = new FormData();
+                data.append("files",chunk,`${file.name}.part${chunkNumber}`);
+                data.append('chunk_number', chunkNumber);
+                data.append('total_chunks', totalChunks);
+                await uploadChunk(data)
+                start += chunkSize;
+                chunkNumber ++;
+                //formData.append("pdfFiles", file, file.filename);
+            }
         }
 
         fetch('/uploadFiles',{
@@ -160,6 +155,22 @@
         .catch(function(error) {
             console.error('Error uploading files:', error);
         });
+    }
+
+    async function uploadChunk(data) {
+        const reponse = await fetch('/uploadChunk',{
+            method : 'POST',
+            body : data,
+        }).then(function(reponse) {
+            console.log(reponse);
+        })
+        .catch(function(error){
+            console.error("Error uploading chunk: ",error)
+        });
+        /*const result = await response.json()
+        console.log('Chunk upload result:', result);
+        */
+
     }
 
     // Function to remove the currently displayed photo

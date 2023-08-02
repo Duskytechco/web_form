@@ -44,8 +44,8 @@ class MyApp(Flask):
                           methods=['POST'])  # Bind self.submit to /submit
         self.add_url_rule('/uploadFiles', view_func=self.uploadFiles,
                           methods=['POST']) # Bind self.uploadFiles tp /uploadFiles
-        # self.add_url_rule('/uploadChunkFiles', view_func=self.uploadChunkedPDF,
-        #                   methods=['POST'])
+        self.add_url_rule('/uploadChunk', view_func=self.uploadChunkedPDF,
+                          methods=['POST'])
 
     # Main Page
     def index(self):
@@ -58,30 +58,42 @@ class MyApp(Flask):
     def page3(self):
         return render_template('Page3.html')
     
-    # def uploadChunkedPDF(self):
-    #     try:
-    #         print("Uploading Chunked PDF",flush=True)
-    #         pdfFiles = request.files['files']
-    #         print("PDFFiles :",pdfFiles, flush=True)
-    #         self.pdfFiles = pdfFiles.filename
-    #         for file in pdfFiles:
-    #             file.save(os.path.join(self.config['UPLOAD_FOLDER'], file.filename))
+    def uploadChunkedPDF(self):
+        try:
+            print("Uploading Chunked PDF",flush=True)
+            file = request.files['files']
+            chunk_number = int(request.form['chunk_number'])
+            total_chunks = int(request.form['total_chunks'])
+            filename = file.filename.split('.part')[0]
+            chunk_filename = f'{filename}.part{chunk_number}'
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
+            self.pdfFiles.append(file.filename)
                 
-    #     except Exception as e:
-    #         print(e,flush=True)
+            if chunk_number == total_chunks - 1:
+                # All chunks uploaded, merge them into the original file
+                merged_filename = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                with open(merged_filename, 'ab') as merged_file:
+                    for i in range(total_chunks):
+                        chunk_filename = f'{filename}.part{i}'
+                        with open(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename), 'rb') as chunk_file:
+                            merged_file.write(chunk_file.read())
+                        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
+                        
+                print("Finish Uploading PDF",flush=True)
+                return {'message': 'File uploaded and merged successfully'}
+            
+            print("Successfully Uploaded Chunked PDF",flush=True)
+            return {'message': 'File uploaded and merged successfully'}
+        except Exception as e:
+            print(e,flush=True)
+            return {'error'}
             
     # upload files POST from page 1 
     # Submit button for page 1
     def uploadFiles(self):
         try:
             # will not save in server yet, will just be in array
-            print("Saving Files . . .", flush =True)
-            if "pdfFiles" not in request.files:
-                print("No PDF Files found", flush=True)
-            else:
-                # assign to array
-                self.pdfFiles.clear()
-                self.pdfFiles = request.files.getlist('pdfFiles')
+            print("Merging Files . . .", flush =True)
                  
             if "photo" not in request.files:
                 print("No photo found",flush=True)
@@ -90,7 +102,7 @@ class MyApp(Flask):
                 self.photos.clear()
                 self.photos = request.files.getlist('photo')
                 
-            if "pdfFiles" in request.files or "photo" in request.files:
+            if len(self.pdfFiles) > 0 or "photo" in request.files:
                 # call the process files function to save the files into local
                 self.processFiles()
                 print("Files Saved", flush=True)
@@ -204,14 +216,16 @@ class MyApp(Flask):
     def processFiles(self):
         try:
             # get files
-            pdfFiles = self.pdfFiles
             photos = self.photos
             
             # save and append the files to merger
             merger = PdfMerger()
+            pdfFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file.endswith(".pdf")]
+            print("PDFFILES = ", pdfFiles)
+            
             if len(pdfFiles) > 0:
                 for file in pdfFiles:
-                    # file.save(os.path.join(self.config['UPLOAD_FOLDER'], file.filename))
+                    file = os.path.join(self.config['UPLOAD_FOLDER'], file)
                     merger.append(file)
 
             # merge the image file if there is any
@@ -236,7 +250,7 @@ class MyApp(Flask):
             
             # remove saved files
             for file in pdfFiles:
-                os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file.filename))
+                os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file))
             
             print("Merged PDF file has been created",flush=True)
         except Exception as e:
