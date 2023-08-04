@@ -23,7 +23,7 @@ class MyApp(Flask):
         self.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
         self.secondPageData = {}  # Dict that storing first page info
         self.thirdPageData = {}  # Dict that storing second page info
-        self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db', port='3306')  # Connect to database
+        self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db')  # Connect to database
         self.cursor = self.db.cursor()
         self.personalInfo = ""  # Storing personal info
         self.productInfo = "" # Storing product info
@@ -38,6 +38,7 @@ class MyApp(Flask):
         # Bind self.page2 to /page2
         self.add_url_rule('/page2', view_func=self.page2)
         self.add_url_rule('/page3', view_func=self.page3)
+        self.add_url_rule('/reuploadPage', view_func=self.reuploadPage)
         self.add_url_rule('/submitSecondPage', view_func=self.submitSecondPage,
                           methods=['POST'])  # Bind self.submitSecondPage to /submitSecondPage
         self.add_url_rule('/submit', view_func=self.submit,
@@ -45,6 +46,8 @@ class MyApp(Flask):
         self.add_url_rule('/uploadFiles', view_func=self.uploadFiles,
                           methods=['POST']) # Bind self.uploadFiles tp /uploadFiles
         self.add_url_rule('/uploadChunk', view_func=self.uploadChunkedPDF,
+                          methods=['POST'])
+        self.add_url_rule('/reuploadFiles', view_func=self.reuploadFiles,
                           methods=['POST'])
 
     # Main Page
@@ -57,6 +60,42 @@ class MyApp(Flask):
     
     def page3(self):
         return render_template('Page3.html')
+    
+    def reuploadPage(self):
+        return render_template('Reupload.html')
+    
+    def reuploadFiles(self):
+        nric = request.form['nric']
+        try:
+            # merge all files together by simulating a normal upload file
+            self.uploadFiles()
+            
+            # get the file path of saved merged.pdf
+            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], f"merged.pdf")
+            
+            # save the merged pdf into a zip
+            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'],f"{nric}.zip")
+            
+            # list of zip files
+            zipFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file.endswith(".zip")]
+            
+            # check if existing zip file, if not return no nric
+            if zipFilePath not in zipFiles:
+                print("Wrong NRIC",flush=True)
+                return 'NO NRIC'
+            
+            with zipfile.ZipFile(zipFilePath, 'w') as zf:
+                zf.write(pdfFile, f"{nric}.pdf")
+
+            # remove merged pdf
+            os.remove(pdfFile)
+            
+            print("Files has been updated",flush=True)
+            return 'Files has been updated'
+        except Exception as e:
+            print("Files update failed",flush=True)
+            traceback.print_exc()
+            print(e,flush=True)
     
     def uploadChunkedPDF(self):
         try:
@@ -107,7 +146,7 @@ class MyApp(Flask):
                 self.processFiles()
                 print("Files Saved", flush=True)
             
-            print("Submitted first page . . .", flush=True)
+            print("Submitted files",flush=True)
             return redirect(url_for('page2'))
         except Exception as e:
             print(e, flush=True)
@@ -221,7 +260,7 @@ class MyApp(Flask):
             # save and append the files to merger
             merger = PdfMerger()
             pdfFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file.endswith(".pdf")]
-            print("PDFFILES = ", pdfFiles)
+            # print("PDFFILES = ", pdfFiles)
             
             if len(pdfFiles) > 0:
                 for file in pdfFiles:
@@ -232,7 +271,7 @@ class MyApp(Flask):
             if len(photos) > 0:
                 for photo in photos:
                     image = Image.open(photo.stream)
-                    image = image.resize((400, 300))
+                    # image = image.resize((400, 300))
                 
                     # create and write into pdf file
                     pdf_bytes = io.BytesIO()

@@ -232,11 +232,11 @@
                 </div> -->
         <!--If else js, for Mailing address option No, will need to fill in the actual address-->
         <div class="row">
-          <div class="col-sm-5 text-center">
-            <h2 class="fw-bold">Product Info</h2>
-          </div>
           <div class="col-sm-7">
             <hr style="height: 5px;background-color: black;opacity: 1;" class="rounded">
+          </div>
+          <div class="col-sm-5 text-center">
+            <h2 class="fw-bold">Product Info</h2>
           </div>
         </div>
         <div class="list-gap">
@@ -245,34 +245,50 @@
             <select class="form-select" id="inputGroupSelect01" name="brand" data-question="11"
               onchange="showDynamically(this.value)">
               <option selected></option>
-              <option value="ZONTES">ZONTES</option>
-              <option value="KAWASAKI">KAWASAKI</option>
-              <option value="ROYAL ALLOY">ROYAL ALLOY</option>
+              <option value="HONDA">HONDA</option> 
+              <option value="YAMAHA">YAMAHA</option>
+              <optgroup label="A"></optgroup>
+              <option value="APRILIA">APRILIA</option>
+              <option value="AVETA">AVETA</option>
+              <optgroup label="B"></optgroup>
+              <option value="BENELLI">BENELLI</option>
+              <option value="BRIXTON">BRIXTON</option>
               <option value="BMW">BMW</option>
+              <optgroup label="C"></optgroup>
+              <option value="CFMOTO">CFMOTO</option>
+              <optgroup label="D"></optgroup>
+              <option value="DEMAK">DEMAK</option>
+              <option value="DUCATI">DUCATI</option>
+              <optgroup label="G"></optgroup>
               <option value="GLORIOUS HOME">GLORIOUS HOME</option>
-              <option value="ZONGSHEN">ZONGSHEN</option>
               <option value="GPX">GPX</option>
+              <optgroup label="H"></optgroup>
+              <option value="HONDA">HONDA</option>
+              <optgroup label="K"></optgroup> 
+              <option value="KAWASAKI">KAWASAKI</option>              
               <option value="KYMCO">KYMCO</option>
               <option value="KTM">KTM</option>
               <option value="KTNS">KTNS</option>
-              <option value="APRILIA">APRILIA</option>
-              <option value="HONDA">HONDA</option>
-              <option value="YAMAHA">YAMAHA</option>
-              <option value="SUZUKI">SUZUKI</option>
-              <option value="MODENAS">MODENAS</option>
-              <option value="SYM">SYM</option>
-              <option value="BENELLI">BENELLI</option>
-              <option value="WMOTO">WMOTO</option>
               <option value="KEEWAY">KEEWAY</option>
-              <option value="SM SPORT">SM SPORT</option>
-              <option value="BRIXTON">BRIXTON</option>
-              <option value="AVETA">AVETA</option>
-              <option value="VESPA">VESPA</option>
+              <optgroup label="M"></optgroup>
+              <option value="MODENAS">MODENAS</option>              
               <option value="MOTO MORINI">MOTO MORINI</option>
+              <optgroup label="Q"></optgroup>
               <option value="QJ MOTOR">QJ MOTOR</option>
-              <option value="DUCATI">DUCATI</option>
-              <option value="CFMOTO">CFMOTO</option>
-              <option value="DEMAK">DEMAK</option>
+              <optgroup label="R"></optgroup>
+              <option value="ROYAL ALLOY">ROYAL ALLOY</option>
+              <optgroup label="S"></optgroup>
+              <option value="SUZUKI">SUZUKI</option>
+              <option value="SYM">SYM</option>
+              <option value="WMOTO">WMOTO</option>
+              <option value="SM SPORT">SM SPORT</option>
+              <optgroup label="V"></optgroup>
+              <option value="VESPA">VESPA</option>
+              <optgroup label="Y"></optgroup>
+              <option value="YAMAHA">YAMAHA</option>              
+              <optgroup label="Z"></optgroup>
+              <option value="ZONTES">ZONTES</option>
+              <option value="ZONGSHEN">ZONGSHEN</option>
             </select>
           </div>
         </div>
@@ -358,10 +374,10 @@
         <!--If got spouse, spouse must at Reference Contact 1-->
         <div class="row my-4">
           <div class="col-sm-6 text-center">
-            <h2 class="fw-bold">Reference Contact Information</h2>
+              <h2 class="fw-bold">Reference Contact Information</h2>
           </div>
           <div class="col-sm-6">
-            <hr style="height: 5px;background-color: black;opacity: 1;" class="rounded">
+              <hr style="height: 5px;background-color: black;opacity: 1;" class="rounded">
           </div>
         </div>
         <p class="fs-5" style="font-size: 12px;">HIGHLY RECOMMENDED TO BE FAMILY MEMBER</p>
@@ -521,6 +537,20 @@
     </div>
   </form>
   <script>
+    // Get a reference to the input element
+    const race_input = document.getElementById('race-option');
+    const bumiElement = document.getElementById('option3');
+    const nonbumiElement = document.getElementById('option4');
+    // Add the event listener for the 'change' event
+    race_input.addEventListener('change', function(event) {
+      // This function will be executed when the value of the input changes
+      const newValue = event.target.value; // Get the new value of the input
+      if (newValue == "Malay"){
+        bumiElement.checked = true 
+        nonbumiElement.checked = false 
+      } 
+    });
+
     /* document.getElementById("submitBtn").addEventListener("click", function (event) { */
     /*     event.preventDefault(); */
     /*     const form = document.getElementById("form"); */
@@ -692,40 +722,48 @@
               <option value="155U1">155U1</option>`
       } else if (choose == 'KAWASAKI') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="Z300 ABS">Z300 ABS</option>
-              <option value = "ZX600-R"> ZX600 - R</option>
-              <option value="Z250 SL">Z250 SL</option>
+              <optgroup label="B"></optgroup>
+              <option value="BR125-H">BR125-H</option>
+              <optgroup label="D"></optgroup>         
               <option value="D TRACKER X">D TRACKER X</option>
-              <option value="VERSYS - X 250">VERSYS - X 250</option>
-              <option value="NINJA 250R">NINJA 250R</option>
-              <option value="NINJA 250 SL WSBK">NINJA 250 SL WSBK</option>
-              <option value="Z250">Z250</option>
-              <option value="Z250 ABS">Z250 ABS</option>
+              <optgroup label="E"></optgroup>
+              <option value="ER650-E">ER650-E</option>
+              <optgroup label="J"></optgroup>                   
+              <option value="J300 ABS">J300 ABS</option>
+              <optgroup label="K"></optgroup>
               <option value="KLX 250">KLX 250</option>
-              <option value="KLE650-C">KLE650-C</option>
+              <option value="KLE650-C">KLE650-C</option> 
+              <option value="KL110-E">KL110-E</option>                
+              <option value="KLE650-E">KLE650-E</option>
+              <optgroup label="N"></optgroup>            
               <option value="NINJA 250 ABS SE">NINJA 250 ABS SE</option>
               <option value="NINJA 250 SL">NINJA 250 SL</option>
               <option value="NINJA 300 ABS">NINJA 300 ABS</option>
               <option value="NINJA 650 SE ABS">NINJA 650 SE ABS</option>
-              <option value="ZR800-A">ZR800-A</option>
-              <option value="NINJA 250">NINJA 250</option>
-              <option value="J300 ABS">J300 ABS</option>
-              <option value="Z800">Z800</option>
+              <option value="NINJA 250R">NINJA 250R</option>
+              <option value="NINJA 250 SL WSBK">NINJA 250 SL WSBK</option>
+              <option value="NINJA KRR ZX150">NINJA KRR ZX150</option>
               <option value="NINJA 400 ABS SE">NINJA 400 ABS SE</option>
               <option value="NINJA 650 SE ABS">NINJA 650 SE ABS</option>
-              <option value="BR125-H">BR125-H</option>
-              <option value="KL110-E">KL110-E</option>
-              <option value="ER650-E">ER650-E</option>
+              <option value="NINJA 250">NINJA 250</option>
+              <optgroup label="V"></optgroup>
+              <option value="VERSYS - X 250">VERSYS - X 250</option>
+              <optgroup label="Z"></optgroup>         
+              <option value="Z300 ABS">Z300 ABS</option>
+              <option value = "ZX600-R"> ZX600 - R</option>
+              <option value="Z250 SL">Z250 SL</option>
+              <option value="Z250">Z250</option>
+              <option value="Z250 ABS">Z250 ABS</option>
+              <option value="ZR800-A">ZR800-A</option>
+              <option value="Z800">Z800</option>
               <option value="ZR900-BA">ZR900-BA</option>
-              <option value="KLE650-E">KLE650-E</option>
               <option value="ZR1000-F">ZR1000-F</option>
-              <option value="ZR1000-D">ZR1000-D</option>
-              <option value="NINJA KRR ZX150">NINJA KRR ZX150</option> `
+              <option value="ZR1000-D">ZR1000-D</option>`
       } else if (choose == 'ROYAL ALLOY') {
         selectTag.innerHTML = `<option selected></option>
               <option value="GP 125">GP 125</option>
-              <option value="TG 250">TG 250</option>
-              <option value="GP 180">GP 180</option> `
+              <option value="GP 180">GP 180</option>
+              <option value="TG 250">TG 250</option>`
       } else if (choose == 'BMW') {
         selectTag.innerHTML = `<option selected></option>
               <option value="G310GS">G310GS</option> `
@@ -734,109 +772,123 @@
               <option value="ZS 250GY-3">ZS 250GY-3</option>`
       } else if (choose == 'GPX') {
         selectTag.innerHTML = `<option selected></option>
+              <optgroup label="D"></optgroup>         
+              <option value="DEMON GR150R">DEMON GR150R</option>              
+              <optgroup label="G"></optgroup>         
               <option value="GR200RR">GR200RR</option>
-              <option value="GENTLEMENT">GENTLEMENT</option>
+              <option value="GENTLEMENT">GENTLEMENT</option>              
+              <option value="GR200RR SE">GR200RR SE</option>
+              <optgroup label="L"></optgroup>         
               <option value="LEGEND 150 S">LEGEND 150 S</option>
               <option value="LEGEND 250">LEGEND 250</option>
-              <option value="GR200RR SE">GR200RR SE</option>
-              <option value="POPZ 110">POPZ 110</option>
-              <option value="DEMON GR150R">DEMON GR150R</option>`
+              <optgroup label="P"></optgroup>         
+              <option value="POPZ 110">POPZ 110</option>`
       } else if (choose == 'KYMCO') {
         selectTag.innerHTML = `<option selected></option>
               <option value="NMS400K">NMS400K</option> `
       } else if (choose == 'KTM') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="390 ADVENTURE">390 ADVENTURE</option>
+              <optgroup label="D"></optgroup>         
               <option value="DUKE 200 ABS">DUKE 200 ABS</option>
-              <option value="DUKE 390 ABS">DUKE 390 ABS</option>
-              <option value="RC 200 ABS">RC 200 ABS</option>
+              <option value="DUKE 390 ABS">DUKE 390 ABS</option>              
               <option value="DUKE 250 ABS">DUKE 250 ABS</option>
               <option value="DUKE 200 STD">DUKE 200 STD</option>
+              <optgroup label="R"></optgroup>         
+              <option value="RC 200 ABS">RC 200 ABS</option>
               <option value="RC 390">RC 390</option>
-              <option value="690 DUKE R - CKD">690 DUKE R - CKD</option>
               <option value="RC250">RC250</option>
-              <option value="250 ADVENTURE">250 ADVENTURE</option>
-              <option value="450 EXC - F">450 EXC - F</option> `
+              <optgroup label="#"></optgroup>         
+              <option value="250 ADVENTURE">250 ADVENTURE</option>              
+              <option value="390 ADVENTURE">390 ADVENTURE</option>
+              <option value="450 EXC - F">450 EXC - F</option>               
+              <option value="690 DUKE R - CKD">690 DUKE R - CKD</option>`
       } else if (choose == 'KTNS') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="RA2">RA2</option>
-              <option value="RHINO">RHINO</option>
               <option value="CF MOTO 250SR SE">CF MOTO 250SR SE</option>
               <option value="CF MOTO 250NK SE">CF MOTO 250NK SE</option>
-              <option value="CLASSIC 125GP">CLASSIC 125GP</option>
-              <option value="MT07 689CC">MT07 689CC</option> `
+              <option value="CLASSIC 125GP">CLASSIC 125GP</option> 
+              <option value="RA2">RA2</option>
+              <option value="RHINO">RHINO</option>`
       } else if (choose == 'APRILIA') {
         selectTag.innerHTML = `<option selected></option>
               <option value="SHIVER 750">SHIVER 750</option> `
       } else if (choose == 'HONDA') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="VARIO 150 (SELF/DISC/CAST) - ACB150CBT/ ACB150CBTK/M">VARIO 150 (SELF/DISC/CAST) - ACB150CBT/ ACB150CBTK/M</option>
-              <option value="VARIO 150 REPSOL (SELF/DISC/CAST) - ACB150CBT3/ ACB150CBTK3/M3">VARIO 150 REPSOL (SELF/DISC/CAST) - ACB150CBT3/ ACB150CBTK3/M3</option>
-              <option value="WAVE 125I (SELF/2DISC/CAST) AFS125MCRH/M">WAVE 125I (SELF/2DISC/CAST) AFS125MCRH/M</option>
-              <option value="RS-X FS150FA/FS150FA2 ABS">RS-X FS150FA/FS150FA2 ABS</option>
-              <option value="VARIO 160 SE">VARIO 160 SE</option>
+              <optgroup label="A"></optgroup>
               <option value="ADV 150A/ADV150A2 (SELF/2DISC/CAST)">ADV 150A/ADV150A2 (SELF/2DISC/CAST)</option>
+              <option value="ADV160 / ADV160A">ADV160 / ADV160A</option>
+              <option value="ALFA FI">ALFA FI</option>
+              <optgroup label="B"></optgroup>
+              <option value="BEAT ACH110CBFH/FJ/FL/FN">BEAT ACH110CBFH/FJ/FL/FN</option>
+              <optgroup label="C"></optgroup>
               <option value="CBR150R">CBR150R</option>
+              <option value="CBR150R REPSOL">CBR150R REPSOL</option>
+              <option value="CBR250RR">CBR250RR</option>
+              <option value="CB650F">CB650F</option>
+              <option value="CBR650F">CBR650F</option>
+              <option value="CB 250 R">CB 250 R</option>
+              <option value="CBR150RA9">CBR150RA9</option>
+              <optgroup label="D"></optgroup>
+              <option value="DASH 110">DASH 110</option>
+              <option value="DASH 125I R">DASH 125I R</option>
+              <option value="DASH 125">DASH 125</option>
+              <optgroup label="D"></optgroup>
+              <option value="EX5">EX5</option>
+              <option value="EX5 110 FI">EX5 110 FI</option>
+              <optgroup label="F"></optgroup>
+              <option value="FORZA 250">FORZA 250</option>
+              <option value="FS150FJ 2">FS150FJ 2</option>
+              <option value="FS150FJ">FS150FJ</option>
+              <option value="FS150FH2">FS150FH2</option>
+              <optgroup label="P"></optgroup> 
+              <option value="PCX WW150 2">PCX WW150 2</option>
+              <optgroup label="R"></optgroup> 
+              <option value="RS-X FS150FA/FS150FA2 ABS">RS-X FS150FA/FS150FA2 ABS</option>
               <option value="RS150R">RS150R</option>
               <option value="RS150R REPSOL">RS150R REPSOL</option>
-              <option value="BEAT ACH110CBFH/FJ/FL/FN">BEAT ACH110CBFH/FJ/FL/FN</option>
-              <option value="VARIO 160">VARIO 160</option>
-              <option value="CBR150R REPSOL">CBR150R REPSOL</option>
-              <option value="DASH 125I R">DASH 125I R</option>
-              <option value="CBR250RR">CBR250RR</option>
-              <option value="EX5">EX5</option>
+              <option value="RS-X FS150FA3/FS150FAN3 REPSOL">RS-X FS150FA3/FS150FAN3 REPSOL</option>
+              <option value="RS-X (FS150FAP)/(FS150FAP2)">RS-X (FS150FAP)/(FS150FAP2)</option>
+              <option value="RS150R FS150FL2">RS150R FS150FL2</option>
+              <optgroup label="W"></optgroup>
               <option value="WAVE 125I (SELF/DISC/CAST) AFS125MCSH/K">WAVE 125I (SELF/DISC/CAST) AFS125MCSH/K</option>
               <option value="WAVE ALPHA (SELF/DISC/CAST) AFS110MCSG/H/J/L">WAVE ALPHA (SELF/DISC/CAST) AFS110MCSG/H/J/L</option>
               <option value="WAVE ALPHA (SELF/DRUM/SPOKE)AFS110MDG/H/J/L">WAVE ALPHA (SELF/DRUM/SPOKE)AFS110MDG/H/J/L</option>
-              <option value="RS-X FS150FA3/FS150FAN3 REPSOL">RS-X FS150FA3/FS150FAN3 REPSOL</option>
-              <option value="DASH 125">DASH 125</option>
-              <option value="PCX WW150 2">PCX WW150 2</option>
-              <option value="CB650F">CB650F</option>
-              <option value="CBR650F">CBR650F</option>
-              <option value="FORZA 250">FORZA 250</option>
-              <option value="ADV160 / ADV160A">ADV160 / ADV160A</option>
               <option value="WAVE ALPHA AFS110MCSG/H/J/L">WAVE ALPHA AFS110MCSG/H/J/L</option>
-              <option value="EX5 110 FI">EX5 110 FI</option>
-              <option value="FS150FJ 2">FS150FJ 2</option>
-              <option value="VARIO 125 ACB125CBT">VARIO 125 ACB125CBT</option>
               <option value="WAVE ALPHA AFS110MCS">WAVE ALPHA AFS110MCS</option>
               <option value="WAVE DASH FI AFP110CSFG/H">WAVE DASH FI AFP110CSFG/H</option>
-              <option value="ALFA FI">ALFA FI</option>
               <option value="WAVE DASH FI AFP110CRFG2/H2">WAVE DASH FI AFP110CRFG2/H2</option>
-              <option value="RS-X (FS150FAP)/(FS150FAP2)">RS-X (FS150FAP)/(FS150FAP2)</option>
-              <option value="CB 250 R">CB 250 R</option>
-              <option value="RS150R FS150FL2">RS150R FS150FL2</option>
-              <option value="FS150FJ">FS150FJ</option>
               <option value="WAVE DASH FI AFP110CRFG/H">WAVE DASH FI AFP110CRFG/H</option>
               <option value="WAVE ALPHA (SELF/DISC/CAST) AFS110MCSG/H/J/L/N)">WAVE ALPHA (SELF/DISC/CAST) AFS110MCSG/H/J/L/N)</option>
-              <option value="FS150FH2">FS150FH2</option>
-              <option value="CBR150RA9">CBR150RA9</option>
-              <option value="DASH 110">DASH 110</option>
-              <option value="MT07 689CC">MT07 689CC</option> `
+              <optgroup label="V"></optgroup>
+              <option value="VARIO 125 ACB125CBT">VARIO 125 ACB125CBT</option>
+              <option value="VARIO 150 (SELF/DISC/CAST) - ACB150CBT/ ACB150CBTK/M">VARIO 150 (SELF/DISC/CAST) - ACB150CBT/ ACB150CBTK/M</option>
+              <option value="VARIO 150 REPSOL (SELF/DISC/CAST) - ACB150CBT3/ ACB150CBTK3/M3">VARIO 150 REPSOL (SELF/DISC/CAST) - ACB150CBT3/ ACB150CBTK3/M3</option>
+              <option value="WAVE 125I (SELF/2DISC/CAST) AFS125MCRH/M">WAVE 125I (SELF/2DISC/CAST) AFS125MCRH/M</option>
+              <option value="VARIO 160 SE">VARIO 160 SE</option>
+              <option value="VARIO 160">VARIO 160</option>`
+              
       } else if (choose == 'YAMAHA') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="MT-25 (MTN250-A)">MT-25 (MTN250-A)</option>
-              <option value="R25">R25</option>
-              <option value="MT-25">MT-25</option>
-              <option value="XMAX">XMAX</option>
-              <option value="YZF R25">YZF R25</option>
-              <option value="MT - 25">MT - 25</option>
-              <option value="R25-(YZFR25)">R25-(YZFR25)</option>
-              <option value="SR400">SR400</option>
-              <option value="TMAX 560">TMAX 560</option>
-              <option value="135LC FI SE">135LC FI SE</option>
-              <option value="135LC FI STANDARD">135LC FI STANDARD</option>
-              <option value="135LC SPECIAL EDITION">135LC SPECIAL EDITION</option>
-              <option value="135LC-AUTO CLUTCH">135LC-AUTO CLUTCH</option>
+              <optgroup label="E"></optgroup>
               <option value="EGO AVANTIZ">EGO AVANTIZ</option>
               <option value="EGO GEAR (LNP125)">EGO GEAR (LNP125)</option>
               <option value="EGO SOLARIZ">EGO SOLARIZ</option>
+              <option value="EZ 115">EZ 115</option>
+              <option value="EGO SI">EGO SI</option>
+              <optgroup label="F"></optgroup>
               <option value="FZ150I (NEW DESIGN)/FZ150I (S)">FZ150I (NEW DESIGN)/FZ150I (S)</option>
+              <optgroup label="L"></optgroup>
               <option value="LAGENDA 115Z (E/EI/UE15)">LAGENDA 115Z (E/EI/UE15)</option>
               <option value="LAGENDA 115Z GP EDITION 115CC">LAGENDA 115Z GP EDITION 115CC</option>
               <option value="LAGENDA 115ZR/ZRI 115CC">LAGENDA 115ZR/ZRI 115CC</option>
+              <optgroup label="M"></optgroup>              
               <option value="MT-15 (BHM3)">MT-15 (BHM3)</option>
               <option value="MT-15 (MTN-155)">MT-15 (MTN-155)</option>
+              <option value="MT-25 (MTN250-A)">MT-25 (MTN250-A)</option>
+              <option value="MT-25">MT-25</option>
+              <option value="MT07 689CC">MT07 689CC</option> 
+              <option value="MT09 890CC">MT09 890CC</option>
+              <optgroup label="N"></optgroup>             
               <option value="NMAX - 155CC">NMAX - 155CC</option>
               <option value="NVX ( GP EDITION ) - 155CC">NVX ( GP EDITION ) - 155CC</option>
               <option value="NVX ( SG48 ) - 155CC">NVX ( SG48 ) - 155CC</option>
@@ -844,6 +896,17 @@
               <option value="NVX DOXOU SPORTS FASHION EDITION">NVX DOXOU SPORTS FASHION EDITION</option>
               <option value="NVX STANDARD - 155CC">NVX STANDARD - 155CC</option>
               <option value="NVX ABS - 155CC">NVX ABS - 155CC</option>
+              <option value="XMAX">XMAX</option>
+              <optgroup label="R"></optgroup>             
+              <option value="R25">R25</option>
+              <option value="R25M">R25M</option>
+              <option value="R25-(YZFR25)">R25-(YZFR25)</option>
+              <optgroup label="T"></optgroup>             
+              <option value="TMAX 560">TMAX 560</option>
+              <optgroup label="X"></optgroup>             
+              <option value="XJ6 DIVERSION F">XJ6 DIVERSION F</option>
+              <optgroup label="Y"></optgroup>             
+              <option value="YZF R25">YZF R25</option>
               <option value="Y15ZR - 150CC">Y15ZR - 150CC</option>
               <option value="Y15ZR ( GP EDITION )">Y15ZR ( GP EDITION )</option>
               <option value="Y16ZR">Y16ZR</option>
@@ -852,129 +915,149 @@
               <option value="YZF-R15 (YZF155)">YZF-R15 (YZF155)</option>
               <option value="YZF-R15 MONSTER">YZF-R15 MONSTER</option>
               <option value="YZF-R15M">YZF-R15M</option>
-              <option value="XJ6 DIVERSION F">XJ6 DIVERSION F</option>
               <option value="Y125ZR">Y125ZR</option>
               <option value="YZF R25 GP EDITION">YZF R25 GP EDITION</option>
+              <optgroup label="#"></optgroup>             
+              <option value="135LC FI SE">135LC FI SE</option>
+              <option value="135LC FI STANDARD">135LC FI STANDARD</option>
+              <option value="135LC SPECIAL EDITION">135LC SPECIAL EDITION</option>
+              <option value="135LC-AUTO CLUTCH">135LC-AUTO CLUTCH</option>
               <option value="135LC (FI) 5MRO">135LC (FI) 5MRO</option>
-              <option value="EZ 115">EZ 115</option>
-              <option value="MT-09">MT-09</option>
-              <option value="NOUVO LC">NOUVO LC</option>
-              <option value="R25M">R25M</option>
-              <option value="MT09 890CC">MT09 890CC</option>
-              <option value="EGO SI">EGO SI</option>
-              <option value="135LC ES">135LC ES</option>
-              <option value="MT07 689CC">MT07 689CC</option> `
+              <option value="135LC ES">135LC ES</option>`
       } else if (choose == 'SUZUKI') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="RAIDER R150FI GP SPECIAL EDITION">RAIDER R150FI GP SPECIAL EDITION</option>
               <option value="GSX-R150 (GSX-R150RFX)">GSX-R150 (GSX-R150RFX)</option>
               <option value="GSX-S150 (GSX-S150RFX)">GSX-S150 (GSX-S150RFX)</option>
               <option value="RAIDER R150FI(FU150MFX)">RAIDER R150FI(FU150MFX)</option>
               <option value="RAIDER R150FI AS25">RAIDER R150FI AS25</option>
+              <option value="RAIDER R150FI GP SPECIAL EDITION">RAIDER R150FI GP SPECIAL EDITION</option>
               <option value="VSTROM 650 XT">VSTROM 650 XT</option> `
       } else if (choose == 'MODENAS') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="ELEGAN 250 ABS">ELEGAN 250 ABS</option>
-              <option value="DOMINAR D400UG">DOMINAR D400UG</option>
+              <optgroup label="C"></optgroup>             
               <option value="CT115S">CT115S</option>
+              <optgroup label="D"></optgroup>             
+              <option value="DOMINAR D400UG">DOMINAR D400UG</option>
+              <option value="DINAMIK 120">DINAMIK 120</option>
+              <optgroup label="E"></optgroup>             
+              <option value="ELEGAN 250 ABS">ELEGAN 250 ABS</option>
+              <option value="ELEGAN 250 EX">ELEGAN 250 EX</option>
+              <optgroup label="K"></optgroup>             
               <option value="KARISMA 125S">KARISMA 125S</option>
               <option value="KRISS 110">KRISS 110</option>
               <option value="KRISS 110 DISC BRAKE">KRISS 110 DISC BRAKE</option>
               <option value="KRISS MR2">KRISS MR2</option>
+              <optgroup label="P"></optgroup>             
               <option value="PULSAR NS160">PULSAR NS160</option>
               <option value="PULSAR NS200">PULSAR NS200</option>
               <option value="PULSAR NS200 FI ABS">PULSAR NS200 FI ABS</option>
-              <option value="PULSAR RS200">PULSAR RS200</option>
-              <option value="DINAMIK 120">DINAMIK 120</option>
-              <option value="ELEGAN 250 EX">ELEGAN 250 EX</option>
-              <option value="NINJA 250 OHLINS">NINJA 250 OHLINS</option>
-              <option value="NINJA 250">NINJA 250</option>
-              <option value="NINJA 250 ABS">NINJA 250 ABS</option>
-              <option value="Z250">Z250</option> `
+              <option value="PULSAR RS200">PULSAR RS200</option>`
+              
       } else if (choose == 'SYM') {
         selectTag.innerHTML = `<option selected></option>
+              <optgroup label="B"></optgroup>             
               <option value="BONUS 110 (SR)">BONUS 110 (SR)</option>
               <option value="BONUS 110(SR) EURO 3">BONUS 110(SR) EURO 3</option>
               <option value="BONUS 110 SR">BONUS 110 SR</option>
               <option value="E BONUS 110">E BONUS 110</option>
               <option value="E BONUS 110H">E BONUS 110H</option>
+              <optgroup label="J"></optgroup>             
               <option value="JET 14 125I">JET 14 125I</option>
               <option value="JET 14 200I">JET 14 200I</option>
               <option value="JET X">JET X</option>
               <option value="JET X(SE)">JET X(SE)</option>
+              <optgroup label="M"></optgroup>             
               <option value="MIO 110">MIO 110</option>
+              <option value="MAXSYM TL 500">MAXSYM TL 500</option> 
+              <optgroup label="S"></optgroup>             
               <option value="SPORT RIDER 125I">SPORT RIDER 125I</option>
               <option value="SPORT RIDER 125I(N2)">SPORT RIDER 125I(N2)</option>
               <option value="SPORT RIDER 125I SE">SPORT RIDER 125I SE</option>
+              <optgroup label="V"></optgroup>             
               <option value="VF3I 185">VF3I 185</option>
               <option value="VF3I 185(N2)">VF3I 185(N2)</option>
               <option value="VF3I 185 LE">VF3I 185 LE</option>
               <option value="VF3I 185 LE(PRO)">VF3I 185 LE(PRO)</option>
-              <option value="VF3I 185 SE">VF3I 185 SE</option>
-              <option value="MAXSYM TL 500">MAXSYM TL 500</option> `
+              <option value="VF3I 185 SE">VF3I 185 SE</option>`
       } else if (choose == 'BENELLI') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="TNT249SE">TNT249SE</option>
-              <option value="PANAREA 125">PANAREA 125</option>
-              <option value="TRK251 SE ABS">TRK251 SE ABS</option>
+              <optgroup label="A"></optgroup>             
+              <option value="ES125 SE">ES125 SE</option>
+              <option value="ES125 STD">ES125 STD</option>
+              <optgroup label="V"></optgroup>             
               <option value="IMPERIALE 400">IMPERIALE 400</option>
-              <option value="249S">249S</option>
-              <option value="TRK251">TRK251</option>
-              <option value="TRK251 SE (N1)">TRK251 SE (N1)</option>
-              <option value="150 S">150 S</option>
-              <option value="150 S (SE)">150 S (SE)</option>
+              <option value="IMPERIALE 400 SE">IMPERIALE 400 SE</option>
+              <optgroup label="L"></optgroup>             
+              <option value="LEONCINO 250">LEONCINO 250</option>
+              <option value="LEONCINO 250 SE ABS">LEONCINO 250 SE ABS</option>
+              <option value="LEONCINO 500 (BJ500)">LEONCINO 500 (BJ500)</option>
+              <optgroup label="P"></optgroup>             
+              <option value="PANAREA 125">PANAREA 125</option>
+              <optgroup label="R"></optgroup>             
               <option value="R18I">R18I</option>
               <option value="R18I (SE)">R18I (SE)</option>
-              <option value="TNT249SE">TNT249SE</option>
               <option value="RFS 150I LE">RFS 150I LE</option>
               <option value="RFS 150I SE">RFS 150I SE</option>
               <option value="RFS 150I STD">RFS 150I STD</option>
+              <optgroup label="T"></optgroup>             
+              <option value="TRK251 SE ABS">TRK251 SE ABS</option>
+              <option value="TNT249SE">TNT249SE</option>
+              <option value="TRK251">TRK251</option>
+              <option value="TRK251 SE (N1)">TRK251 SE (N1)</option>
+              <option value="TRK502 LE">TRK502 LE</option>
+              <option value="TNT249SE">TNT249SE</option>
               <option value="TNT 135I">TNT 135I</option>
               <option value="TNT 135I LE">TNT 135I LE</option>
               <option value="TNT 135I SE">TNT 135I SE</option>
-              <option value="VZ 125I">VZ 125I</option>
-              <option value="VZ 125I SE">VZ 125I SE</option>
               <option value="TNT 25">TNT 25</option>
               <option value="TNT 249S">TNT 249S</option>
               <option value="TNT 300">TNT 300</option>
-              <option value="LEONCINO 250">LEONCINO 250</option>
-              <option value="IMPERIALE 400 SE">IMPERIALE 400 SE</option>
-              <option value="TNT249S">TNT249S</option>
-              <option value="LEONCINO 250 SE ABS">LEONCINO 250 SE ABS</option>
               <option value="TNT249S (BJ250GS-3-SE)">TNT249S (BJ250GS-3-SE)</option>
+              <option value="TNT249S">TNT249S</option>
+              <option value="TNT 600 S">TNT 600 S</option
+              <optgroup label="V"></optgroup>             
+              <option value="VSTROM 650 XT">VSTROM 650 XT</option>
+              <option value="VZ 125I">VZ 125I</option>
+              <option value="VZ 125I SE">VZ 125I SE</option>
+              <optgroup label="#"></optgroup>             
               <option value="250SE">250SE</option>
-              <option value="302R">302R</option>
-              <option value="TRK502 LE">TRK502 LE</option>
-              <option value="LEONCINO 500 (BJ500)">LEONCINO 500 (BJ500)</option>
-              <option value="TNT 600 S">TNT 600 S</option>
-              <option value="ES125 SE">ES125 SE</option>
-              <option value="ES125 STD">ES125 STD</option>
-              <option value="VSTROM 650 XT">VSTROM 650 XT</option> `
+              <option value="302R">302R</option> 
+              <option value="150 S">150 S</option>
+              <option value="150 S (SE)">150 S (SE)</option>
+              <option value="249S">249S</option>`
       } else if (choose == 'WMOTO') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="XDV 250 PX">XDV 250 PX</option>
-              <option value="RT3S">RT3S</option>
-              <option value="ES250I">ES250I</option>
-              <option value="RT3">RT3</option>
-              <option value="XDV250">XDV250</option>
-              <option value="V16">V16</option>
+              <optgroup label="C"></optgroup>             
               <option value="CUB CLASSIC 110">CUB CLASSIC 110</option>
               <option value="CUB CLASSIC SE">CUB CLASSIC SE</option>
+              <optgroup label="E"></optgroup>             
+              <option value="ES250I">ES250I</option>
+              <option value="ES250">ES250</option>
               <option value="ES125 SE">ES125 SE</option>
               <option value="ES125 STD">ES125 STD</option>
+              <option value="EXTREME 150I SE">EXTREME 150I SE</option>
+              <option value="EXTREME 150I STD">EXTREME 150I STD</option>
+              <optgroup label="F"></optgroup>             
               <option value="F-15I">F-15I</option>
+              <option value="F15">F15</option>
+              <optgroup label="R"></optgroup>             
+              <option value="RT3S">RT3S</option>
+              <option value="RT3">RT3</option>
+              <optgroup label="S"></optgroup>             
+              <option value="SX2 300">SX2 300</option>
+              <optgroup label="V"></optgroup>             
               <option value="VE1-110E">VE1-110E</option>
               <option value="VE1-110E (N1)">VE1-110E (N1)</option>
               <option value="VE1-110H (N1)">VE1-110H (N1)</option>
               <option value="VE1-R">VE1-R</option>
+              <option value="V16">V16</option>
               <option value="VE1-R N1">VE1-R N1</option>
-              <option value="WM110">WM110</option>
-              <option value="EXTREME 150I SE">EXTREME 150I SE</option>
-              <option value="EXTREME 150I STD">EXTREME 150I STD</option>
-              <option value="SX2 300">SX2 300</option>
-              <option value="F15">F15</option>
               <option value="V16 250">V16 250</option>
-              <option value="ES250">ES250</option> `
+              <optgroup label="W"></optgroup>             
+              <option value="WM110">WM110</option>
+              <optgroup label="X"></optgroup>             
+              <option value="XDV 250 PX">XDV 250 PX</option>
+              <option value="XDV250">XDV250</option>`
       } else if (choose == 'KEEWAY') {
         selectTag.innerHTML = `<option selected></option>
               <option value="PATAGONIA 250">PATAGONIA 250</option>
@@ -995,14 +1078,19 @@
               <option value="SCRAMBLER 150I">SCRAMBLER 150I</option> `
       } else if (choose == 'AVETA') {
         selectTag.innerHTML = `<option selected></option>
+              <optgroup label="D"></optgroup>             
+              <option value="DY90">DY90</option>
+              <optgroup label="E"></optgroup>             
+              <option value="EURO 3">EURO 3</option>
+              <optgroup label="R"></optgroup>             
               <option value="RANGER 110">RANGER 110</option>
               <option value="RX110">RX110</option>
+              <optgroup label="S"></optgroup>             
               <option value="SVR180">SVR180</option>
+              <optgroup label="V"></optgroup>             
               <option value="V13R">V13R</option>
               <option value="VS110">VS110</option>
               <option value="VS110 DISC BRAKE">VS110 DISC BRAKE</option>
-              <option value="DY90">DY90</option>
-              <option value="EURO 3">EURO 3</option>
               <option value="VZR250">VZR250</option> `
       } else if (choose == 'CMC') {
         selectTag.innerHTML = `<option selected></option>
@@ -1010,18 +1098,22 @@
               <option value="ITALJET BUCCANEER 250I">ITALJET BUCCANEER 250I</option> `
       } else if (choose == 'VESPA') {
         selectTag.innerHTML = `<option selected></option>
-              <option value="GTS 300  SUPER SPORT ABS">GTS 300  SUPER SPORT ABS</option>
-              <option value="SPRINT 150 ABS">SPRINT 150 ABS</option>
+              <optgroup label="G"></optgroup>             
               <option value="GTS 150 (70TH ANNIVERSARY)">GTS 150 (70TH ANNIVERSARY)</option>
+              <option value="GTS 150">GTS 150</option>
+              <option value="GTS 300 SUPER TECH ABS">GTS 300 SUPER TECH ABS</option>
+              <option value="GTS 300  SUPER SPORT ABS">GTS 300  SUPER SPORT ABS</option>
+              <optgroup label="L"></optgroup>             
               <option value="LXV 150IE">LXV 150IE</option>
+              <option value="LT 150">LT 150</option>
+              <option value="LX 150">LX 150</option>
+              <optgroup label="P"></optgroup>             
               <option value="PRIMAVERA 150 (70TH ANNIVERSARY)">PRIMAVERA 150 (70TH ANNIVERSARY)</option>
               <option value="PRIMAVERA 150 50TH ANNIVERSARY EDITION">PRIMAVERA 150 50TH ANNIVERSARY EDITION</option>
               <option value="PRIMAVERA 150 75TH ABS">PRIMAVERA 150 75TH ABS</option>
-              <option value="GTS 150">GTS 150</option>
-              <option value="LT 150">LT 150</option>
-              <option value="LX 150">LX 150</option>
               <option value="PRIMAVERA 150 ABS">PRIMAVERA 150 ABS</option>
-              <option value="GTS 300 SUPER TECH ABS">GTS 300 SUPER TECH ABS</option> `
+              <optgroup label="S"></optgroup>             
+              <option value="SPRINT 150 ABS">SPRINT 150 ABS</option>`
       } else if (choose == 'MOTO MORINI') {
         selectTag.innerHTML = `<option selected></option>
               <option value="X-CAPE 650">X-CAPE 650</option>
@@ -1066,7 +1158,13 @@
         })
       })
     })
-
+    // Add an event listener to the form
+    document.getElementById('form').addEventListener('keypress', function (event) {
+            // Check if the pressed key is Enter (key code 13)
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Prevent the default form submission action
+            }
+        });
   </script>
 </body>
 

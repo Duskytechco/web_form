@@ -24,6 +24,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lz-string/1.4.4/lz-string.min.js"
     integrity="sha512-qoCTmFwBtCPvFhA+WAqatSOrghwpDhFHxwAGh+cppWonXbHA09nG1z5zi4/NGnp8dUhXiVrzA6EnKgJA+fyrpw=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     const showingHiddenDiv = (target) => {
       const hiddenDiv = document.querySelectorAll(".employmentstatus");
@@ -158,22 +159,31 @@
           <div class="fs-5">Position <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
             <select class="form-select" id="inputGroupSelect01" name="position" required>
-              <option selected></option>
-              <option value="manager / supervisor">manager / supervisor</option>
-              <option value="waiter / waitress">waiter / waitress</option>
+              <option selected></option> 
+              <optgroup label="A"></optgroup>
               <option value="admin">admin</option>
+              <optgroup label="F"></optgroup>
               <option value="factory worker">factory worker</option>
+              <optgroup label="G"></optgroup>
               <option value="general worker">general worker</option>
               <option value="general manager / assistant general manager">general manager / assistant
                 general manager</option>
-              <option value="saleman / promoter">saleman / promoter</option>
+              <optgroup label="M"></optgroup>              
+              <option value="manager / supervisor">manager / supervisor</option>
               <option value="managing director">managing director</option>
+              <option value="waiter / waitress">waiter / waitress</option>
+              <optgroup label="O"></optgroup>              
               <option value="officer / executive">officer / executive</option>
+              <optgroup label="P"></optgroup>              
               <option value="pensioner / retiree">pensioner / retiree</option>
               <option value="professional ( lawyer, doctor )">professional ( lawyer, doctor )</option>
+              <optgroup label="S"></optgroup>              
+              <option value="saleman / promoter">saleman / promoter</option>
               <option value="skill worker ( technician / nurse )">skill worker ( technician / nurse )
               </option>
+              <optgroup label="T"></optgroup>              
               <option value="teacher / lecture">teacher / lecture</option>
+              <optgroup label=""></optgroup>
               <option value="other">other</option>
             </select>
           </div>
@@ -189,17 +199,25 @@
           <div class="input-group mb-3">
             <select class="form-select" id="inputGroupSelect01" name="department" required>
               <option selected></option>
+              <optgroup label="A"></optgroup>
               <option value="account">account</option>
               <option value="admin">admin</option>
+              <optgroup label="C"></optgroup>
               <option value="clerk">clerk</option>
               <option value="collection">collection</option>
               <option value="construction">construction</option>
+              <optgroup label="I"></optgroup>
               <option value="IT">IT</option>
+              <optgroup label="M"></optgroup>
               <option value="management">management</option>
+              <optgroup label="P"></optgroup>
               <option value="production">production</option>
+              <optgroup label="S"></optgroup>
               <option value="sales">sales</option>
               <option value="services">services</option>
+              <optgroup label="T"></optgroup>
               <option value="technical">technical</option>
+              <optgroup label=""></optgroup>
               <option value="other">other</option>
             </select>
           </div>
@@ -211,33 +229,48 @@
             <select class="form-select" id="inputGroupSelect01" name="businessNature" data-question="2" disabled
               onchange="checkValue(event)" required>
               <option selected></option>
+              <optgroup label="A"></optgroup>
               <option value="administrator / support services">administrator / support services
               </option>
               <option value="agriculture">agriculture</option>
               <option value="arts / entertainment / recreation">arts / entertainment / recreation
               </option>
+              <optgroup label="B"></optgroup>
               <option value="banking / finance">banking / finance</option>
+              <optgroup label="C"></optgroup>
               <option value="construction">construction</option>
+              <optgroup label="E"></optgroup>
               <option value="education">education</option>
               <option value="extraterritorial organization and bodies">extraterritorial organization
                 and bodies</option>
+              <option value="electrical">electrical</option>
+              <optgroup label="G"></optgroup>
+              <option value="government">government</option>
+              <optgroup label="H"></optgroup>
               <option value="healthcare">healthcare</option>
+              <optgroup label="I"></optgroup>
               <option value="investment">investment</option>
               <option value="IT / research / development">IT / research / development</option>
+              <optgroup label="L"></optgroup>
               <option value="logistic">logistic</option>
+              <optgroup label="M"></optgroup>
               <option value="manufacturing">manufacturing</option>
               <option value="mass media">mass media</option>
               <option value="mining / quarrying">mining / quarrying</option>
-              <option value="electrical">electrical</option>
+              <optgroup label="O"></optgroup>
               <option value="other services activities">other services activities</option>
+              <optgroup label="P"></optgroup>
               <option value="production of domestic / personal services">production of domestic /
                 personal services</option>
+              <optgroup label="R"></optgroup>
               <option value="retail / wholesale">retail / wholesale</option>
-              <option value="government">government</option>
+              <optgroup label="S"></optgroup>
               <option value="service line ( hotel, restaurants )">service line ( hotel, restaurants )
               </option>
+              <optgroup label="W"></optgroup>
               <option value="water supply / sewerage / waste management">water supply / sewerage /
                 waste management</option>
+              <optgroup label=""></optgroup>
               <option value="other">other</option>
             </select>
             <input type="text" class="form-control others" />
@@ -268,13 +301,13 @@
           <div class="list-gap">
             <div class="fs-5">Working in Singapore <span style="color:red;padding-left:0.25rem">*</span></div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="workinginsingapore" value="Yes" id="option14">
+              <input class="form-check-input" type="radio" name="workinginsingapore" value="Yes" id="option14" >
               <label class="form-check-label" for="option14">
                 Yes
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="workinginsingapore" value="No" id="option15" checked>
+              <input class="form-check-input" type="radio" name="workinginsingapore" value="No" id="option15" checked="">
               <label class="form-check-label" for="option15">
                 No
               </label>
@@ -293,7 +326,7 @@
           </div>
           <div class="list-gap">
             <div class="fs-5">When You Join the Company <span style="color:red;padding-left:0.25rem">*</span></div>
-            <input class="form-control date-picker" type="month" name="whenJoinedCompany" placeholder="Select DateTime"
+            <input class="form-control date-picker" id="monthYearPicker" type="month" name="whenJoinedCompany" placeholder="Select DateTime"
               data-question="6" disabled />
           </div>
           <div class="list-gap">
@@ -322,13 +355,13 @@
                 </div>
                 <p class="fs-5">Have EPF?</p>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="epfGross" value="Yes" id="optionEFPyes" selected>
+                  <input class="form-check-input" type="radio" name="epfGross" value="Yes" checked="" id="optionEFPyes">
                   <label class="form-check-label" for="optionEFPyes">
                     Yes
                   </label>
                 </div>
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="efpGross" value="No" id="optionEFPno">
+                  <input class="form-check-input" type="radio" name="epfGross" value="No" id="optionEFPno">
                   <label class="form-check-label" for="optionEFPno">
                     No
                   </label>
@@ -572,7 +605,7 @@
           </div>
           <div class="gap-2 d-md-block btn-container">
             <div>
-              <button class="btn btn-primary" type="button">Previous Page</button>
+              <button class="btn btn-primary" onclick="previousPage()" type="button">Previous Page</button>
               <a href="#" style="color:white;text-decoration:none"><button class="btn btn-danger"
                   type="submit">Submit</button></a>
             </div>
@@ -589,6 +622,13 @@
   <script>
     // Datepicker
     flatpickr("input[type=datetime-local]", {});
+    $(document).ready(function() {
+      $('#monthYearPicker').datepicker({
+        format: 'yyyy-mm',
+        viewMode: 'months',
+        minViewMode: 'months'
+      });
+    });
     // This Section for dropdown list, when OTHER is picked, show another box
     let employmentStatus = document.getElementById("employment-status");
     let addbox0 = document.getElementById('container-for-employed');
@@ -733,6 +773,17 @@
         })
       })
     })
+    // Add an event listener to the form
+    document.getElementById('myForm').addEventListener('keypress', function (event) {
+            // Check if the pressed key is Enter (key code 13)
+            if (event.keyCode === 13) {
+                event.preventDefault(); // Prevent the default form submission action
+            }
+        });
+
+    function previousPage(){
+      history.back()
+    } 
   </script>
 </body>
 </html>
