@@ -150,12 +150,14 @@ class MyApp(Flask):
                 # assign to session array
                 self.photos.clear()
                 self.photos = request.files.getlist('photo')
-                # session['photos'] = request.files.getlist('photo')
                 
-            if len(session['uploaded_filenames']) > 0 or "photo" in request.files:
-                # call the process files function to save the files into local
-                self.processFiles()
-                print("Files Saved", flush=True)
+            pdfFiles = session.get('uploaded_filenames','empty')
+            
+            if pdfFiles == 'empty':
+                print("No PDF Files uploaded",flush=True)
+            
+            # call the process files function to save the files into local
+            self.processFiles()
             
             print("Submitted files",flush=True)
             return redirect(url_for('page2'))
@@ -265,9 +267,8 @@ class MyApp(Flask):
     def processFiles(self):
         try:
             # get files
-            # photos = session['photos']
             photos = self.photos
-            pdfFiles = session['uploaded_filenames']
+            pdfFiles = session.get('uploaded_filenames', [])
         
             merger = PdfMerger()
             # print("PDFFILES = ", pdfFiles)
