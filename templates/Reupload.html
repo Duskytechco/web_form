@@ -167,7 +167,7 @@
         })
         .then(function(response) {
             // Redirect Response from backend
-            if (response.text() == "Files has been updated") {
+            if (response.ok) {
                 // Extract the new URL from the response headers
                 // window.location.href = response.url;
                 console.log("Success!")

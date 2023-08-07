@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session, make_response
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from PIL import Image
@@ -10,7 +10,8 @@ import io
 import os
 from datetime import datetime 
 import traceback
-
+import secrets
+import time
 
 # TODO:UPDATE BUSINESS OF NATURE
 # TODO:UPDATE TYPE OF OCCUPATION
@@ -21,8 +22,8 @@ class MyApp(Flask):
         super().__init__(*args, **kwargs)
         self.config['UPLOAD_FOLDER'] = 'webform'
         self.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
-        self.secondPageData = {}  # Dict that storing first page info
-        self.thirdPageData = {}  # Dict that storing second page info
+        # self.secondPageData = {}  # Dict that storing first page info
+        # self.thirdPageData = {}  # Dict that storing second page info
         self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db')  # Connect to database
         self.cursor = self.db.cursor()
         self.personalInfo = ""  # Storing personal info
@@ -62,36 +63,38 @@ class MyApp(Flask):
         return render_template('Page3.html')
     
     def reuploadPage(self):
+        session.clear()
         return render_template('Reupload.html')
     
     def reuploadFiles(self):
         nric = request.form['nric']
+        self.photos.clear()
         try:
             # merge all files together by simulating a normal upload file
             self.uploadFiles()
-            
+            mergedFilename = session['unique_filename']
             # get the file path of saved merged.pdf
-            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], f"merged.pdf")
+            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'],mergedFilename)
             
-            # save the merged pdf into a zip
-            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'],f"{nric}.zip")
+            # get the zip file path
+            zipFilePath = f"{nric}.zip"
             
             # list of zip files
-            zipFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file.endswith(".zip")]
+            zipFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file == zipFilePath]
             
             # check if existing zip file, if not return no nric
             if zipFilePath not in zipFiles:
                 print("Wrong NRIC",flush=True)
                 return 'NO NRIC'
             
-            with zipfile.ZipFile(zipFilePath, 'w') as zf:
+            with zipfile.ZipFile(os.path.join(self.config['UPLOAD_FOLDER'], zipFilePath), 'w') as zf:
                 zf.write(pdfFile, f"{nric}.pdf")
 
             # remove merged pdf
             os.remove(pdfFile)
             
             print("Files has been updated",flush=True)
-            return 'Files has been updated'
+            return make_response("Success",200)
         except Exception as e:
             print("Files update failed",flush=True)
             traceback.print_exc()
@@ -106,7 +109,9 @@ class MyApp(Flask):
             filename = file.filename.split('.part')[0]
             chunk_filename = f'{filename}.part{chunk_number}'
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
-            self.pdfFiles.append(file.filename)
+            
+            if 'uploaded_filenames' not in session:
+                session['uploaded_filenames'] = []
                 
             if chunk_number == total_chunks - 1:
                 # All chunks uploaded, merge them into the original file
@@ -117,7 +122,12 @@ class MyApp(Flask):
                         with open(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename), 'rb') as chunk_file:
                             merged_file.write(chunk_file.read())
                         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
-                        
+                
+                # when all chunks have been merged, the session will append the filename for later usage
+                session['uploaded_filenames'].append(filename)
+                session.modified = True
+                print(f"Appended {filename}",flush=True)
+                
                 print("Finish Uploading PDF",flush=True)
                 return {'message': 'File uploaded and merged successfully'}
             
@@ -137,11 +147,12 @@ class MyApp(Flask):
             if "photo" not in request.files:
                 print("No photo found",flush=True)
             else:
-                # assign to array
+                # assign to session array
                 self.photos.clear()
                 self.photos = request.files.getlist('photo')
+                # session['photos'] = request.files.getlist('photo')
                 
-            if len(self.pdfFiles) > 0 or "photo" in request.files:
+            if len(session['uploaded_filenames']) > 0 or "photo" in request.files:
                 # call the process files function to save the files into local
                 self.processFiles()
                 print("Files Saved", flush=True)
@@ -155,12 +166,9 @@ class MyApp(Flask):
     # Submit First Page Handler
     def submitSecondPage(self):
         try:
-            self.secondPageData = dict(request.form)
-            self.secondPageData['gender'] = 'Male'
-            if int( self.secondPageData['NRIC']) % 2 == 0:
-                self.secondPageData['gender'] = 'Female'
-            self.restructureSecondPageInfo()
-            print("Submitted second page . . .", flush=True)
+            session['secondPageData'] = dict(request.form)
+            print("SESSION SECOND PAGE DATA --",session['secondPageData'], flush=True)
+            print("Submitted second page", flush=True)
             return redirect(url_for('page3'))
         except Exception as e:
             print(e, flush=True)
@@ -172,8 +180,8 @@ class MyApp(Flask):
             # create the zip file with the NRIC
             self.createZipFile()
             
-            self.thirdPageData = dict(request.form)
-            self.restructureThirdPageInfo()
+            session['thirdPageData'] = dict(request.form)
+            self.restructureData()
 
             flag1 = flag2 = flag3 = flag4 = flag5 = flag6 = False
         except Exception as e:
@@ -183,7 +191,7 @@ class MyApp(Flask):
             
         try:
             query = f"INSERT INTO `Personal Info` VALUES ({self.personalInfo})"
-            self.cursor.execute(query)
+            # self.cursor.execute(query)
             print(f"Inserted Personal Info :{self.personalInfo}" , flush=True)
             flag1 = True
         except mysql.connector.Error as e:
@@ -193,7 +201,7 @@ class MyApp(Flask):
         try:
             for i in self.referenceContacts:
                 queryX = f"INSERT INTO `Reference Contact` (`NRIC`, `Name`,`Reference Contact NRIC`, `Phone Number`, `Stay with user`,`Stay where(If no)`, `Relation to user`) VALUES ({i})"
-                self.cursor.execute(queryX)
+                # self.cursor.execute(queryX)
                 print(f"Inserted Reference Contact :{i}" , flush=True)
             flag2 = True
         except mysql.connector.Error as e:
@@ -202,7 +210,7 @@ class MyApp(Flask):
 
         try:
             query2 = f"INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`,`Net Salary` , `Gross Salary`, `Have EPF`, `Salary Term`) VALUES ({self.workingInfo})"
-            self.cursor.execute(query2)
+            # self.cursor.execute(query2)
             print(f"Inserted Working Info :{self.workingInfo}" , flush=True)
             flag3 = True
         except mysql.connector.Error as e:
@@ -211,7 +219,7 @@ class MyApp(Flask):
 
         try:
             query3 = f"INSERT INTO `Banking Info` (`NRIC`, `Bank Name`, `Bank Account Number`, `Type Of Account`, `pdfFilePath`) VALUES ({self.bankingInfo})"
-            self.cursor.execute(query3)
+            # self.cursor.execute(query3)
             print(f"Inserted Banking Info :{self.bankingInfo}" , flush=True)
             flag4 = True
         except mysql.connector.Error as e:
@@ -220,7 +228,7 @@ class MyApp(Flask):
 
         try:
             query4 = f"INSERT INTO `Product Info` (`NRIC`, `Product Type`, `Brand`, `Model`, `Number Plate`, `Tenure`) VALUES ({self.productInfo})"
-            self.cursor.execute(query4)
+            # self.cursor.execute(query4)
             print(f"Inserted Product Info :{self.productInfo}" , flush=True)
             flag5 = True
         except mysql.connector.Error as e:
@@ -229,7 +237,7 @@ class MyApp(Flask):
 
         try:
             query5 = f"INSERT INTO `Extra Info` (`NRIC`, `Best time to contact`, `Have license or not`, `License Type`, `How user know Motosing`) VALUES ({self.extraInfo})"
-            self.cursor.execute(query5)
+            # self.cursor.execute(query5)
             print(f"Inserted Extra Info :{self.extraInfo}" , flush=True)
             flag6 = True
         except mysql.connector.Error as e:
@@ -238,7 +246,7 @@ class MyApp(Flask):
 
         if flag1 and flag2 and flag3 and flag4 and flag5 and flag6:
             try: 
-                self.db.commit()
+                # self.db.commit()
                 print("COMMITED INTO DB", flush=True)
                 print("Submit complete", flush=True)
             except Exception as e:
@@ -249,17 +257,19 @@ class MyApp(Flask):
             self.db.rollback()
             print("Flag detected, not committing to database", flush=True)
             return '<h1>Something is wrong with the data</h1>'
-
+        
+        # reset session data
+        session.clear()
         return '<h1>Submitted, please wait</h1>'
         
     def processFiles(self):
         try:
             # get files
+            # photos = session['photos']
             photos = self.photos
-            
-            # save and append the files to merger
+            pdfFiles = session['uploaded_filenames']
+        
             merger = PdfMerger()
-            pdfFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file.endswith(".pdf")]
             # print("PDFFILES = ", pdfFiles)
             
             if len(pdfFiles) > 0:
@@ -282,14 +292,23 @@ class MyApp(Flask):
                     merger.append(pdf_bytes)
                     image.close()
             
+            # generate unique name for the merged pdf based on timestamp
+            # save unique name as a session for later usage
+            uniqueName = f"{int(time.time())}_merged.pdf"
+            session['unique_filename'] = uniqueName
+            
             # write the merged files into a new pdf
-            mergedPdfPath = os.path.join(self.config['UPLOAD_FOLDER'],"merged.pdf")
+            mergedPdfPath = os.path.join(self.config['UPLOAD_FOLDER'],uniqueName)
             with open(mergedPdfPath, 'wb') as combined_pdf_file:
                 merger.write(combined_pdf_file)    
             
             # remove saved files
-            for file in pdfFiles:
-                os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file))
+            if len(pdfFiles) > 0:
+                for file in pdfFiles:
+                    os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file))
+            
+            # reset the photos
+            self.photos.clear()
             
             print("Merged PDF file has been created",flush=True)
         except Exception as e:
@@ -299,13 +318,14 @@ class MyApp(Flask):
             
     def createZipFile(self):
         try:
+            uniqueFile = session['unique_filename']
             # get the file path of saved merged.pdf
-            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], f"merged.pdf")
+            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], uniqueFile)
             
             # save the merged pdf into a zip
-            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{self.secondPageData['NRIC']}.zip")
+            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{session['secondPageData']['NRIC']}.zip")
             with zipfile.ZipFile(zipFilePath, 'w') as zf:
-                zf.write(pdfFile, f"{self.secondPageData['NRIC']}.pdf")
+                zf.write(pdfFile, f"{session['secondPageData']['NRIC']}.pdf")
 
             # remove merged pdf
             os.remove(pdfFile)
@@ -316,10 +336,14 @@ class MyApp(Flask):
             traceback.print_exc()
             print(e,flush=True)
     
-    # Restructure First Page Data into a string
-    def restructureSecondPageInfo(self):
+    # Restructure all data when submit
+    # Gets data from session
+    def restructureData(self):
         try:
-            data = self.secondPageData
+            data = session['secondPageData']
+            data['gender'] = 'Male'
+            if int( data['NRIC']) % 2 == 0:
+                data['gender'] = 'Female'
             # print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
             
             now = datetime.now()
@@ -340,11 +364,9 @@ class MyApp(Flask):
             print("Error in Restructure second Page Info", flush=True)
             print(e, flush=True)
             return f"<h1>{e}<h1>"
-
-    # Restructure Second Page Data into a string
-    def restructureThirdPageInfo(self):
+        
         try: 
-            data = self.thirdPageData
+            data = session['thirdPageData']
             # print("DEBUGGING THIRD PAGE DATA : ",data,flush=True)
             employmentStatus = data['employmentStatus']
             status = ''
@@ -372,11 +394,11 @@ class MyApp(Flask):
             if not grossDecimal:
                 grossDecimal = "00"
             
-            self.workingInfo = f"'{self.secondPageData['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
+            self.workingInfo = f"'{session['secondPageData']['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
 
-            self.bankingInfo = f"'{self.secondPageData['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{self.secondPageData['NRIC']}.zip'"
+            self.bankingInfo = f"'{session['secondPageData']['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{session['secondPageData']['NRIC']}.zip'"
 
-            self.extraInfo = f"'{self.secondPageData['NRIC']}', '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'Yes' else 'None'}', '{data['howToKnowMotosing']}'"
+            self.extraInfo = f"'{session['secondPageData']['NRIC']}', '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'Yes' else 'None'}', '{data['howToKnowMotosing']}'"
             print("Finish Restructure Third Page Info", flush=True)
         except Exception as e:
             print("Error in Restructure Third Page Info", flush=True)
@@ -384,6 +406,7 @@ class MyApp(Flask):
             return f"<h1>{e}<h1>"
 
 app = MyApp(__name__)
+app.secret_key = secrets.token_hex(32)
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
 #EOF
