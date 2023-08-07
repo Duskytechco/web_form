@@ -156,12 +156,23 @@
           <div class="fs-5">Address <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="fs-6" style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal
             Included)</div>
-          <div class="fs-6" style="font-size:14px;padding-top:8px">Lot, Street, Postal Code, District, State</div>
+          <div class="fs-6" style="font-size:14px;padding-top:8px">Lot, Street</div>
           <div class="abc">
             <div class="def">
               <!-- input class="form-control" placeholder="Your Answer" onchange="validateAddress(event)"
                                 data-question="8" disabled / -->
               <input class="form-control" name="address" placeholder="Your Answer" data-question="8" disabled />
+            </div>
+          </div>
+          <!-- make it row and column -->
+          <div class="abc">
+            <label for="postcode" class="form-label">Postcode</label>
+            <label for="city" class="form-label">City</label>
+            <label for="state" class="form-label">State</label>
+            <div class="input-group">
+              <input type="text" class="form-control" name="postcode" placeholder="E.g. 55300" data-question="8" disabled />
+              <input type="text" class="form-control" name="city" placeholder="" data-question="8" disabled />
+              <input type="text" class="form-control" name="state" placeholder="" data-question="8" disabled />
             </div>
           </div>
         </div>
