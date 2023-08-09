@@ -190,7 +190,14 @@ class MyApp(Flask):
             print("Error before sql statements", flush=True)
             print(e,flush=True)
             return f"<h1>{e}<h1>"
-            
+
+        # check if the database is timed out
+        try:
+            print("Pinging the server...",flush=True)
+            self.db.ping(reconnect=True)
+        except mysql.connector.Error:
+            print("Connection Timed out",flush=True) 
+        
         try:
             query = f"INSERT INTO `Personal Info` VALUES ({self.personalInfo})"
             # self.cursor.execute(query)

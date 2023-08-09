@@ -156,34 +156,34 @@
           <div class="fs-5">Address <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="fs-6" style="font-size:14px;padding-top:8px">All addresses must be typed according to IC (Postal
             Included)</div>
-          <div class="fs-6" style="font-size:14px;padding-top:8px">Lot, Street</div>
+            <div class="row">
+              <div class="col">
+                <label for="postcode" class="form-label">Postcode</label>
+                <div class="input-group">
+                  <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);"
+                   class="form-control" id="postcode" name="postcode" maxlength="5" placeholder="E.g. 55300" data-question="8" disabled />
+                </div>
+              </div>
+              <div class="col">
+                <label for="city" class="form-label">City</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="city" name="city" placeholder="" data-question="8" disabled />
+                </div>
+              </div>
+              <div class="col">
+                <label for="state" class="form-label">State</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="state" name="state" placeholder="" data-question="8" disabled />
+                </div>
+              </div>
+            </div>  
+          <div class="fs-6" style="font-size:14px;padding-top:8px">Lot (House Number) ,(Building Name) ,Street, District</div>
           <div class="abc">
+            <!-- <label> -->
             <div class="def">
-              <!-- input class="form-control" placeholder="Your Answer" onchange="validateAddress(event)"
-                                data-question="8" disabled / -->
-              <input class="form-control" name="address" placeholder="Your Answer" data-question="8" disabled />
+              <input class="form-control" name="address" id="address" placeholder="Your Answer" data-question="8" disabled />
             </div>
           </div>
-          <div class="row">
-            <div class="col">
-              <label for="postcode" class="form-label">Postcode</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="postcode" name="postcode" placeholder="E.g. 55300" data-question="8" disabled />
-              </div>
-            </div>
-            <div class="col">
-              <label for="city" class="form-label">City</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="city" name="city" placeholder="" data-question="8" disabled />
-              </div>
-            </div>
-            <div class="col">
-              <label for="state" class="form-label">State</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="state" name="state" placeholder="" data-question="8" disabled />
-              </div>
-            </div>
-          </div>          
         </div>
         <div class="list-gap">
           <div class="fs-5">Number of year in residence <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -561,6 +561,8 @@
     const race_input = document.getElementById('race-option');
     const bumiElement = document.getElementById('option3');
     const nonbumiElement = document.getElementById('option4');
+    var isAddress = false 
+
     // Add the event listener for the 'change' event
     race_input.addEventListener('change', function(event) {
       // This function will be executed when the value of the input changes
@@ -570,16 +572,20 @@
         nonbumiElement.checked = false 
       } 
     });
-
-    /* document.getElementById("submitBtn").addEventListener("click", function (event) { */
-    /*     event.preventDefault(); */
-    /*     const form = document.getElementById("form"); */
-    /*     if (form.checkValidity()) { */
-    /*         window.location.href = "Page2.html"; */
-    /*     } else { */
-    /*         alert("Please fill in all required fields."); */
-    /*     } */
-    /* }); */
+    /*
+    document.getElementById("submitBtn").addEventListener("click", function (event) { 
+        event.preventDefault(); 
+        const form = document.getElementById("form"); 
+        if (!isAddress){
+          alert("Please reenter address field without postcode, city and state")
+        }
+        else if (form.checkValidity()) { 
+            form.submit()
+        } else { 
+            alert("Please fill in all required fields."); 
+        } 
+     }); 
+     */
     //This section for used/recon, showing another box
     let option7 = document.getElementById("option7");
     let option8 = document.getElementById("option8");
@@ -701,14 +707,6 @@
         titleOfPerson.value =
           titleOfPerson.querySelector("option[value='MR']").value;
       }
-    };
-
-    const validateAddress = (event) => {
-      const address = event.target.value;
-      /* const addressRe = /^(\d{1,5})(?:\s*[-\/]\s*(\d{1,5}))?\s*,\s*([\w\s]+)\s*,\s*(\d{5})\s+(.*)$/i; */
-      const addressRe = /^(\d{1,5})\s*,\s*(.*?)\s*,\s*(\d{5})\s*(.*?)$/i;
-
-      !addressRe.test(address) ? alert("Please enter a valid address") : "";
     };
 
     const checkTenureType = (event) => {
@@ -1186,9 +1184,11 @@
             }
         });
 
-    const postcodeInput = document.getElementById('postcode') 
-    const stateInput = document.getElementById('state') 
-    const cityInput = document.getElementById('city') 
+    const postcodeInput = document.getElementById('postcode');
+    const stateInput = document.getElementById('state');
+    const cityInput = document.getElementById('city');
+    const addressInput = document.getElementById('address');
+    const postcodeRegex = /\b\d{5}\b/g;
 
     postcodeInput.addEventListener('change', function() {
         var postcode = postcodeInput.value;
@@ -1215,6 +1215,13 @@
                 }
             }))
             .catch(error => console.error('Error:', error));
+    })
+
+
+    addressInput.addEventListener('change', function() {
+      const address = addressInput.value;
+      isAddress = false
+      !postcodeRegex.test(address) ? isAddress = true :  alert("Please remove postcode, city and state from address field");
     })
   </script>
 </body>

@@ -315,19 +315,12 @@
           </div>
           <div class="list-gap">
             <div class="fs-5">Company Address <span style="color:red;padding-left:0.25rem">*</span></div>
-            <div class="fs-6" style="padding-top:8px">Lot, Street
-            </div>
-            <div class="abc">
-              <div class="def">
-                <input class="form-control" name="companyAddress" placeholder="Your Answer" required data-question="5"
-                  disabled />
-              </div>
-            </div>
             <div class="row">
               <div class="col">
                 <label for="postcode" class="form-label">Postcode</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="companyPostcode" name="companyPostcode" placeholder="E.g. 55300" data-question="5" disabled />
+                  <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);"
+                   class="form-control" id="companyPostcode" name="companyPostcode" placeholder="E.g. 55300" data-question="5" disabled />
                 </div>
               </div>
               <div class="col">
@@ -343,6 +336,14 @@
                 </div>
               </div>
             </div> 
+            <div class="fs-6" style="padding-top:8px">Lot (House Number) ,(Building Name), Street, District
+            </div>
+            <div class="abc">
+              <div class="def">
+                <input class="form-control" id="companyAddress" name="companyAddress" placeholder="Your Answer" required data-question="5"
+                  disabled />
+              </div>
+            </div>
           </div>
           <div class="list-gap">
             <div class="fs-5">When You Join the Company <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -626,7 +627,7 @@
           <div class="gap-2 d-md-block btn-container">
             <div>
               <button class="btn btn-primary" onclick="previousPage()" type="button">Previous Page</button>
-              <a href="#" style="color:white;text-decoration:none"><button class="btn btn-danger"
+              <a href="#" style="color:white;text-decoration:none"><button class="btn btn-danger" id="submitBtn"
                   type="submit">Submit</button></a>
             </div>
             <div>
@@ -667,6 +668,23 @@
     let othercontainer1 = document.getElementById('other-container1');
     let addbox3 = document.getElementById('container-for-other-employment-status');
     let addbox4 = document.getElementById('container-for-other-income-source');
+    var isAddress = false
+    const submitBtn = document.getElementById('submitBtn')
+    /*
+    submitBtn.addEventListener("click", function (event) { 
+      event.preventDefault(); 
+      const form = document.getElementById("myForm"); 
+      if (!isAddress){
+        alert("Please reenter address field without postcode, city and state")
+      }
+      else if (form.checkValidity()) { 
+        form.submit()
+      } else { 
+          alert("Please fill in all required fields."); 
+      } 
+    }); 
+    */
+
     function required() {
       option0.required = false;
       option1.required = false;
@@ -800,14 +818,15 @@
                 event.preventDefault(); // Prevent the default form submission action
             }
         });
-
     function previousPage(){
       history.back()
-    } 
-
+    }
+    
     const postcodeInput = document.getElementById('companyPostcode') 
     const stateInput = document.getElementById('companyState') 
     const cityInput = document.getElementById('companyCity') 
+    const addressInput = document.getElementById('companyAddress')
+    const postcodeRegex = /\b\d{5}\b/g;
 
     postcodeInput.addEventListener('change', function() {
         var postcode = postcodeInput.value;
@@ -834,6 +853,11 @@
                 }
             }))
             .catch(error => console.error('Error:', error));
+    })
+    addressInput.addEventListener('change', function() {
+      const address = addressInput.value;
+      isAddress = false
+      !postcodeRegex.test(address) ? isAddress = true :  alert("Please remove postcode, city and state from address field");
     })
   </script>
 </body>
