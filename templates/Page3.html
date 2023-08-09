@@ -315,7 +315,7 @@
           </div>
           <div class="list-gap">
             <div class="fs-5">Company Address <span style="color:red;padding-left:0.25rem">*</span></div>
-            <div class="fs-6" style="padding-top:8px">Lot, Street, Postal Code, District, State
+            <div class="fs-6" style="padding-top:8px">Lot, Street
             </div>
             <div class="abc">
               <div class="def">
@@ -323,6 +323,26 @@
                   disabled />
               </div>
             </div>
+            <div class="row">
+              <div class="col">
+                <label for="postcode" class="form-label">Postcode</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="companyPostcode" name="companyPostcode" placeholder="E.g. 55300" data-question="5" disabled />
+                </div>
+              </div>
+              <div class="col">
+                <label for="city" class="form-label">City</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="companyCity" name="companyCity" placeholder="" data-question="5" disabled />
+                </div>
+              </div>
+              <div class="col">
+                <label for="state" class="form-label">State</label>
+                <div class="input-group">
+                  <input type="text" class="form-control" id="companyState" name="companyState" placeholder="" data-question="5" disabled />
+                </div>
+              </div>
+            </div> 
           </div>
           <div class="list-gap">
             <div class="fs-5">When You Join the Company <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -784,6 +804,37 @@
     function previousPage(){
       history.back()
     } 
+
+    const postcodeInput = document.getElementById('companyPostcode') 
+    const stateInput = document.getElementById('companyState') 
+    const cityInput = document.getElementById('companyCity') 
+
+    postcodeInput.addEventListener('change', function() {
+        var postcode = postcodeInput.value;
+
+        var apiUrl = `https://nominatim.openstreetmap.org/search?postalcode=${postcode}&countrycodes=my&format=json`;
+
+        fetch(apiUrl)
+            .then(response => response.json().then(data => {
+                console.log(data)
+                if (data.length > 0) {
+                    var display_name  = data[0].display_name.split(', ')
+                    if(display_name.length == 1) {
+                        console.error("Invalid post code")
+                    }
+                    else {
+                        console.log(display_name)
+                        var state = display_name[ display_name.length - 3 ];
+                        var city = display_name[0];
+                        stateInput.value = state;
+                        cityInput.value = city;
+                    }
+                } else {
+                    console.error('No results found.');
+                }
+            }))
+            .catch(error => console.error('Error:', error));
+    })
   </script>
 </body>
 </html>

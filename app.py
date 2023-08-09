@@ -347,8 +347,7 @@ class MyApp(Flask):
                 data['gender'] = 'Female'
             # print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
             
-            address = f"{data['address']},{data['postcode']},{data['city']},{data['state']}" 
-            
+            address = f"{data['address']}, {data['postcode']}, {data['city']}, {data['state']}" 
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
             
@@ -397,7 +396,9 @@ class MyApp(Flask):
             if not grossDecimal:
                 grossDecimal = "00"
             
-            self.workingInfo = f"'{session['secondPageData']['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{data['companyAddress']}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
+            companyAddress = f"{data['companyAddress']}, {data['companyPostcode']}, {data['companyCity']}, {data['companyState']}" 
+            
+            self.workingInfo = f"'{session['secondPageData']['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{companyAddress}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
 
             self.bankingInfo = f"'{session['secondPageData']['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{session['secondPageData']['NRIC']}.zip'"
 

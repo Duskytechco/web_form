@@ -164,17 +164,26 @@
               <input class="form-control" name="address" placeholder="Your Answer" data-question="8" disabled />
             </div>
           </div>
-          <!-- make it row and column -->
-          <div class="abc">
-            <label for="postcode" class="form-label">Postcode</label>
-            <label for="city" class="form-label">City</label>
-            <label for="state" class="form-label">State</label>
-            <div class="input-group">
-              <input type="text" class="form-control" name="postcode" placeholder="E.g. 55300" data-question="8" disabled />
-              <input type="text" class="form-control" name="city" placeholder="" data-question="8" disabled />
-              <input type="text" class="form-control" name="state" placeholder="" data-question="8" disabled />
+          <div class="row">
+            <div class="col">
+              <label for="postcode" class="form-label">Postcode</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="postcode" name="postcode" placeholder="E.g. 55300" data-question="8" disabled />
+              </div>
             </div>
-          </div>
+            <div class="col">
+              <label for="city" class="form-label">City</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="city" name="city" placeholder="" data-question="8" disabled />
+              </div>
+            </div>
+            <div class="col">
+              <label for="state" class="form-label">State</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="state" name="state" placeholder="" data-question="8" disabled />
+              </div>
+            </div>
+          </div>          
         </div>
         <div class="list-gap">
           <div class="fs-5">Number of year in residence <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -1176,6 +1185,37 @@
                 event.preventDefault(); // Prevent the default form submission action
             }
         });
+
+    const postcodeInput = document.getElementById('postcode') 
+    const stateInput = document.getElementById('state') 
+    const cityInput = document.getElementById('city') 
+
+    postcodeInput.addEventListener('change', function() {
+        var postcode = postcodeInput.value;
+
+        var apiUrl = `https://nominatim.openstreetmap.org/search?postalcode=${postcode}&countrycodes=my&format=json`;
+
+        fetch(apiUrl)
+            .then(response => response.json().then(data => {
+                console.log(data)
+                if (data.length > 0) {
+                    var display_name  = data[0].display_name.split(', ')
+                    if(display_name.length == 1) {
+                        console.error("Invalid post code")
+                    }
+                    else {
+                        console.log(display_name)
+                        var state = display_name[ display_name.length - 3 ];
+                        var city = display_name[0];
+                        stateInput.value = state;
+                        cityInput.value = city;
+                    }
+                } else {
+                    console.error('No results found.');
+                }
+            }))
+            .catch(error => console.error('Error:', error));
+    })
   </script>
 </body>
 
