@@ -61,7 +61,7 @@
           <div class="fs-5">Employment Status <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
             <select class="form-select" id="employment-status" required name="employmentStatus"
-              onchange="showingHiddenDiv(this)" data-question="1">
+              onchange="showingHiddenDiv(this)" data-question="1" required>
               <option selected></option>
               <option value="employed">employed</option>
               <option value="self-employed">self-employed</option>
@@ -282,7 +282,7 @@
             <div class="abc">
               <div class="def">
                 <input class="form-control uppercase" name="companyName" placeholder="Your Answer" data-question="3"
-                  disabled />
+                  disabled required/>
               </div>
             </div>
           </div>
@@ -295,7 +295,7 @@
                 <option value="+65">+65</option>
               </select>
               <input type="tel" class="form-control w-75" placeholder="Your Answer" name="companyPhoneNumber"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="4" disabled />
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="4" disabled required/>
             </div>
           </div>
           <div class="list-gap">
@@ -320,19 +320,19 @@
                 <label for="postcode" class="form-label">Postcode</label>
                 <div class="input-group">
                   <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);"
-                   class="form-control" id="companyPostcode" name="companyPostcode" placeholder="E.g. 55300" data-question="5" disabled />
+                   class="form-control" id="companyPostcode" name="companyPostcode" placeholder="E.g. 55300" data-question="5" disabled required/>
                 </div>
               </div>
               <div class="col">
                 <label for="city" class="form-label">City</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="companyCity" name="companyCity" placeholder="" data-question="5" disabled />
+                  <input type="text" class="form-control" id="companyCity" name="companyCity" placeholder="" data-question="5" disabled required/>
                 </div>
               </div>
               <div class="col">
                 <label for="state" class="form-label">State</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="companyState" name="companyState" placeholder="" data-question="5" disabled />
+                  <input type="text" class="form-control" id="companyState" name="companyState" placeholder="" data-question="5" disabled required/>
                 </div>
               </div>
             </div> 
@@ -341,55 +341,58 @@
             <div class="abc">
               <div class="def">
                 <input class="form-control" id="companyAddress" name="companyAddress" placeholder="Your Answer" required data-question="5"
-                  disabled />
+                  disabled required/>
               </div>
             </div>
           </div>
           <div class="list-gap">
             <div class="fs-5">When You Join the Company <span style="color:red;padding-left:0.25rem">*</span></div>
             <input class="form-control date-picker" id="monthYearPicker" type="month" name="whenJoinedCompany" placeholder="Select DateTime"
-              data-question="6" disabled />
+              data-question="6" disabled required/>
           </div>
           <div class="list-gap">
             <p class="fs-6">Gross Salary has to be more than Net Salary</p>
-            <div class="fs-5">Net Salary<span style="color:red;padding-left:0.25rem">*</span></div>
-            <div class="abc">
-              <div class="def">
-                <div class="input-group mb-3">
-                  <span class="input-group-text block">RM</span>
-                  <input class="form-control" data-question="7" type="number" name="netSalary">
-                  <span class="input-group-text block">.</span>
-                  <input class="form-control" type="number" name="netSalaryDecimal" maxlength="2" max="99">
+            <div class="list-gap">
+              <div class="fs-5">Net Salary<span style="color:red;padding-left:0.25rem">*</span></div>
+              <div class="abc">
+                <div class="def">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text block">RM</span>
+                    <input class="form-control" data-question="7" type="number" name="netSalary" required>
+                    <span class="input-group-text block">.</span>
+                    <input class="form-control" type="number" name="netSalaryDecimal" maxlength="2" max="99">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="list-gap">
+              <div class="fs-5">Gross Salary <span style="color:red;padding-left:0.25rem">*</span></div>
+              <div class="abc">
+                <div class="def">
+                  <div class="input-group mb-3">
+                    <span class="input-group-text block">RM</span>
+                    <input class="form-control" data-question="7" type="number" name="grossSalary" required>
+                    <span class="input-group-text block">.</span>
+                    <input class="form-control" type="number" name="grossSalaryDecimal" maxlength="2" max="99">
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           <div class="list-gap">
-            <div class="fs-5">Gross Salary <span style="color:red;padding-left:0.25rem">*</span></div>
-            <div class="abc">
-              <div class="def">
-                <div class="input-group mb-3">
-                  <span class="input-group-text block">RM</span>
-                  <input class="form-control" data-question="7" type="number" name="grossSalary">
-                  <span class="input-group-text block">.</span>
-                  <input class="form-control" type="number" name="grossSalaryDecimal" maxlength="2" max="99">
-                </div>
-                <p class="fs-5">Have EPF?</p>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="epfGross" value="Yes" checked="" id="optionEFPyes">
-                  <label class="form-check-label" for="optionEFPyes">
-                    Yes
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="epfGross" value="No" id="optionEFPno">
-                  <label class="form-check-label" for="optionEFPno">
-                    No
-                  </label>
-                </div>
-              </div>
+            <p class="fs-5">Have EPF?</p>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="epfGross" value="Yes" checked="" id="optionEFPyes">
+              <label class="form-check-label" for="optionEFPyes">
+                Yes
+              </label>
             </div>
           </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="epfGross" value="No" id="optionEFPno">
+            <label class="form-check-label" for="optionEFPno">
+              No
+            </label>
           </div>
           <div class="list-gap">
             <div class="fs-5">Salary Term <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -397,7 +400,7 @@
             </div>
             <div class="abc">
               <div class="def">
-                <select name="salaryTerm" class="form-select" data-question="8" disabled>
+                <select name="salaryTerm" class="form-select" data-question="8" disabled required>
                   <option value=""></option>
                   <option value="1">1</option>
                   <option value="2">2</option>
@@ -447,7 +450,7 @@
             <div class="fs-6" style="padding-top:8px">Which bank are you using?</div>
             <div class="abc">
               <div class="def">
-                <select name="bankName" class="form-select" data-question="10" disabled>
+                <select name="bankName" class="form-select" data-question="10" disabled required>
                   <option></option>
                   <optgroup label="A">
                     <option value="AFFIN BANK BERHAD">AFFIN BANK BERHAD</option>
@@ -540,7 +543,7 @@
             <div class="abc">
               <div class="def">
                 <input class="form-control" placeholder="Your Answer" type="text" name="bankAccountNumber"
-                  data-question="11" disabled>
+                  data-question="11" disabled required>
               </div>
             </div>
           </div>
@@ -548,7 +551,7 @@
             <div class="fs-5">Type of Account <span style="color:red;padding-left:0.25rem">*</span></div>
             <div class="form-check">
               <input class="form-check-input" type="radio" name="typeOfAccount" value="Saving" id="option16"
-                onchange="typeOfAccount('option16')">
+                onchange="typeOfAccount('option16')" required>
               <label class="form-check-label" for="option16">
                 Saving
               </label>
@@ -573,7 +576,7 @@
             <div class="fs-5">Best Time of Contact</div>
             <div class="fs-6" style="padding-top:8px">For us to contact you in times of need</div>
             <div class="input-group mb-3">
-              <select class="form-select" id="inputGroupSelect01" name="bestContactTime" data-question="13" disabled>
+              <select class="form-select" id="inputGroupSelect01" name="bestContactTime" data-question="13" disabled required>
                 <option></option>
                 <option value="8am to 12pm">8am to 12pm</option>
                 <option value="12pm to 4pm">12pm to 4pm</option>
@@ -587,7 +590,7 @@
             <div class="fs-5">Motorcycle License <span style="color:red;padding-left:0.25rem">*</span></div>
             <div class="form-check">
               <input class="form-check-input" type="radio" name="motorLicense" value="No" id="option19"
-                onchange="checkLicense('option19')">
+                onchange="checkLicense('option19')" required> 
               <label class="form-check-label" for="option19">
                 No License
               </label>
@@ -610,8 +613,8 @@
           </div>
           <div class="list-gap">
             <div class="fs-5">How do you know Motosing</div>
-            <div class="input-group mb-3">
-              <select class="form-select" id="inputGroupSelect01" name="howToKnowMotosing">
+            <div class="input-group mb-3 ">
+              <select class="form-select" id="inputGroupSelect01" name="howToKnowMotosing" required>
                 <option selected></option>
                 <option value="Google">Google</option>
                 <option value="Facebook">Facebook</option>
@@ -650,6 +653,14 @@
         minViewMode: 'months'
       });
     });
+
+    const form = document.getElementById("myForm"); 
+    form.addEventListener('submit',function(event) {
+      if (!form.checkValidity()) {
+        event.preventDefault()
+      }
+    })
+
     // This Section for dropdown list, when OTHER is picked, show another box
     let employmentStatus = document.getElementById("employment-status");
     let addbox0 = document.getElementById('container-for-employed');
@@ -670,20 +681,6 @@
     let addbox4 = document.getElementById('container-for-other-income-source');
     var isAddress = false
     const submitBtn = document.getElementById('submitBtn')
-    /*
-    submitBtn.addEventListener("click", function (event) { 
-      event.preventDefault(); 
-      const form = document.getElementById("myForm"); 
-      if (!isAddress){
-        alert("Please reenter address field without postcode, city and state")
-      }
-      else if (form.checkValidity()) { 
-        form.submit()
-      } else { 
-          alert("Please fill in all required fields."); 
-      } 
-    }); 
-    */
 
     function required() {
       option0.required = false;

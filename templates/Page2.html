@@ -43,7 +43,7 @@
           <div class="abc">
             <div class="def">
               <input class="form-control" id="name" name="name" type="text" placeholder="Your Answer"
-                data-question="1">
+                data-question="1" required>
             </div>
           </div>
         </div>
@@ -54,7 +54,7 @@
             <div class="def">
               <input class="form-control" placeholder="Your Answer" type="text" name="NRIC"
                 oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);"
-                onchange="autoSelectGender(event)" data-question="2" disabled>
+                onchange="autoSelectGender(event)" data-question="2" disabled required>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@
               <option value="+65">+65</option>
             </select>
             <input type="tel" class="form-control w-75" placeholder="Your Answer" name="phoneNumber"
-              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="3" disabled>
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="3" disabled required>
           </div>
         </div>
         <div class="list-gap">
@@ -75,14 +75,14 @@
           <div class="abc">
             <div class="def">
               <input class="form-control" id="email" name="email" type="email" onchange="validateEmail(event)"
-                placeholder="Your Answer" data-question="4" disabled />
+                placeholder="Your Answer" data-question="4" disabled required/>
             </div>
           </div>
         </div>
         <div class="list-gap">
           <div class="fs-5">Title of person <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select titleOfPerson" id="inputGroupSelect01" name="title">
+            <select class="form-select titleOfPerson" id="inputGroupSelect01" name="title" required>
               <option selected></option>
               <option value="MR">MR</option>
               <option value="MRS">MRS</option>
@@ -109,7 +109,7 @@
         <div class="list-gap">
           <label class="fs-5" for="race-option">Race <span style="color:red;padding-left:0.25rem">*</span></label>
           <div class="input-group mb-3">
-            <select class="form-select" id="race-option" name="race" data-question="5" disabled>
+            <select class="form-select" id="race-option" name="race" data-question="5" disabled required>
               <option selected></option>
               <option value="Malay">Malay</option>
               <option value="Chinese">Chinese</option>
@@ -127,7 +127,7 @@
         <div class="list-gap">
           <div class="fs-5">Marital Status <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="inputGroupSelect01" name="maritalStatus" data-question="6" disabled>
+            <select class="form-select" id="inputGroupSelect01" name="maritalStatus" data-question="6" disabled required>
               <option selected></option>
               <option value="Single">Single</option>
               <option value="Married">Married</option>
@@ -161,19 +161,22 @@
                 <label for="postcode" class="form-label">Postcode</label>
                 <div class="input-group">
                   <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);"
-                   class="form-control" id="postcode" name="postcode" maxlength="5" placeholder="E.g. 55300" data-question="8" disabled />
+                   class="form-control" id="postcode" name="postcode" maxlength="5" placeholder="E.g. 55300" data-question="8" disabled required/>
                 </div>
               </div>
               <div class="col">
                 <label for="city" class="form-label">City</label>
-                <div class="input-group">
-                  <input type="text" class="form-control" id="city" name="city" placeholder="" data-question="8" disabled />
+                <div class="spinner-border spinner-border-sm float-end text-primary" style="display:none" id="spinner" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="input-group" id="cityInput">
+                  <input type="text" class="form-control" id="city" name="city" placeholder="" data-question="8" disabled required/>
                 </div>
               </div>
               <div class="col">
                 <label for="state" class="form-label">State</label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="state" name="state" placeholder="" data-question="8" disabled />
+                  <input type="text" class="form-control" id="state" name="state" placeholder="" data-question="8" disabled required/>
                 </div>
               </div>
             </div>  
@@ -181,14 +184,14 @@
           <div class="abc">
             <!-- <label> -->
             <div class="def">
-              <input class="form-control" name="address" id="address" placeholder="Your Answer" data-question="8" disabled />
+              <input class="form-control" name="address" id="address" placeholder="Your Answer" data-question="8" disabled required/>
             </div>
           </div>
         </div>
         <div class="list-gap">
           <div class="fs-5">Number of year in residence <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="inputGroupSelect01" name="numOfYear" data-question="9" disabled>
+            <select class="form-select" id="inputGroupSelect01" name="numOfYear" data-question="9" disabled required>
               <option selected></option>
               <option value="1-2">1-2</option>
               <option value="3-4">3-4</option>
@@ -202,7 +205,7 @@
         <div class="list-gap">
           <div class="fs-5">Ownership status <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="inputGroupSelect01" name="ownership" data-question="10" disabled>
+            <select class="form-select" id="inputGroupSelect01" name="ownership" data-question="10" disabled required>
               <option selected></option>
               <option value="employer quarters">employer quarters</option>
               <option value="family home">family home</option>
@@ -263,7 +266,7 @@
           <div class="fs-5">Brand<span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
             <select class="form-select" id="inputGroupSelect01" name="brand" data-question="11"
-              onchange="showDynamically(this.value)">
+              onchange="showDynamically(this.value)" required>
               <option selected></option>
               <option value="HONDA">HONDA</option> 
               <option value="YAMAHA">YAMAHA</option>
@@ -315,7 +318,7 @@
         <div class="list-gap">
           <div class="fs-5">Model<span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="modal" name="modal" data-question="11">
+            <select class="form-select" id="modal" name="modal" data-question="11" required>
             </select>
           </div>
         </div>
@@ -323,7 +326,7 @@
           <div class="fs-5">Product type <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
             <select class="form-select" id="inputGroupSelect01" name="productType" onchange="checkTenureType(event)"
-              data-question="11" disabled>
+              data-question="11" disabled required>
               <option selected></option>
               <option value="scooter (below 200cc)">scooter (below 200cc)</option>
               <option value="scooter (200cc above)">scooter (200cc above)</option>
@@ -336,7 +339,7 @@
         <div class="list-gap">
           <div class="fs-5">New/Used/Recon <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="newusedrecon" value="New" id="option7">
+            <input class="form-check-input" type="radio" name="newusedrecon" value="New" id="option7" required>
             <label class="form-check-label" for="option7">
               New
             </label>
@@ -376,7 +379,7 @@
           <div class="fs-5">Tenure <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="fs-5" style="font-size:14px;padding-top:8px">How long do you wish to loan (months)</div>
           <div class="input-group mb-3">
-            <select class="form-select tenure" id="inputGroupSelect01" name="tenure" data-question="12" disabled>
+            <select class="form-select tenure" id="inputGroupSelect01" name="tenure" data-question="12" disabled required>
               <option selected></option>
               <option value="12 month (1 year)">12 month (1 year)</option>
               <option value="24 months (2 years)">24 months (2 years)</option>
@@ -406,13 +409,14 @@
           <div class="fs-5" style="font-size:14px;padding-top:8px">Full Name as in NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" name="referenceName1" placeholder="Your Answer" data-question="14" disabled />
+              <input class="form-control uppercase" name="referenceName1" placeholder="Your Answer" data-question="14" disabled required/>
             </div>
           </div>
           <div class="fs-5" style="font-size:14px;padding-top:8px">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
+          <p class="fs-5" style="font-size: 12px;">At least need 1 NRIC for Reference Contact</p>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" type="text" name="referenceNric1" placeholder="NRIC">
+              <input class="form-control uppercase" type="text" name="referenceNric1" placeholder="NRIC" required>
             </div>
           </div>
         </div>
@@ -425,7 +429,7 @@
               <option value="+65">+65</option>
             </select>
             <input type="tel" class="form-control w-75" placeholder="Your Answer" name="referencePhoneNum1"
-              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="15" disabled>
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="15" disabled required>
           </div>
         </div>
         <div class="list-gap">
@@ -461,7 +465,7 @@
         <div class="list-gap">
           <div class="fs-5">How are you related to Reference Contact (1) <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="inputGroupSelect01" name="referenceRelation1" data-question="16" disabled>
+            <select class="form-select" id="inputGroupSelect01" name="referenceRelation1" data-question="16" disabled required>
               <option selected></option>
               <option value="spouse">spouse</option>
               <option value="parents">parents</option>
@@ -479,13 +483,14 @@
           <div class="fs-5" style="font-size:14px;padding-top:8px">Full Name as in NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" name="referenceName2" placeholder="Your Answer" data-question="17" disabled />
+              <input class="form-control uppercase" name="referenceName2" placeholder="Your Answer" data-question="17" disabled required/>
             </div>
           </div>
           <div class="fs-5" style="font-size:14px;padding-top:8px">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
+          <p class="fs-5" style="font-size: 12px;">Put '-' if no NRIC</p>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" type="text" name="referenceNric2" placeholder="NRIC">
+              <input class="form-control uppercase" id="referenceNric2" type="text" name="referenceNric2" placeholder="NRIC">
             </div>
           </div>
         </div>
@@ -498,7 +503,7 @@
               <option value="+65">+65</option>
             </select>
             <input type="tel" class="form-control w-75" placeholder="Your Answer" name="referencePhoneNum2"
-              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="18" disabled>
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" data-question="18" disabled required>
           </div>
         </div>
         <div class="list-gap">
@@ -536,7 +541,7 @@
         <div class="list-gap">
           <div class="fs-5">How are you related to Reference Contact (2) <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="inputGroupSelect01" name="referenceRelation2" data-question="19" disabled>
+            <select class="form-select" id="inputGroupSelect01" name="referenceRelation2" data-question="19" disabled required>
               <option selected></option>
               <option value="spouse">spouse</option>
               <option value="parents">parents</option>
@@ -572,20 +577,16 @@
         nonbumiElement.checked = false 
       } 
     });
-    /*
-    document.getElementById("submitBtn").addEventListener("click", function (event) { 
-        event.preventDefault(); 
-        const form = document.getElementById("form"); 
-        if (!isAddress){
-          alert("Please reenter address field without postcode, city and state")
-        }
-        else if (form.checkValidity()) { 
-            form.submit()
-        } else { 
-            alert("Please fill in all required fields."); 
-        } 
-     }); 
-     */
+
+    const form = document.getElementById("form"); 
+    form.addEventListener('submit',function(event) {
+      var referenceNric2 = document.getElementById('referenceNric2').value
+      referenceNric2 == '' ? referenceNric2 = '-' : ''; 
+      if (!form.checkValidity()) {
+        event.preventDefault()
+      }
+    })
+
     //This section for used/recon, showing another box
     let option7 = document.getElementById("option7");
     let option8 = document.getElementById("option8");
@@ -1188,30 +1189,79 @@
     const stateInput = document.getElementById('state');
     const cityInput = document.getElementById('city');
     const addressInput = document.getElementById('address');
+    const cityFieldInput = document.getElementById('cityInput') 
     const postcodeRegex = /\b\d{5}\b/g;
 
     postcodeInput.addEventListener('change', function() {
         var postcode = postcodeInput.value;
 
         var apiUrl = `https://nominatim.openstreetmap.org/search?postalcode=${postcode}&countrycodes=my&format=json`;
-
+        
+        document.getElementById('spinner').style.display = 'inline-block'
         fetch(apiUrl)
             .then(response => response.json().then(data => {
-                console.log(data)
                 if (data.length > 0) {
                     var display_name  = data[0].display_name.split(', ')
                     if(display_name.length == 1) {
+                        // replace with enabling input field so that, user can manually input the city and state
+                        if (document.getElementById('citySelect') !== null) {
+                          document.getElementById('citySelect').remove()
+                        }
+                        cityInput.style.display = 'block'
                         console.error("Invalid post code")
+                        document.getElementById('spinner').style.display = 'none'
                     }
                     else {
-                        console.log(display_name)
-                        var state = display_name[ display_name.length - 3 ];
-                        var city = display_name[0];
-                        stateInput.value = state;
-                        cityInput.value = city;
+                      // clear out previous select element, if there is 
+                      if (document.getElementById('citySelect') !== null) {
+                        document.getElementById('citySelect').remove()
+                      }
+                      console.log(display_name)
+                      var state = display_name[ display_name.length - 3 ]
+                      var city = []
+                      if (display_name.length == 3) {
+                        city.push(display_name[0])
+                      } else if (display_name.length > 3) {
+                        city = display_name.slice(0, display_name.length - 3)
+                      }
+                      // change kuala lumpur state to Wilayah Persekutuan
+                      if (state === "Kuala Lumpur") {
+                        state = "Wilayah Persekutuan";
+                      }
+
+                      // create unique data set
+                      uniqueCities = Array.from(new Set(city))
+
+                      stateInput.value = state;
+                      // create select element
+                      const select = document.createElement('select')
+                      select.id = 'citySelect'
+                      select.name = 'citySelect'
+                      select.required = true
+                      select.classList.add('form-select')
+                      select.style.borderRadius = '50px' 
+                      select.setAttribute('data-question','8')
+                      // based on the incoming city, create options with the value and text and append to select
+                      uniqueCities.forEach(option => {
+                        const element = document.createElement('option')
+                        element.value = option;
+                        element.text = option;
+                        select.appendChild(element)
+                      })
+                      // select the first element and disable the original input element
+                      select.selectedIndex = 0
+                      cityInput.style.display = 'none'
+                      cityFieldInput.appendChild(select)
+                      document.getElementById('spinner').style.display = 'none'
                     }
                 } else {
+                    // replace with enabling input field so that, user can manually input the city and state
+                    if (document.getElementById('citySelect') !== null) {
+                      document.getElementById('citySelect').remove()
+                    }
+                    cityInput.style.display = 'block'
                     console.error('No results found.');
+                    document.getElementById('spinner').style.display = 'none'
                 }
             }))
             .catch(error => console.error('Error:', error));

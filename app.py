@@ -24,7 +24,7 @@ class MyApp(Flask):
         self.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
         # self.secondPageData = {}  # Dict that storing first page info
         # self.thirdPageData = {}  # Dict that storing second page info
-        self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db')  # Connect to database
+        self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db', port='3306')  # Connect to database
         self.cursor = self.db.cursor()
         self.personalInfo = ""  # Storing personal info
         self.productInfo = "" # Storing product info
@@ -63,7 +63,6 @@ class MyApp(Flask):
         return render_template('Page3.html')
     
     def reuploadPage(self):
-        session.clear()
         return render_template('Reupload.html')
     
     def reuploadFiles(self):
@@ -74,9 +73,9 @@ class MyApp(Flask):
             self.uploadFiles()
             mergedFilename = session['unique_filename']
             # get the file path of saved merged.pdf
-            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'],mergedFilename)
+            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], mergedFilename)
             
-            # get the zip file path
+            # save the merged pdf into a zip
             zipFilePath = f"{nric}.zip"
             
             # list of zip files
@@ -100,6 +99,7 @@ class MyApp(Flask):
             traceback.print_exc()
             print(e,flush=True)
     
+    
     def uploadChunkedPDF(self):
         try:
             print("Uploading Chunked PDF",flush=True)
@@ -109,9 +109,9 @@ class MyApp(Flask):
             filename = file.filename.split('.part')[0]
             chunk_filename = f'{filename}.part{chunk_number}'
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
-            
+                
             if 'uploaded_filenames' not in session:
-                session['uploaded_filenames'] = []
+                session['uploaded_filenames'] = []   
                 
             if chunk_number == total_chunks - 1:
                 # All chunks uploaded, merge them into the original file
@@ -147,19 +147,19 @@ class MyApp(Flask):
             if "photo" not in request.files:
                 print("No photo found",flush=True)
             else:
-                # assign to session array
+                # assign to array
                 self.photos.clear()
                 self.photos = request.files.getlist('photo')
-                
+            
             pdfFiles = session.get('uploaded_filenames','empty')
             
             if pdfFiles == 'empty':
                 print("No PDF Files uploaded",flush=True)
-            
+                
             # call the process files function to save the files into local
             self.processFiles()
             
-            print("Submitted files",flush=True)
+            print("Submitted files", flush=True)
             return redirect(url_for('page2'))
         except Exception as e:
             print(e, flush=True)
@@ -190,17 +190,17 @@ class MyApp(Flask):
             print("Error before sql statements", flush=True)
             print(e,flush=True)
             return f"<h1>{e}<h1>"
-
+        
         # check if the database is timed out
         try:
             print("Pinging the server...",flush=True)
             self.db.ping(reconnect=True)
         except mysql.connector.Error:
             print("Connection Timed out",flush=True) 
-        
+            
         try:
             query = f"INSERT INTO `Personal Info` VALUES ({self.personalInfo})"
-            # self.cursor.execute(query)
+            self.cursor.execute(query)
             print(f"Inserted Personal Info :{self.personalInfo}" , flush=True)
             flag1 = True
         except mysql.connector.Error as e:
@@ -210,7 +210,7 @@ class MyApp(Flask):
         try:
             for i in self.referenceContacts:
                 queryX = f"INSERT INTO `Reference Contact` (`NRIC`, `Name`,`Reference Contact NRIC`, `Phone Number`, `Stay with user`,`Stay where(If no)`, `Relation to user`) VALUES ({i})"
-                # self.cursor.execute(queryX)
+                self.cursor.execute(queryX)
                 print(f"Inserted Reference Contact :{i}" , flush=True)
             flag2 = True
         except mysql.connector.Error as e:
@@ -219,7 +219,7 @@ class MyApp(Flask):
 
         try:
             query2 = f"INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`,`Net Salary` , `Gross Salary`, `Have EPF`, `Salary Term`) VALUES ({self.workingInfo})"
-            # self.cursor.execute(query2)
+            self.cursor.execute(query2)
             print(f"Inserted Working Info :{self.workingInfo}" , flush=True)
             flag3 = True
         except mysql.connector.Error as e:
@@ -228,7 +228,7 @@ class MyApp(Flask):
 
         try:
             query3 = f"INSERT INTO `Banking Info` (`NRIC`, `Bank Name`, `Bank Account Number`, `Type Of Account`, `pdfFilePath`) VALUES ({self.bankingInfo})"
-            # self.cursor.execute(query3)
+            self.cursor.execute(query3)
             print(f"Inserted Banking Info :{self.bankingInfo}" , flush=True)
             flag4 = True
         except mysql.connector.Error as e:
@@ -237,7 +237,7 @@ class MyApp(Flask):
 
         try:
             query4 = f"INSERT INTO `Product Info` (`NRIC`, `Product Type`, `Brand`, `Model`, `Number Plate`, `Tenure`) VALUES ({self.productInfo})"
-            # self.cursor.execute(query4)
+            self.cursor.execute(query4)
             print(f"Inserted Product Info :{self.productInfo}" , flush=True)
             flag5 = True
         except mysql.connector.Error as e:
@@ -246,7 +246,7 @@ class MyApp(Flask):
 
         try:
             query5 = f"INSERT INTO `Extra Info` (`NRIC`, `Best time to contact`, `Have license or not`, `License Type`, `How user know Motosing`) VALUES ({self.extraInfo})"
-            # self.cursor.execute(query5)
+            self.cursor.execute(query5)
             print(f"Inserted Extra Info :{self.extraInfo}" , flush=True)
             flag6 = True
         except mysql.connector.Error as e:
@@ -255,7 +255,7 @@ class MyApp(Flask):
 
         if flag1 and flag2 and flag3 and flag4 and flag5 and flag6:
             try: 
-                # self.db.commit()
+                self.db.commit()
                 print("COMMITED INTO DB", flush=True)
                 print("Submit complete", flush=True)
             except Exception as e:
@@ -266,7 +266,7 @@ class MyApp(Flask):
             self.db.rollback()
             print("Flag detected, not committing to database", flush=True)
             return '<h1>Something is wrong with the data</h1>'
-        
+
         # reset session data
         session.clear()
         return '<h1>Submitted, please wait</h1>'
@@ -275,10 +275,11 @@ class MyApp(Flask):
         try:
             # get files
             photos = self.photos
-            pdfFiles = session.get('uploaded_filenames', [])
-        
+            pdfFiles = session.get('uploaded_filenames',[])
+                
+            # save and append the files to merger
             merger = PdfMerger()
-            # print("PDFFILES = ", pdfFiles)
+            # print("PDFFILES = ", pdfFiles, flush=True)
             
             if len(pdfFiles) > 0:
                 for file in pdfFiles:
@@ -289,7 +290,7 @@ class MyApp(Flask):
             if len(photos) > 0:
                 for photo in photos:
                     image = Image.open(photo.stream)
-                    # image = image.resize((400, 300))
+                    # image = image.resize((1200, 1200))
                 
                     # create and write into pdf file
                     pdf_bytes = io.BytesIO()
@@ -343,7 +344,7 @@ class MyApp(Flask):
             print("Zip File Creation Failed",flush=True)
             traceback.print_exc()
             print(e,flush=True)
-    
+            
     # Restructure all data when submit
     # Gets data from session
     def restructureData(self):
@@ -353,17 +354,19 @@ class MyApp(Flask):
             if int( data['NRIC']) % 2 == 0:
                 data['gender'] = 'Female'
             # print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
+            city = data.get('citySelect', data['city'])
+            address = f"{data['address']}, {data['postcode']}, {city}, {data['state']}" 
             
-            address = f"{data['address']}, {data['postcode']}, {data['city']}, {data['state']}" 
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
             
             self.personalInfo = f"'{data['NRIC']}', '{data['name']}', '{data['countryCode'] + data['phoneNumber']}', '{data['email']}', '{data['title']}', '{data['gender']}', '{data['race'] if data['race'] != '' else data['otherRace']}', '{data['maritalStatus']}', '{data['bumiornon']}', '{address}', '{data['numOfYear']}', '{data['ownership']}', '{data['stayRegisterAddress']}', '{data['noStayRegisterAddress'] if data['stayRegisterAddress'] == 'No' else 'None'}', '{currentTime}'"
+            
             self.productInfo = f"'{data['NRIC']}', '{data['productType'].lower()}{data['newusedrecon'].lower()}', '{data['brand']}', '{data['modal']}', '{data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None'}', '{data['tenure']}'"
 
             referenceContact1 = f"'{data['NRIC']}', '{data['referenceName1']}', '{data['referenceNric1']}', '{data['referenceCountryCode1'] + data['referencePhoneNum1']}', '{data['stayWithReference1']}', '{data['notStayWithApplicant1'] if data['stayWithReference1'] == 'No' else 'None'}', '{data['referenceRelation1']}'"
 
-            referenceContact2 = f"'{data['NRIC']}', '{data['referenceName2']}', '{data['referenceNric2']}','{data['referenceCountryCode2'] + data['referencePhoneNum2']}', '{data['stayWithReference2']}', '{data['notStayWithApplicant2'] if data['stayWithReference2'] == 'No' else 'None'}', '{data['referenceRelation2']}'"
+            referenceContact2 = f"'{data['NRIC']}', '{data['referenceName2']}', '{data.get('referenceNric2','-')}','{data['referenceCountryCode2'] + data['referencePhoneNum2']}', '{data['stayWithReference2']}', '{data['notStayWithApplicant2'] if data['stayWithReference2'] == 'No' else 'None'}', '{data['referenceRelation2']}'"
 
             self.referenceContacts.clear()
             self.referenceContacts.append(referenceContact1)
@@ -415,8 +418,9 @@ class MyApp(Flask):
             print("Error in Restructure Third Page Info", flush=True)
             print(e, flush = True)
             return f"<h1>{e}<h1>"
-
+        
 app = MyApp(__name__)
+# for session
 app.secret_key = secrets.token_hex(32)
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
