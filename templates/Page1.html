@@ -89,38 +89,6 @@
     document.getElementById('reuploadBtn').addEventListener('click', function(){
         window.location.href = '/reuploadPage'
     })
-    /*
-    const postalCodeInput = document.getElementById('postalCode') 
-    const stateInput = document.getElementById('state') 
-    const cityInput = document.getElementById('city') 
-
-    postalCodeInput.addEventListener('change', function() {
-        var postalCode = postalCodeInput.value;
-
-        var apiUrl = `https://nominatim.openstreetmap.org/search?postalcode=${postalCode}&countrycodes=my&format=json`;
-
-        fetch(apiUrl)
-            .then(response => response.json().then(data => {
-                console.log(data)
-                if (data.length > 0) {
-                    var display_name  = data[0].display_name.split(', ')
-                    if(display_name.length == 1) {
-                        console.error("Invalid post code")
-                    }
-                    else {
-                        console.log(display_name)
-                        var state = display_name[ display_name.length - 3 ];
-                        var city = display_name[0];
-                        stateInput.value = state;
-                        cityInput.value = city;
-                    }
-                } else {
-                    console.error('No results found.');
-                }
-            }))
-            .catch(error => console.error('Error:', error));
-    })
-    */
 
     function clickCamera() {
         cameraInput.click()

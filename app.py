@@ -350,13 +350,29 @@ class MyApp(Flask):
     def restructureData(self):
         try:
             data = session['secondPageData']
+            # print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
+            
             data['gender'] = 'Male'
             if int( data['NRIC']) % 2 == 0:
                 data['gender'] = 'Female'
-            # print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
-            city = data.get('citySelect', data['city'])
-            address = f"{data['address']}, {data['postcode']}, {city}, {data['state']}" 
             
+            # use array to store all address parts
+            addressParts = [data['lot'], data['street']]
+            
+            # if building name has characters, add it into the array
+            if (data.get('buildingName','')):
+                addressParts.append(data['buildingName'])
+            # if district has characters, add it into the array
+            if (data.get('district','')):
+                addressParts.append(data['district'])
+            # getting city
+            city = data.get('citySelect', data['city'])
+            # append all the last addresses
+            addressParts.extend([data['postcode'], city, data['state']])
+            # form an address using join with comma
+            address = ', '.join(addressParts)
+            
+            print("Company Address :", address,flush=True)
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
             
@@ -406,8 +422,26 @@ class MyApp(Flask):
             if not grossDecimal:
                 grossDecimal = "00"
             
-            companyAddress = f"{data['companyAddress']}, {data['companyPostcode']}, {data['companyCity']}, {data['companyState']}" 
+            # use array to store all address parts
+            companyAddressParts = [data['companyLot'], data['companyStreet']]
             
+            # if building name has characters, add it into the array
+            if (data.get('companyBuildingName','')):
+                companyAddressParts.append(data['companyBuildingName'])
+                
+            # if district has characters, add it into the array
+            if (data.get('companyDistrict','')):
+                companyAddressParts.append(data['companyDistrict'])
+                
+            # getting city
+            companyCity = data.get('companyCitySelect', data['companyCity'])
+            
+            # append all the last addresses
+            companyAddressParts.extend([data['companyPostcode'], companyCity, data['companyState']])
+            # form an address using join with comma
+            companyAddress = ', '.join(companyAddressParts)
+            
+            print("Company Address :", companyAddress,flush=True)
             self.workingInfo = f"'{session['secondPageData']['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{companyAddress}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
 
             self.bankingInfo = f"'{session['secondPageData']['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{session['secondPageData']['NRIC']}.zip'"

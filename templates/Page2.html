@@ -158,35 +158,54 @@
             Included)</div>
             <div class="row">
               <div class="col">
-                <label for="postcode" class="form-label">Postcode</label>
+                <label for="postcode" class="form-label">Postcode <span style="color:red;padding-left:0.25rem">*</span></label>
                 <div class="input-group">
                   <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);"
                    class="form-control" id="postcode" name="postcode" maxlength="5" placeholder="E.g. 55300" data-question="8" disabled required/>
                 </div>
               </div>
               <div class="col">
-                <label for="city" class="form-label">City</label>
+                <label for="city" class="form-label">City <span style="color:red;padding-left:0.25rem">*</span></label>
                 <div class="spinner-border spinner-border-sm float-end text-primary" style="display:none" id="spinner" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>
-                <div class="input-group" id="cityInput">
+                <div class="input-group" id="cityDiv">
                   <input type="text" class="form-control" id="city" name="city" placeholder="" data-question="8" disabled required/>
                 </div>
               </div>
               <div class="col">
-                <label for="state" class="form-label">State</label>
+                <label for="state" class="form-label">State <span style="color:red;padding-left:0.25rem">*</span></label>
                 <div class="input-group">
                   <input type="text" class="form-control" id="state" name="state" placeholder="" data-question="8" disabled required/>
                 </div>
               </div>
-            </div>  
-          <div class="fs-6" style="font-size:14px;padding-top:8px">Lot (House Number) ,(Building Name) ,Street, District</div>
-          <div class="abc">
-            <!-- <label> -->
-            <div class="def">
-              <input class="form-control" name="address" id="address" placeholder="Your Answer" data-question="8" disabled required/>
+            </div> 
+            <div class="row">
+              <div class="col">
+                <label for="lot" class="form-label">Lot (House Number) <span style="color:red;padding-left:0.25rem">*</span></label>
+                <div class="input-group">
+                  <input type="text"class="form-control" id="lot" name="lot" maxlength="10" placeholder="Your Answer" data-question="8" disabled required/>
+                </div>
+              </div>
+              <div class="col">
+                <label for="street" class="form-label">Street <span style="color:red;padding-left:0.25rem">*</span></label>
+                <div class="input-group">
+                  <input type="text"class="form-control" id="street" name="street" maxlength="50" placeholder="Your Answer" data-question="8" disabled required/>
+                </div>
+              </div>
+              <div class="col">
+                <label for="buildingName" class="form-label">Building Name</label>
+                <div class="input-group">
+                  <input type="text"class="form-control" id="buildingName" name="buildingName" maxlength="30" placeholder="Your Answer" data-question="8" disabled/>
+                </div>
+              </div>
+              <div class="col">
+                <label for="district" class="form-label">District</label>
+                <div class="input-group">
+                  <input type="text"class="form-control" id="district" name="district" maxlength="30" placeholder="Your Answer" data-question="8" disabled/>
+                </div>
+              </div>
             </div>
-          </div>
         </div>
         <div class="list-gap">
           <div class="fs-5">Number of year in residence <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -1188,9 +1207,7 @@
     const postcodeInput = document.getElementById('postcode');
     const stateInput = document.getElementById('state');
     const cityInput = document.getElementById('city');
-    const addressInput = document.getElementById('address');
-    const cityFieldInput = document.getElementById('cityInput') 
-    const postcodeRegex = /\b\d{5}\b/g;
+    const cityFieldInput = document.getElementById('cityDiv') 
 
     postcodeInput.addEventListener('change', function() {
         var postcode = postcodeInput.value;
@@ -1207,6 +1224,7 @@
                         if (document.getElementById('citySelect') !== null) {
                           document.getElementById('citySelect').remove()
                         }
+                        cityInput.value = ''
                         cityInput.style.display = 'block'
                         console.error("Invalid post code")
                         document.getElementById('spinner').style.display = 'none'
@@ -1241,6 +1259,7 @@
                       select.classList.add('form-select')
                       select.style.borderRadius = '50px' 
                       select.setAttribute('data-question','8')
+                      select.addEventListener('change',assignCity)
                       // based on the incoming city, create options with the value and text and append to select
                       uniqueCities.forEach(option => {
                         const element = document.createElement('option')
@@ -1250,6 +1269,7 @@
                       })
                       // select the first element and disable the original input element
                       select.selectedIndex = 0
+                      cityInput.value = uniqueCities[0]
                       cityInput.style.display = 'none'
                       cityFieldInput.appendChild(select)
                       document.getElementById('spinner').style.display = 'none'
@@ -1259,6 +1279,7 @@
                     if (document.getElementById('citySelect') !== null) {
                       document.getElementById('citySelect').remove()
                     }
+                    cityInput.value = ''
                     cityInput.style.display = 'block'
                     console.error('No results found.');
                     document.getElementById('spinner').style.display = 'none'
@@ -1266,13 +1287,9 @@
             }))
             .catch(error => console.error('Error:', error));
     })
-
-
-    addressInput.addEventListener('change', function() {
-      const address = addressInput.value;
-      isAddress = false
-      !postcodeRegex.test(address) ? isAddress = true :  alert("Please remove postcode, city and state from address field");
-    })
+    function assignCity() {
+      document.getElementById('city').value = document.getElementById('citySelect').value
+    }
   </script>
 </body>
 

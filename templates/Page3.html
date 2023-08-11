@@ -317,31 +317,52 @@
             <div class="fs-5">Company Address <span style="color:red;padding-left:0.25rem">*</span></div>
             <div class="row">
               <div class="col">
-                <label for="postcode" class="form-label">Postcode</label>
+                <label for="companyPostcode" class="form-label">Postcode <span style="color:red;padding-left:0.25rem">*</span></label>
                 <div class="input-group">
                   <input type="text" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);"
                    class="form-control" id="companyPostcode" name="companyPostcode" placeholder="E.g. 55300" data-question="5" disabled required/>
                 </div>
               </div>
               <div class="col">
-                <label for="city" class="form-label">City</label>
-                <div class="input-group">
+                <label for="companyCity" class="form-label">City <span style="color:red;padding-left:0.25rem">*</span></label>
+                <div class="spinner-border spinner-border-sm float-end text-primary" style="display:none" id="spinner" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <div class="input-group" id="cityDiv">
                   <input type="text" class="form-control" id="companyCity" name="companyCity" placeholder="" data-question="5" disabled required/>
                 </div>
               </div>
               <div class="col">
-                <label for="state" class="form-label">State</label>
+                <label for="companyState" class="form-label">State <span style="color:red;padding-left:0.25rem">*</span></label>
                 <div class="input-group">
                   <input type="text" class="form-control" id="companyState" name="companyState" placeholder="" data-question="5" disabled required/>
                 </div>
               </div>
             </div> 
-            <div class="fs-6" style="padding-top:8px">Lot (House Number) ,(Building Name), Street, District
-            </div>
-            <div class="abc">
-              <div class="def">
-                <input class="form-control" id="companyAddress" name="companyAddress" placeholder="Your Answer" required data-question="5"
-                  disabled required/>
+            <div class="row">
+              <div class="col">
+                <label for="companyLot" class="form-label">Lot (House Number) <span style="color:red;padding-left:0.25rem">*</span></label>
+                <div class="input-group">
+                  <input type="text"class="form-control" id="companyLot" name="companyLot" maxlength="10" placeholder="Your Answer" data-question="5" disabled required/>
+                </div>
+              </div>
+              <div class="col">
+                <label for="companyStreet" class="form-label">Street <span style="color:red;padding-left:0.25rem">*</span></label>
+                <div class="input-group">
+                  <input type="text"class="form-control" id="companyStreet" name="companyStreet" maxlength="50" placeholder="Your Answer" data-question="5" disabled required/>
+                </div>
+              </div>
+              <div class="col">
+                <label for="companyBuildingName" class="form-label">Building Name</label>
+                <div class="input-group">
+                  <input type="text"class="form-control" id="companyBuildingName" name="companyBuildingName" maxlength="30" placeholder="Your Answer" data-question="5" disabled/>
+                </div>
+              </div>
+              <div class="col">
+                <label for="companyDistrict" class="form-label">District</label>
+                <div class="input-group">
+                  <input type="text"class="form-control" id="companyDistrict" name="companyDistrict" maxlength="30" placeholder="Your Answer" data-question="5" disabled/>
+                </div>
               </div>
             </div>
           </div>
@@ -822,40 +843,89 @@
     const postcodeInput = document.getElementById('companyPostcode') 
     const stateInput = document.getElementById('companyState') 
     const cityInput = document.getElementById('companyCity') 
-    const addressInput = document.getElementById('companyAddress')
-    const postcodeRegex = /\b\d{5}\b/g;
+    const cityFieldInput = document.getElementById('cityDiv') 
 
     postcodeInput.addEventListener('change', function() {
         var postcode = postcodeInput.value;
 
         var apiUrl = `https://nominatim.openstreetmap.org/search?postalcode=${postcode}&countrycodes=my&format=json`;
 
+        document.getElementById('spinner').style.display = 'inline-block'
         fetch(apiUrl)
             .then(response => response.json().then(data => {
                 console.log(data)
                 if (data.length > 0) {
                     var display_name  = data[0].display_name.split(', ')
                     if(display_name.length == 1) {
+                        // replace with enabling input field so that, user can manually input the city and state
+                        if (document.getElementById('companyCitySelect') !== null) {
+                          document.getElementById('companyCitySelect').remove()
+                        }
+                        cityInput.value = ''
+                        cityInput.style.display = 'block'
                         console.error("Invalid post code")
+                        document.getElementById('spinner').style.display = 'none'
                     }
                     else {
+                        // clear out previous select element, if there is 
+                        if (document.getElementById('companyCitySelect') !== null) {
+                          document.getElementById('companyCitySelect').remove()
+                        }
                         console.log(display_name)
-                        var state = display_name[ display_name.length - 3 ];
-                        var city = display_name[0];
+                        var state = display_name[ display_name.length - 3 ]
+                        var city = []
+                        if (display_name.length == 3) {
+                          city.push(display_name[0])
+                        } else if (display_name.length > 3) {
+                          city = display_name.slice(0, display_name.length - 3)
+                        }
+                        // change kuala lumpur state to Wilayah Persekutuan
+                        if (state === "Kuala Lumpur") {
+                          state = "Wilayah Persekutuan";
+                        }
+  
+                        // create unique data set
+                        uniqueCities = Array.from(new Set(city))
                         stateInput.value = state;
-                        cityInput.value = city;
+                        // create select element
+                        const select = document.createElement('select')
+                        select.id = 'companyCitySelect'
+                        select.name = 'companyCitySelect'
+                        select.required = true
+                        select.classList.add('form-select')
+                        select.style.borderRadius = '50px' 
+                        select.setAttribute('data-question','8')
+                        select.addEventListener('change',assignCity)
+                        // based on the incoming city, create options with the value and text and append to select
+                        uniqueCities.forEach(option => {
+                          const element = document.createElement('option')
+                          element.value = option;
+                          element.text = option;
+                          select.appendChild(element)
+                        })
+                        // select the first element and disable the original input element
+                        select.selectedIndex = 0
+                        cityInput.value = uniqueCities[0]
+                        cityInput.style.display = 'none'
+                        cityFieldInput.appendChild(select)
+                        document.getElementById('spinner').style.display = 'none'
                     }
                 } else {
+                     // replace with enabling input field so that, user can manually input the city and state
+                     if (document.getElementById('companyCitySelect') !== null) {
+                      document.getElementById('companyCitySelect').remove()
+                    }
+                    cityInput.value = ''
+                    cityInput.style.display = 'block'
                     console.error('No results found.');
+                    document.getElementById('spinner').style.display = 'none'
                 }
             }))
             .catch(error => console.error('Error:', error));
     })
-    addressInput.addEventListener('change', function() {
-      const address = addressInput.value;
-      isAddress = false
-      !postcodeRegex.test(address) ? isAddress = true :  alert("Please remove postcode, city and state from address field");
-    })
+    function assignCity() {
+      cityInput.value = document.getElementById('companyCitySelect').value
+    }
   </script>
 </body>
 </html>
