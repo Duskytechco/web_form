@@ -12,9 +12,9 @@ from datetime import datetime
 import traceback
 import secrets
 import time
+import subprocess
 
-# TODO:UPDATE BUSINESS OF NATURE
-# TODO:UPDATE TYPE OF OCCUPATION
+
 
 
 class MyApp(Flask):
@@ -51,20 +51,26 @@ class MyApp(Flask):
         self.add_url_rule('/reuploadFiles', view_func=self.reuploadFiles,
                           methods=['POST'])
 
+
+
     # Main Page
     def index(self):
         return render_template('Page1.html')
+
 
     # Second page
     def page2(self):
         return render_template('Page2.html')
     
+
     def page3(self):
         return render_template('Page3.html')
     
+
     def reuploadPage(self):
         return render_template('Reupload.html')
     
+
     def reuploadFiles(self):
         nric = request.form['nric']
         self.photos.clear()
@@ -100,6 +106,9 @@ class MyApp(Flask):
             print(e,flush=True)
     
     
+
+
+
     def uploadChunkedPDF(self):
         try:
             print("Uploading Chunked PDF",flush=True)
@@ -136,7 +145,12 @@ class MyApp(Flask):
         except Exception as e:
             print(e,flush=True)
             return {'error'}
-            
+
+
+
+
+
+
     # upload files POST from page 1 
     # Submit button for page 1
     def uploadFiles(self):
@@ -165,6 +179,10 @@ class MyApp(Flask):
             print(e, flush=True)
     
     
+
+
+
+
     # Submit First Page Handler
     def submitSecondPage(self):
         try:
@@ -175,13 +193,15 @@ class MyApp(Flask):
         except Exception as e:
             print(e, flush=True)
 
+
+
+
+
+
     # Submit Second Page Handler
     def submit(self):
         print("Submitting form. . .", flush=True)
         try:
-            # create the zip file with the NRIC
-            self.createZipFile()
-            
             session['thirdPageData'] = dict(request.form)
             self.restructureData()
 
@@ -258,6 +278,19 @@ class MyApp(Flask):
                 self.db.commit()
                 print("COMMITED INTO DB", flush=True)
                 print("Submit complete", flush=True)
+
+                # Execute SFTP Script to transfer PDF Files
+                try: 
+                    self.createZipFile()
+                    subprocess_args = ['python3', 'scripts/transfer_file_via_sftp.py', f"{session['secondPageData']['NRIC']}.zip"]
+                    subprocess.run(subprocess_args, check=True)
+                    print("SFTP Transfer completed", flush=True)
+                except subprocess.CalledProcessError as e:
+                    self.db.rollback()
+                    error_message = f"SFTP script execution failed: {e}"
+                    print(error_message, flush=True)
+
+                
             except Exception as e:
                 self.db.rollback()
                 print(e, flush=True)
@@ -269,8 +302,13 @@ class MyApp(Flask):
 
         # reset session data
         session.clear()
-        return '<h1>Submitted, please wait</h1>'
+        return '<h1>Submitted successfully</h1>'
         
+
+
+
+
+
     def processFiles(self):
         try:
             # get files
@@ -325,6 +363,11 @@ class MyApp(Flask):
             traceback.print_exc()
             print(e,flush=True)
             
+
+
+
+
+
     def createZipFile(self):
         try:
             uniqueFile = session['unique_filename']
@@ -338,13 +381,18 @@ class MyApp(Flask):
 
             # remove merged pdf
             os.remove(pdfFile)
-            
             print("Zip file has been created",flush=True)
+
         except Exception as e:
             print("Zip File Creation Failed",flush=True)
             traceback.print_exc()
             print(e,flush=True)
             
+
+
+
+
+
     # Restructure all data when submit
     # Gets data from session
     def restructureData(self):
@@ -371,12 +419,12 @@ class MyApp(Flask):
             addressParts.extend([data['postcode'], city, data['state']])
             # form an address using join with comma
             address = ', '.join(addressParts)
-            
-            print("Company Address :", address,flush=True)
+            address = address.replace("'"," ")
+            print("address :", address,flush=True)
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
             
-            self.personalInfo = f"'{data['NRIC']}', '{data['name']}', '{data['countryCode'] + data['phoneNumber']}', '{data['email']}', '{data['title']}', '{data['gender']}', '{data['race'] if data['race'] != '' else data['otherRace']}', '{data['maritalStatus']}', '{data['bumiornon']}', '{address}', '{data['numOfYear']}', '{data['ownership']}', '{data['stayRegisterAddress']}', '{data['noStayRegisterAddress'] if data['stayRegisterAddress'] == 'No' else 'None'}', '{currentTime}'"
+            self.personalInfo = f'"{data["NRIC"]}", "{data["name"]}", "{data["countryCode"] + data["phoneNumber"]}", "{data["email"]}", "{data["title"]}", "{data["gender"]}", "{data["race"] if data["race"] != "" else data["otherRace"]}", "{data["maritalStatus"]}", "{data["bumiornon"]}", "{address}", "{data["numOfYear"]}", "{data["ownership"]}", "{data["stayRegisterAddress"]}", "{data["noStayRegisterAddress"] if data["stayRegisterAddress"] == "No" else "None"}", "{currentTime}"'
             
             self.productInfo = f"'{data['NRIC']}', '{data['productType'].lower()}{data['newusedrecon'].lower()}', '{data['brand']}', '{data['modal']}', '{data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None'}', '{data['tenure']}'"
 
@@ -440,7 +488,7 @@ class MyApp(Flask):
             companyAddressParts.extend([data['companyPostcode'], companyCity, data['companyState']])
             # form an address using join with comma
             companyAddress = ', '.join(companyAddressParts)
-            
+            companyAddress = companyAddress.replace("'"," ")
             print("Company Address :", companyAddress,flush=True)
             self.workingInfo = f"'{session['secondPageData']['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{companyAddress}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
 
@@ -453,6 +501,11 @@ class MyApp(Flask):
             print(e, flush = True)
             return f"<h1>{e}<h1>"
         
+
+
+
+
+
 app = MyApp(__name__)
 # for session
 app.secret_key = secrets.token_hex(32)
