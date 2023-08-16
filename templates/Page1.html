@@ -44,8 +44,8 @@
                       <button type="button" class="btn btn-primary" id="activateCameraButton">Activate Camera
                           <input style="display:none" name="image" type="file" id="cameraInput" accept="image/*" capture="camera">
                       </button>
-                      <button type="button" class="btn btn-primary" id="uploadButton" >Submit Image</button>
-                      <button type="button" class="btn btn-danger" id="removeImgButton">Remove Image</button>
+                      <button type="button" class="btn btn-primary" id="uploadImageButton" >Upload Image</button>
+                      <button type="button" class="btn btn-danger" id="removeImageButton">Remove Image</button>
                       <p id=photoCount class="fs-4">Total Photo Submitted 0</p>
                   </div>
                   <div id="previewContainer"></div>
@@ -81,8 +81,8 @@
     const cameraInput = document.getElementById("cameraInput");
     const pdfFilesInput = document.getElementById("pdfFiles")
     const statusMessage = document.getElementById("statusMessage")
-    document.getElementById('uploadButton').addEventListener('click', uploadPhoto);
-    document.getElementById('removeImgButton').addEventListener('click', removePhoto);
+    document.getElementById('uploadImageButton').addEventListener('click', uploadImage);
+    document.getElementById('removeImageButton').addEventListener('click', removeImage);
     activateCameraButton.addEventListener('click', clickCamera)
     cameraInput.addEventListener('change',capturePhoto)
 
@@ -116,7 +116,7 @@
     }
 
     // Function to upload the currently displayed photo
-    function uploadPhoto() {
+    function uploadImage() {
         compressedPhoto = new Compressor(photo, {
             quality : 0.7,
             success(result) {
@@ -183,7 +183,7 @@
     }
 
     // Function to remove the currently displayed photo
-    function removePhoto() {
+    function removeImage() {
         photo = '';
         cameraInput.files[0] = '';
         temp = document.getElementById("capturedPhoto")

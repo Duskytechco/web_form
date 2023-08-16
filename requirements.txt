@@ -8,3 +8,5 @@ pandas==2.0.1
 requests~=2.28.1
 selenium-recaptcha-solver==1.8.1
 pycryptodome==3.18.0
+Psutil==5.9.5
+paramiko==3.3.1
