@@ -14,6 +14,8 @@
     integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/webform.css') }}" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
     crossorigin="anonymous"></script>
@@ -25,6 +27,10 @@
     integrity="sha512-qoCTmFwBtCPvFhA+WAqatSOrghwpDhFHxwAGh+cppWonXbHA09nG1z5zi4/NGnp8dUhXiVrzA6EnKgJA+fyrpw=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+  <script src="js/script.js"></script>
   <script>
     const showingHiddenDiv = (target) => {
       const hiddenDiv = document.querySelectorAll(".employmentstatus");
@@ -37,9 +43,26 @@
         }
       });
     };
-
-
   </script>
+  <style type="text/css">   
+  .multi_select_box{
+    width: 640px;
+    margin: auto;
+    background:transparent;
+    padding:10px;
+    border:1px solid #dadce0;
+    border-radius:8px;
+  }
+  .multi_select_box select{
+    width: 100%;
+  }
+  .multi_select_box button{
+    background:white;
+    padding:10px;
+    border:1px solid #0d275a;
+    border-radius:8px;
+  }
+  </style>
 </head>
 
 <body>
@@ -63,29 +86,75 @@
             <select class="form-select" id="employment-status" required name="employmentStatus"
               onchange="showingHiddenDiv(this)" data-question="1" required>
               <option selected></option>
-              <option value="employed">employed</option>
-              <option value="self-employed">self-employed</option>
-              <option value="other">other</option>
+              <option value="employed">Employed</option>
+              <option value="self-employed">Self-Employed</option>
+              <!-- <option value="retiree">Retiree</option> -->
             </select>
           </div>
           <div class="list-gap">
             <div class="form-group d-none card card-body" id="container-for-employed">
-              <label class="fs-5" for="add-container0">Employed Status <span style="color:red;padding-left:0.25rem">*</span></label>
-              <div style="font-size:14px;padding-top:8px">If you are Employed please click on an
-                option</div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="NemployedStatus" value="governmentEmployee"
-                  id="option0">
-                <label class="form-check-label" for="option0">
-                  government employee
-                </label>
-              </div>
-              <div class="form-check">
-                <input class="form-check-input" type="radio" name="NemployedStatus" value="privateSector" id="option1">
-                <label class="form-check-label" for="option1">
-                  private sector
-                </label>
-              </div>
+              <div class="row">
+                <div class="col-md-6" id="sectorSelect">
+                  <label class="fs-5" for="add-container0">Employed Status <span style="color:red;padding-left:0.25rem">*</span></label>
+                  <div style="font-size:14px;padding-top:8px">If you are Employed please click on an
+                    option</div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="NemployedStatus" value="governmentEmployee"
+                      id="option0">
+                    <label class="form-check-label" for="option0">
+                      Government employee
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="NemployedStatus" value="privateSector" id="option1">
+                    <label class="form-check-label" for="option1">
+                      Private sector
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="NemployedStatus" value="international" id="internationalRadio">
+                    <label class="form-check-label" for="internationalRadio">International (Multi-National Company)</label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="NemployedStatus" value="non-profit organization" id="ngoRadio">
+                    <label class="form-check-label" for="ngoRadio">Non-profit Organization</label>
+                  </div>              
+                </div>
+                <div class="col-md-6" id="sectorSelectContainer" style="display: block;">
+                  <div>
+                    <div id="addGovernment" style="display: none;">
+                      <label for="additionalEmployedStatus">Which sector are you in?</label>
+                      <div>
+                        <input type="radio" checked class="form-check-input" name="SectorRadio" value="military" id="militaryRadio">
+                        <label class="form-check-label" for="militaryRadio">Military</label>
+                      </div>
+                      <div>
+                        <input type="radio" class="form-check-input" name="SectorRadio" value="government and public administration" id="normGovRadio">
+                        <label class="form-check-label" for="normGovRadio">Government and Public Administration</label>
+                      </div>  
+                    </div>
+                    <div id="addPrivatesector" style="display: none;">
+                      <label for="additionalEmployedStatus">Which sector are you in?</label>
+                      <div>
+                        <input type="radio" class="form-check-input" name="SectorRadio" value="online_ecommerce" id="onlineRadio">
+                        <label class="form-check-label" for="onlineRadio">Online E-commerce</label>
+                      </div>
+                      <div>
+                        <input type="radio" class="form-check-input" name="SectorRadio" value="startup" id="startupRadio">
+                        <label class="form-check-label" for="startupRadio">Startup</label>
+                      </div>
+                      <div>
+                        <input type="radio" class="form-check-input" name="SectorRadio" value="smallmediumcorporation" id="smallmediumRadio">
+                        <label class="form-check-label" for="smallmediumRadio">Small Medium Corporation</label>
+                      </div>
+                      <div>
+                        <input type="radio" class="form-check-input" name="SectorRadio" value="largeprivatecorporation" id="largeprivateRadio">
+                        <label class="form-check-label" for="largeprivateRadio">Large Private Corporation</label>
+                      </div>
+                    </div>
+                  </div>  
+                </div>
+              </div>     
             </div>
           </div>
           <div class="list-gap">
@@ -97,13 +166,13 @@
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="selfEmployedStatus" value="freeLance" id="option2">
                 <label class="form-check-label" for="option2">
-                  freelance
+                  Freelance
                 </label>
               </div>
               <div class="form-check">
                 <input class="form-check-input" type="radio" name="selfEmployedStatus" value="ownBusiness" id="option3">
                 <label class="form-check-label" for="option3">
-                  Owner of a business / working for yourself
+                  Owner of a business / Working for yourself
                 </label>
               </div>
               <div class="form-check">
@@ -113,7 +182,7 @@
                 </label>
                 <div class="form-group d-none card card-body" id="container-for-other-self-employed-status">
                   <label>Other Self-Employed Status <span style="color:red;padding-left:0.25rem">*</span></label>
-                  <input type="text" class="form-control" id="other-container0" name="selfEmployedOther" value="yes"
+                  <input type="text" class="form-control" id="other-container0" name="selfEmployedOther" value=" "
                     placeholder="Your Answer">
                 </div>
               </div>
@@ -158,41 +227,32 @@
         <div class="list-gap employmentstatus">
           <div class="fs-5">Position <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="inputGroupSelect01" name="position" required>
+            <select class="form-select" id="Position" name="position" required>
               <option selected></option> 
               <optgroup label="A"></optgroup>
-              <option value="admin">admin</option>
-              <optgroup label="F"></optgroup>
-              <option value="factory worker">factory worker</option>
+              <option value="assistant manager">Assistant Manager</option>
+              <optgroup label="D"></optgroup>
+              <option value="department manager">Department Manager</option>
+              <optgroup label="E"></optgroup>
+              <option value="executives">Executives</option>
               <optgroup label="G"></optgroup>
-              <option value="general worker">general worker</option>
-              <option value="general manager / assistant general manager">general manager / assistant
-                general manager</option>
-              <optgroup label="M"></optgroup>              
-              <option value="manager / supervisor">manager / supervisor</option>
-              <option value="managing director">managing director</option>
-              <option value="waiter / waitress">waiter / waitress</option>
+              <option value="general manager">General Manager</option>
               <optgroup label="O"></optgroup>              
-              <option value="officer / executive">officer / executive</option>
+              <option value="operational worker">Operational Worker</option>
               <optgroup label="P"></optgroup>              
-              <option value="pensioner / retiree">pensioner / retiree</option>
-              <option value="professional ( lawyer, doctor )">professional ( lawyer, doctor )</option>
+              <option value="professional worker">Professional Worker</option>
+              <option value="project manager">Project Manager</option>
               <optgroup label="S"></optgroup>              
-              <option value="saleman / promoter">saleman / promoter</option>
-              <option value="skill worker ( technician / nurse )">skill worker ( technician / nurse )
-              </option>
-              <optgroup label="T"></optgroup>              
-              <option value="teacher / lecture">teacher / lecture</option>
+              <option value="supervisor">Supervisor</option>
               <optgroup label=""></optgroup>
               <option value="other">other</option>
             </select>
           </div>
         </div>
-        <div class="list-gap otherPosition">
-          <div>Other Position <span style="color:red;padding-left:0.25rem">*</span></div>
-          <div class="input-group mb-3">
-              <input class="form-control" name="otherPosition" placeholder="Your Answer"/>
-          </div>
+        <div id="PositionSubDropdownContainer" style="display: none;">
+          <label for="PositionSubDropdown">Operational Position</label>
+          <select class="form-select" id="PositionSubDropdown" name="PositionSubDropdown">
+          </select>
         </div>
         <div class="list-gap employmentstatus">
           <div class="fs-5">Department <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -200,83 +260,110 @@
             <select class="form-select" id="inputGroupSelect01" name="department" required>
               <option selected></option>
               <optgroup label="A"></optgroup>
-              <option value="account">account</option>
-              <option value="admin">admin</option>
+              <option value="administration">Administration</option>
+              <option value="analytics or data science">Analytics or Data Science</option>
+              <option value="assets management">Assets Management</option>
+              <optgroup label="B"></optgroup>
+              <option value="board of directors (executives)">Board of Directors (Executives)</option>
+              <option value="business development">Business Development</option>
               <optgroup label="C"></optgroup>
-              <option value="clerk">clerk</option>
-              <option value="collection">collection</option>
-              <option value="construction">construction</option>
+              <option value="charitable non-profit organization">Charitable Non-profit Organization</option>
+              <option value="communication and media">Communication and Media</option>
+              <option value="customer service">Customer Service</option>
+              <optgroup label="D"></optgroup>
+              <option value="design">Design</option>
+              <optgroup label="E"></optgroup>
+              <option value="engineering">Engineering</option>
+              <optgroup label="F"></optgroup>
+              <option value="finance">Finance</option>
+              <option value="food and beverage">Food and Beverage</option>
+              <optgroup label="G"></optgroup>
+              <option value="general management">General Management</option>
+              <optgroup label="H"></optgroup>
+              <option value="health">Health</option>
+              <option value="human resources">Human Resources</option>
               <optgroup label="I"></optgroup>
-              <option value="IT">IT</option>
+              <option value="IT">IT/ Technology</option>
+              <optgroup label="L"></optgroup>
+              <option value="legal">Legal</option>
+              <option value="logistics">Logistics</option>
               <optgroup label="M"></optgroup>
-              <option value="management">management</option>
+              <option value="marketing">Marketing</option>
+              <optgroup label="O"></optgroup>
+              <option value="operation">Operation</option>
               <optgroup label="P"></optgroup>
-              <option value="production">production</option>
+              <option value="production">Production</option>
+              <option value="project management">Project Management</option>
+              <option value="public relations">Public Relations</option>
+              <option value="purchasing">Purchasing</option>
+              <optgroup label="Q"></optgroup>
+              <option value="quality assurance">Quality Assurance</option>
+              <optgroup label="R"></optgroup>
+              <option value="research and development">Research and Development</option>
+              <option value="risk management">Risk Management</option>
               <optgroup label="S"></optgroup>
-              <option value="sales">sales</option>
-              <option value="services">services</option>
+              <option value="sales">Sales</option>
+              <option value="security">Security</option>
               <optgroup label="T"></optgroup>
-              <option value="technical">technical</option>
+              <option value="training and development">Training and Development</option>
+              <option value="transportation">Transportation</option>
               <optgroup label=""></optgroup>
               <option value="other">other</option>
             </select>
           </div>
         </div>
         <div class="list-gap">
-          <div class="fs-5">Company/Self-Employed Business Nature <span style="color:red;padding-left:0.25rem">*</span>
+          <div class="fs-5">Company/Business Nature <span style="color:red;padding-left:0.25rem">*</span>
           </div>
           <div class="input-group mb-3">
-            <select class="form-select" id="inputGroupSelect01" name="businessNature" data-question="2" disabled
+            <select class="form-select" id="business-nature-dropdown" name="businessNature" data-question="2" disabled
               onchange="checkValue(event)" required>
               <option selected></option>
               <optgroup label="A"></optgroup>
-              <option value="administrator / support services">administrator / support services
-              </option>
-              <option value="agriculture">agriculture</option>
-              <option value="arts / entertainment / recreation">arts / entertainment / recreation
-              </option>
-              <optgroup label="B"></optgroup>
-              <option value="banking / finance">banking / finance</option>
+              <option value="agriculture">Agriculture</option>
               <optgroup label="C"></optgroup>
-              <option value="construction">construction</option>
+              <option value="communications">Communications</option>
+              <option value="consulting">Consulting</option>
+              <option value="construction">Construction</option>
+              <option value ="cultural and artistic leadership">Cultural and Artistic Leadership</option>
               <optgroup label="E"></optgroup>
-              <option value="education">education</option>
-              <option value="extraterritorial organization and bodies">extraterritorial organization
-                and bodies</option>
-              <option value="electrical">electrical</option>
+              <option value="education">Education</option>
+              <option value="energy">Energy</option>
+              <optgroup label="F"></optgroup>
+              <option value="financial services">Financial Services</option>
+              <option value="fishing">Fishing</option>
+              <option value="foresty">Foresty</option>
               <optgroup label="G"></optgroup>
-              <option value="government">government</option>
+              <option value="government">Government and Public Administration</option>
               <optgroup label="H"></optgroup>
-              <option value="healthcare">healthcare</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="hospitalities">Hospitalities</option>
               <optgroup label="I"></optgroup>
-              <option value="investment">investment</option>
-              <option value="IT / research / development">IT / research / development</option>
+              <option value="information technology">Information Technology</option>
+              <option value="intellectual property">Intellectual Property</option>
               <optgroup label="L"></optgroup>
-              <option value="logistic">logistic</option>
+              <option value="logistics">Logistics</option>
               <optgroup label="M"></optgroup>
-              <option value="manufacturing">manufacturing</option>
-              <option value="mass media">mass media</option>
-              <option value="mining / quarrying">mining / quarrying</option>
-              <optgroup label="O"></optgroup>
-              <option value="other services activities">other services activities</option>
-              <optgroup label="P"></optgroup>
-              <option value="production of domestic / personal services">production of domestic /
-                personal services</option>
+              <option value="manufacturing">Manufacturing</option>
+              <option value="mining">Mining</option>
               <optgroup label="R"></optgroup>
-              <option value="retail / wholesale">retail / wholesale</option>
-              <optgroup label="S"></optgroup>
-              <option value="service line ( hotel, restaurants )">service line ( hotel, restaurants )
-              </option>
-              <optgroup label="W"></optgroup>
-              <option value="water supply / sewerage / waste management">water supply / sewerage /
-                waste management</option>
+              <option value="research and development">Research and Development</option>
+              <option value="retails">Retails</option>
+              <optgroup label="T"></optgroup>
+              <option value="transportation">Transportation</option>
+              <optgroup label="U"></optgroup>
+              <option value="utilities">Utilities</option>
               <optgroup label=""></optgroup>
-              <option value="other">other</option>
+              <option value="other">Other</option>
             </select>
-            <input type="text" class="form-control others" />
+            <input type="text" class="form-control others" style="display: none;"/>
+            <div id="multi_select_box" style="display: none;">
+              <select class="multi_select w-100" id="searchbox" name="subBusinessNature" data-selected-text-format="count > 3" data-live-search="true" >
+              </select>
+            </div> 
           </div>
           <div class="list-gap">
-            <div class="fs-5">Company Name <span style="color:red;padding-left:0.25rem">*</span></div>
+            <div class="fs-5">Company Name <span style="color:red;padding-left:0.25rem;margin-top: 20px;">*</span></div>
             <div class="fs-6" style="padding-top:8px">All in Caps and must be full name as per
               registered</div>
             <div class="abc">
@@ -651,7 +738,7 @@
           <div class="gap-2 d-md-block btn-container">
             <div>
               <button class="btn btn-primary" onclick="previousPage()" type="button">Previous Page</button>
-              <a href="#" style="color:white;text-decoration:none"><button class="btn btn-danger" id="submitBtn"
+              <a href="#" style="color:white;text-decoration:none"></a><button class="btn btn-danger" id="submitBtn"
                   type="submit">Submit</button></a>
             </div>
             <div>
@@ -681,6 +768,256 @@
         event.preventDefault()
       }
     })
+    //additional Position
+    document.getElementById('Position').addEventListener('change', function(event) {
+      var selectedOption = event.target.value;
+      if (selectedOption) {
+        additionalPosition(selectedOption);
+      } else {
+        document.getElementById('PositionSubDropdownContainer').style.display = 'none';
+      }
+    });
+    function additionalPosition(PositionOption) {
+      var subPositionDropdown = document.getElementById('PositionSubDropdown');
+      subPositionDropdown.innerHTML = ''; 
+      console.log('Selected main option:', PositionOption);
+      if (PositionOption === 'operational worker'){
+        document.getElementById('PositionSubDropdownContainer').style.display = 'block';  
+        subPositionDropdown.required = true;
+        subPositionDropdown.innerHTML += '<optgroup label="A"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="administrative assistants">Administrative Assistants</option>';
+        subPositionDropdown.innerHTML += '<option value="assembly line worker">Assembly Line Worker</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="B"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="barista">Barista</option>';
+        subPositionDropdown.innerHTML += '<option value="bus drivers">Bus Drivers</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="C"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="carpenters">Carpenters</option>';
+        subPositionDropdown.innerHTML += '<option value="cashier">Cashier</option>';
+        subPositionDropdown.innerHTML += '<option value="chef">Chef</option>';
+        subPositionDropdown.innerHTML += '<option value="chef assistants">Chef Assistants</option>';
+        subPositionDropdown.innerHTML += '<option value="cleaners">Cleaners</option>';
+        subPositionDropdown.innerHTML += '<option value="construction workers">Construction Workers</option>';
+        subPositionDropdown.innerHTML += '<option value="customer service representatives">Customer Service Representatives</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="D"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="data entry operators">Data Entry Operators</option>';
+        subPositionDropdown.innerHTML += '<option value="delivery riders/drivers">Delivery Riders/Drivers</option>';
+        subPositionDropdown.innerHTML += '<option value="dishwashers">Dishwashers</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="E"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="electricians/plumbers/heavy equipment operators">Electricians/Plumbers/Heavy Equipment Operators</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="F"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="farm worker">Farm Worker</option>';
+        subPositionDropdown.innerHTML += '<option value="flight attendants">Flight attendants</option>';
+        subPositionDropdown.innerHTML += '<option value="forklift operator">Forklift Operator</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="H"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="hairstylists">Hairstylists</option>';
+        subPositionDropdown.innerHTML += '<option value="housekeeping staff (hotel)">Housekeeping Staff (Hotel)</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="L"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="lab technicians">Lab Technicians</option>';
+        subPositionDropdown.innerHTML += '<option value="lawyers">Lawyers</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="M"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="machine operator">Machine Operator</option>';
+        subPositionDropdown.innerHTML += '<option value="mechanics">Mechanics</option>';
+        subPositionDropdown.innerHTML += '<option value="medical assistants">Medical Assistants</option>';
+        subPositionDropdown.innerHTML += '<option value="medical technicians">Medical Technicians</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="N"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="nurses">Nurses</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="P"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="paramedics">Paramedics</option>';
+        subPositionDropdown.innerHTML += '<option value="postman">Postman</option>';
+        subPositionDropdown.innerHTML += '<option value="professors">Professors</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="Q"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="quality control inspectors">Quality Control Inspectors</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="R"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="receptionists">Receptionists</option>';
+        subPositionDropdown.innerHTML += '<option value="rig workers">Rig Workers</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="S"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="sales associates/promoters">Sales Associates/Promoters</option>';
+        subPositionDropdown.innerHTML += '<option value="security guards">Security Guards</option>';
+        subPositionDropdown.innerHTML += '<option value="stock clerks">Stock Clerks</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="T"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="teachers/principal">Teachers/Principal</option>';
+        subPositionDropdown.innerHTML += '<option value="truck drivers">Truck Drivers</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="V"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="volunteer">Volunteer</option>';
+        subPositionDropdown.innerHTML += '<optgroup label="W"></optgroup>';
+        subPositionDropdown.innerHTML += '<option value="waiters/waitresses">Waiters/Waitresses</option>';
+        subPositionDropdown.innerHTML += '<option value="warehouse workers">Warehouse Workers</option>';
+      } else{
+        document.getElementById('PositionSubDropdownContainer').style.display = 'none';  
+        subPositionDropdown.required = false;
+      }
+      console.log('Subdropdown populated:', subPositionDropdown.innerHTML);
+    }
+
+    // BusinessNature
+    document.getElementById('business-nature-dropdown').addEventListener('change', function(event) {
+      var selectedOption = event.target.value;
+      if (selectedOption) {
+        populateBusinessNatureSubDropdown(selectedOption);
+      } else {
+        document.getElementById('multi_select_box').style.display = 'none';
+      }
+    });
+    // Business Nature
+    function populateBusinessNatureSubDropdown(mainOption) {
+      var subDropdown = document.getElementById('searchbox');
+      subDropdown.innerHTML = ''; 
+      console.log('Selected main option:', mainOption);
+      if (mainOption === 'communications') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="advertising">Advertising</option>';
+        subDropdown.innerHTML += '<option value="broadcasting">Broadcasting</option>';
+        subDropdown.innerHTML += '<option value="cable & satellite">Cable & Satellite</option>';
+        subDropdown.innerHTML += '<option value="internet services">Internet Services</option>';
+        subDropdown.innerHTML += '<option value="publishing">Publishing (Magazines & Newspaper)</option>';
+        subDropdown.innerHTML += '<option value="telecommunications">Telecommunications</option>';
+      } else if (mainOption === 'consulting') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="financial">Financial</option>';
+        subDropdown.innerHTML += '<option value="healthcare">Healthcare</option>';
+        subDropdown.innerHTML += '<option value="human resource">Human Resource</option>';
+        subDropdown.innerHTML += '<option value="legal services">Legal Services</option>';
+        subDropdown.innerHTML += '<option value="management">Management</option>';
+        subDropdown.innerHTML += '<option value="marketing">Marketing</option>';
+        subDropdown.innerHTML += '<option value="technology">Technology</option>';
+      } else if (mainOption === 'government') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="civil service">Civil Service</option>';
+        subDropdown.innerHTML += '<option value="emergency services">Emergency Services</option>';
+        subDropdown.innerHTML += '<option value="executive branch">Executive Branch</option>';
+        subDropdown.innerHTML += '<option value="foreign affairs">Foreign Affairs and Diplomacy</option>';
+        subDropdown.innerHTML += '<option value="judicial branch">Judicial Branch</option>';
+        subDropdown.innerHTML += '<option value="law enforcement">Law Enforcement</option>';
+        subDropdown.innerHTML += '<option value="legislative branch">Legislative Branch</option>';
+        subDropdown.innerHTML += '<option value="local government">Local Government</option>';
+        subDropdown.innerHTML += '<option value="public finance">Public Finance and Budgeting</option>';
+        subDropdown.innerHTML += '<option value="public policy">Public Policy and Administration</option>';
+        subDropdown.innerHTML += '<option value="public services">Public Services</option>';
+        subDropdown.innerHTML += '<option value="regulatory agencies">Regulatory Agencies</option>';
+      } else if (mainOption === 'construction') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="commercial">Commercial</option>';
+        subDropdown.innerHTML += '<option value="demolition">Demolition</option>';
+        subDropdown.innerHTML += '<option value="green building">Green Building and Sustainability</option>';
+        subDropdown.innerHTML += '<option value="heavy civil">Heavy Civil</option>';
+        subDropdown.innerHTML += '<option value="industrial">Industrial</option>';
+        subDropdown.innerHTML += '<option value="infrastructure">Infrastructure</option>';
+        subDropdown.innerHTML += '<option value="institutional">Institutional</option>';
+        subDropdown.innerHTML += '<option value="real estate developers">Real Estate Developers</option>';
+        subDropdown.innerHTML += '<option value="renovation">Renovation</option>';
+        subDropdown.innerHTML += '<option value="residential">Residential</option>';
+        subDropdown.innerHTML += '<option value="specialized">Specialized</option>';
+      } else if (mainOption === 'education') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="language school">Language School</option>';
+        subDropdown.innerHTML += '<option value="preschool and early childhood">Pre-school and Early Childhood</option>';
+        subDropdown.innerHTML += '<option value="primary and secondary">Primary & Secondary</option>';
+        subDropdown.innerHTML += '<option value="special">Special</option>';
+        subDropdown.innerHTML += '<option value="technical and vocational">Technical and Vocational Education and Training</option>';
+        subDropdown.innerHTML += '<option value="tertiary">Tertiary</option>';
+        subDropdown.innerHTML += '<option value="tuition">Tuition</option>';
+      } else if (mainOption === 'energy') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="oil and gas">Oil and Gas</option>';
+      } else if (mainOption === 'financial services') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="accounting and auditing">Accounting and Auditing</option>';
+        subDropdown.innerHTML += '<option value="bank">Bank</option>';
+        subDropdown.innerHTML += '<option value="financial planning">Financial Planning</option>';
+        subDropdown.innerHTML += '<option value="fintech">Fintech</option>';
+        subDropdown.innerHTML += '<option value="financial regulatory and compliance agencies">Financial Regulatory and Compliance Agencies</option>';
+        subDropdown.innerHTML += '<option value="insurance">Insurance</option>';
+        subDropdown.innerHTML += '<option value="investing">Investing</option>';
+        subDropdown.innerHTML += '<option value="real estate investment trust">Real Estate Investment Trust</option>';
+        subDropdown.innerHTML += '<option value="securities and exchanges">Securities and Exchanges</option>';
+      } else if (mainOption === 'healthcare') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="emergency services">Emergency Services</option>';
+        subDropdown.innerHTML += '<option value="hospitals">Hospitals</option>';
+        subDropdown.innerHTML += '<option value="mental health">Mental Health</option>';
+        subDropdown.innerHTML += '<option value="nursing">Nursing</option>';
+        subDropdown.innerHTML += '<option value="pharmaceuticals">Pharmaceuticals</option>';
+      } else if (mainOption === 'hospitalities') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="amusement parks">Amusement Parks</option>';
+        subDropdown.innerHTML += '<option value="entertainment">Entertainment</option>';
+        subDropdown.innerHTML += '<option value="event planning">Event Planning</option>';
+        subDropdown.innerHTML += '<option value="hotels">Hotels</option>';
+        subDropdown.innerHTML += '<option value="restaurants">Restaurants</option>';
+        subDropdown.innerHTML += '<option value="spa and wellness">Spa and Wellness</option>';
+        subDropdown.innerHTML += '<option value="sport facilities">Sport Facilities</option>';
+        subDropdown.innerHTML += '<option value="travel">Travel</option>';
+      } else if (mainOption === 'information technology') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="ai">AI</option>';
+        subDropdown.innerHTML += '<option value="cybersecurity">Cybersecurity</option>';
+        subDropdown.innerHTML += '<option value="data analytics">Data Analytics</option>';
+        subDropdown.innerHTML += '<option value="digital marketing and advertising">Digital Marketing and Advertising</option>';
+        subDropdown.innerHTML += '<option value="e commerce">E-commerce</option>';
+        subDropdown.innerHTML += '<option value="network and telecom">Network and Telecom</option>';
+        subDropdown.innerHTML += '<option value="it services">IT Services</option>';
+        subDropdown.innerHTML += '<option value="iot">IoT</option>';
+        subDropdown.innerHTML += '<option value="technology hardware">Technology Hardware</option>';
+        subDropdown.innerHTML += '<option value="software development">Software Development</option>';
+      } else if (mainOption === 'logistics') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="transportation">Transportation</option>';
+        subDropdown.innerHTML += '<option value="warehouse and distribution">Warehouse and Distribution</option>';
+      } else if (mainOption === 'manufacturing') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="aerospace and aviation">Aerospace and Aviation</option>';
+        subDropdown.innerHTML += '<option value="automotive">Automotive</option>';
+        subDropdown.innerHTML += '<option value="chemical">Chemical</option>';
+        subDropdown.innerHTML += '<option value="food and beverage">Food and Beverage</option>';
+        subDropdown.innerHTML += '<option value="electronics">Electronics</option>';
+        subDropdown.innerHTML += '<option value="furniture">Furniture</option>';
+        subDropdown.innerHTML += '<option value="machinery">Machinery</option>';
+        subDropdown.innerHTML += '<option value="metals">Metals</option>';
+        subDropdown.innerHTML += '<option value="off site construction">Off-Site Construction</option>';
+        subDropdown.innerHTML += '<option value="others">Others</option>';
+        subDropdown.innerHTML += '<option value="pharmaceutical">Pharmaceutical</option>';
+        subDropdown.innerHTML += '<option value="textile and apparel">Textile and Apparel</option>';
+        subDropdown.innerHTML += '<option value="wood and paper">Wood and Paper</option>';
+      } else if (mainOption === 'research and development') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="product development">Product Development</option>';
+        subDropdown.innerHTML += '<option value="scientific">Scientific</option>';
+        subDropdown.innerHTML += '<option value="technology innovation">Technology Innovation</option>';
+      } else if (mainOption === 'retails') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="apparel and fashion">Apparel and Fashion Retail</option>';
+        subDropdown.innerHTML += '<option value="electronics and technology">Electronics and Technology Retail (Car)</option>';
+        subDropdown.innerHTML += '<option value="grocery and food">Grocery and Food Retail</option>';
+        subDropdown.innerHTML += '<option value="home and furniture">Home and Furniture Retail</option>';
+        subDropdown.innerHTML += '<option value="health and beauty">Health and Beauty Retail</option>';
+      } else if (mainOption === 'transportation') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="aerospace">Aerospace</option>';
+        subDropdown.innerHTML += '<option value="car">Car</option>';
+        subDropdown.innerHTML += '<option value="maritime">Maritime</option>';
+        subDropdown.innerHTML += '<option value="train">Train</option>';
+      } else if (mainOption === 'utilities') {
+        document.getElementById('multi_select_box').style.display = 'block';
+        subDropdown.innerHTML += '<option value="water and electricity">Water & Electricity</option>';
+        subDropdown.innerHTML += '<option value="renewable energy">Renewable Energy</option>';
+      } else if (mainOption === 'agriculture' || mainOption === 'foresty' || mainOption === 'fishing' || mainOption === 'mining' || mainOption === 'intellectual property' || mainOption === 'cultural and artistic leadership' || mainOption === 'other'){
+        document.getElementById('multi_select_box').style.display = 'none';
+      } 
+      console.log('Subdropdown populated:', subDropdown.innerHTML);
+      $('.multi_select').selectpicker('refresh');
+
+    }
+
+    function addOption(selectElement, value, text) {
+      var option = document.createElement('option');
+      option.value = value;
+      option.text = text;
+      selectElement.appendChild(option);
+    }
+
+    $(document).ready(function(){
+      $('.multi_select').selectpicker();
+    })
 
     // This Section for dropdown list, when OTHER is picked, show another box
     let employmentStatus = document.getElementById("employment-status");
@@ -700,6 +1037,17 @@
     let othercontainer1 = document.getElementById('other-container1');
     let addbox3 = document.getElementById('container-for-other-employment-status');
     let addbox4 = document.getElementById('container-for-other-income-source');
+    let military = document.getElementById('militaryRadio')
+    let normgov = document.getElementById('normGovRadio')
+    let onlineEcom = document.getElementById('onlineRadio')
+    let startup = document.getElementById('startupRadio')
+    let smallmedium = document.getElementById('smallmediumRadio')
+    let largeprivate = document.getElementById('largeprivateRadio')
+    let govSector = document.getElementById('addGovernment')
+    let privSector = document.getElementById('addPrivatesector')
+    let sector = document.getElementById('sectorSelection')
+    let non_profit = document.getElementById('ngoRadio')
+    let international = document.getElementById('internationalRadio')
     var isAddress = false
     const submitBtn = document.getElementById('submitBtn')
 
@@ -797,6 +1145,107 @@
       addbox3.classList.remove('d-none');
       othercontainer1.required = true;
       addbox4.classList.remove('d-none');
+    })
+
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get the radio button elements
+      var governmentRadio = document.getElementById('option0');
+      var privateSectorRadio = document.getElementById('option1');
+      var internationalRadio = document.getElementById('internationalRadio');
+      var ngoRadio = document.getElementById('ngoRadio'); 
+      
+      // Add event listeners to the radio buttons
+      governmentRadio.addEventListener('change', handleSectorSelection);
+      privateSectorRadio.addEventListener('change', handleSectorSelection);
+      internationalRadio.addEventListener('change', handleSectorSelection);
+      ngoRadio.addEventListener('change', handleSectorSelection);
+    });
+
+    function handleSectorSelection(event) {
+      // Get the selected radio button's value
+      var selectedValue = event.target.value;
+      if (selectedValue === 'governmentEmployee'){
+        govSector.style.display = 'block';
+        privSector.style.display = 'none';
+      } else if (selectedValue === 'privateSector'){
+        privSector.style.display = 'block';
+        govSector.style.display = 'none';
+      } else {
+        govSector.style.display = 'none';
+        privSector.style.display = 'none';
+      }
+      
+      // You can use the selectedValue as needed (e.g., store it, display it, etc.)
+      console.log('Selected Sector:', selectedValue);
+    }
+    
+    //let SectorRadio be empty when ngo and international selected
+    non_profit.addEventListener('click', () =>{
+      normgov.checked = false;
+      onlineEcom.checked = false;
+      startup.checked = false;
+      smallmedium.checked = false;
+      largeprivate.checked = false;
+      military.checked = false;
+    })
+
+    international.addEventListener('click', () =>{
+      normgov.checked = false;
+      onlineEcom.checked = false;
+      startup.checked = false;
+      smallmedium.checked = false;
+      largeprivate.checked = false;
+      military.checked = false;
+    })
+
+    // unclick other option when one is selected
+    military.addEventListener('click',() => {
+      normgov.checked = false;
+      onlineEcom.checked = false;
+      startup.checked = false;
+      smallmedium.checked = false;
+      largeprivate.checked = false;
+    })
+
+    normgov.addEventListener('click',() => {
+      military.checked = false;
+      onlineEcom.checked = false;
+      startup.checked = false;
+      smallmedium.checked = false;
+      largeprivate.checked = false;
+    })
+    
+    onlineEcom.addEventListener('click',() => {
+      startup.checked = false;
+      smallmedium.checked = false;
+      largeprivate.checked = false;
+      military.checked = false;
+      normgov.checked = false;
+    })
+    
+    startup.addEventListener('click',() => {
+      onlineEcom.checked = false;
+      smallmedium.checked = false;
+      largeprivate.checked = false;
+      military.checked = false;
+      normgov.checked = false;
+    })
+    
+    smallmedium.addEventListener('click',() => {
+      startup.checked = false;
+      onlineEcom.checked = false;
+      largeprivate.checked = false;
+      military.checked = false;
+      normgov.checked = false;
+    })
+
+    largeprivate.addEventListener('click',() => {
+      startup.checked = false;
+      smallmedium.checked = false;
+      onlineEcom.checked = false;
+      military.checked = false;
+      normgov.checked = false;
     })
 
     const checkLicense = (id) => {
