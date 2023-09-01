@@ -226,3 +226,20 @@ body {
 .row {
     margin-bottom: 2rem;
 }
+
+.rightStraightBorder + button{
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.multi_select + button, .multi_select + button:hover {
+    border: 1px solid black;
+    background: white;
+    border-radius: 50px;
+}
+
+
+[data-id="searchbox"], [data-id="searchbox"]:hover  {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}

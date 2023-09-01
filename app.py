@@ -115,6 +115,7 @@ class MyApp(Flask):
             file = request.files['files']
             chunk_number = int(request.form['chunk_number'])
             total_chunks = int(request.form['total_chunks'])
+            print(total_chunks)
             filename = file.filename.split('.part')[0]
             chunk_filename = f'{filename}.part{chunk_number}'
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
@@ -195,9 +196,6 @@ class MyApp(Flask):
 
 
 
-
-
-
     # Submit Second Page Handler
     def submit(self):
         print("Submitting form. . .", flush=True)
@@ -219,7 +217,7 @@ class MyApp(Flask):
             print("Connection Timed out",flush=True) 
             
         try:
-            query = f"INSERT INTO `Personal Info` VALUES ({self.personalInfo})"
+            query = f"INSERT INTO `Personal Info` (`NRIC`, `Name`, `Phone Number`, `Email`, `Title`, `Gender`, `Race`, `Marital Status`, `Bumi`, `Address`, `No of year in residence`, `Ownership Status`, `Stay in registered address`, `Where user stay(If not stay in registered address)`, `Loan Status`,  `Timestamp`) VALUES ({self.personalInfo})"
             self.cursor.execute(query)
             print(f"Inserted Personal Info :{self.personalInfo}" , flush=True)
             flag1 = True
@@ -238,7 +236,7 @@ class MyApp(Flask):
             flag2 = False
 
         try:
-            query2 = f"INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`,`Net Salary` , `Gross Salary`, `Have EPF`, `Salary Term`) VALUES ({self.workingInfo})"
+            query2 = f"INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Sector`,`Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`,`Net Salary` , `Gross Salary`, `Have EPF`, `Salary Term`) VALUES ({self.workingInfo})"
             self.cursor.execute(query2)
             print(f"Inserted Working Info :{self.workingInfo}" , flush=True)
             flag3 = True
@@ -398,7 +396,7 @@ class MyApp(Flask):
     def restructureData(self):
         try:
             data = session['secondPageData']
-            # print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
+            print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
             
             data['gender'] = 'Male'
             if int( data['NRIC']) % 2 == 0:
@@ -424,7 +422,7 @@ class MyApp(Flask):
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
             
-            self.personalInfo = f'"{data["NRIC"]}", "{data["name"]}", "{data["countryCode"] + data["phoneNumber"]}", "{data["email"]}", "{data["title"]}", "{data["gender"]}", "{data["race"] if data["race"] != "" else data["otherRace"]}", "{data["maritalStatus"]}", "{data["bumiornon"]}", "{address}", "{data["numOfYear"]}", "{data["ownership"]}", "{data["stayRegisterAddress"]}", "{data["noStayRegisterAddress"] if data["stayRegisterAddress"] == "No" else "None"}", "{currentTime}"'
+            self.personalInfo = f'"{data["NRIC"]}", "{data["name"]}", "{data["countryCode"] + data["phoneNumber"]}", "{data["email"]}", "{data["title"]}", "{data["gender"]}", "{data["race"] if data["race"] != "" else data["otherRace"]}", "{data["maritalStatus"]}", "{data["bumiornon"]}", "{address}", "{data["numOfYear"]}", "{data["ownership"]}", "{data["stayRegisterAddress"]}", "{data["noStayRegisterAddress"] if data["stayRegisterAddress"] == "No" else "None"}", "NULL", "{currentTime}"'
             
             self.productInfo = f"'{data['NRIC']}', '{data['productType'].lower()}{data['newusedrecon'].lower()}', '{data['brand']}', '{data['modal']}', '{data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None'}', '{data['tenure']}'"
 
@@ -439,29 +437,47 @@ class MyApp(Flask):
         except Exception as e:
             print("Error in Restructure second Page Info", flush=True)
             print(e, flush=True)
-            return f"<h1>{e}<h1>"
+            #return f"<h1>{e}<h1>"
+            pass
         
         try: 
             data = session['thirdPageData']
-            # print("DEBUGGING THIRD PAGE DATA : ",data,flush=True)
+            print("DEBUGGING THIRD PAGE DATA : ",data,flush=True)
             employmentStatus = data['employmentStatus']
             status = ''
             if employmentStatus == 'employed':
                 status = data['NemployedStatus']
-            elif employmentStatus == 'other':
-                status = data['selfEmployedOther']
-                if status == 'yes':
-                    status = data['otherIncomeSourceOther']
-            elif employmentStatus == 'student':
-                status = 'None'
-                data['department'] = "None"
-                data['position'] = "None"
-                
             elif employmentStatus == 'self-employed' and data.get('selfEmployedStatus','') != 'other':
                 status = data['selfEmployedStatus']
+            #elif employmentStatus == 'retiree':
+            #    #need further information
+            #    status = ''
             else:
                 status = data['selfEmployedOther']
-                
+
+            #let sector be none if employment status is internation or ngo    
+            if status in ['international','non-profit organization']:                
+                sector = "None"      
+            else:
+                sector = data['SectorRadio']
+            print("Sector Value: ",sector,flush=True)
+
+            #getting detail position
+            position = data.get('position','')
+            if position == 'operational worker':
+                position += '(' + data['PositionSubDropdown'] + ')'
+            
+            print("Position: ",position,flush=True)
+
+            #getting detail Business Nature
+            businessNature = data.get('businessNature','')
+            if businessNature in ['foresty','fishing','agriculture','mining','intellectual property','cultural and artistic leadership','other']:
+                print("No subBusinessNature")
+            else:    
+                businessNature += '(' + data['subBusinessNature'] + ')'
+            print("BusinessNature: ",businessNature,flush=True)
+
+            #salary part
             netDecimal = data['netSalaryDecimal']
             grossDecimal = data['grossSalaryDecimal']
             
@@ -490,7 +506,7 @@ class MyApp(Flask):
             companyAddress = ', '.join(companyAddressParts)
             companyAddress = companyAddress.replace("'"," ")
             print("Company Address :", companyAddress,flush=True)
-            self.workingInfo = f"'{session['secondPageData']['NRIC']}', '{data['employmentStatus']}', '{status}', '{data['position']}', '{data['department']}', '{data['businessNature']}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{companyAddress}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
+            self.workingInfo = f"'{session['secondPageData']['NRIC']}', '{data['employmentStatus']}', '{sector}','{status}', '{position}' , '{data['department']}', '{businessNature}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{companyAddress}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
 
             self.bankingInfo = f"'{session['secondPageData']['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{session['secondPageData']['NRIC']}.zip'"
 
