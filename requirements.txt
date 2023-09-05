@@ -10,3 +10,4 @@ selenium-recaptcha-solver==1.8.1
 pycryptodome==3.18.0
 Psutil==5.9.5
 paramiko==3.3.1
+flask-cors==4.0.0

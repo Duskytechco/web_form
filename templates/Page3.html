@@ -67,7 +67,7 @@
 </head>
 
 <body>
-  <form class="g-3" id="myForm" method="POST" action="{{url_for('submit')}}" enctype="multipart/form-data">
+  <form class="g-3" id="myForm" method="POST" action="{{ url_for('submit') }}" enctype="multipart/form-data">
     <div id="listitem">
       <div class="list-container container">
         <div class="d-flex align-items-center w-100 justify-content-center mt-5">
@@ -126,7 +126,7 @@
                     <div id="addGovernment" style="display: none;">
                       <label for="additionalEmployedStatus">Which sector are you in? <span style="color:red;padding-left:0.25rem">*</span></label>
                       <div>
-                        <input type="radio" checked requried class="form-check-input" name="SectorRadio" value="military" id="militaryRadio">
+                        <input type="radio" checked required class="form-check-input" name="SectorRadio" value="military" id="militaryRadio">
                         <label class="form-check-label" for="militaryRadio">Military</label>
                       </div>
                       <div>
@@ -165,19 +165,19 @@
               <div style="font-size:14px;padding-top:8px">If you are Self-Employed please click on an
                 option</div>
               <div class="form-check">
-                <input class="form-check-input" requried type="radio" name="selfEmployedStatus" value="freeLance" id="option2">
+                <input class="form-check-input" required type="radio" name="selfEmployedStatus" value="freeLance" id="option2">
                 <label class="form-check-label" for="option2">
                   Freelance
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" requried type="radio" name="selfEmployedStatus" value="ownBusiness" id="option3">
+                <input class="form-check-input" type="radio" name="selfEmployedStatus" value="ownBusiness" id="option3">
                 <label class="form-check-label" for="option3">
                   Owner of a business / Working for yourself
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" requried type="radio" name="selfEmployedStatus" value="other" id="option4">
+                <input class="form-check-input" type="radio" name="selfEmployedStatus" value="other" id="option4">
                 <label class="form-check-label" for="option4">
                   other
                 </label>
@@ -231,26 +231,26 @@
             <select class="form-select" id="Position" name="position" data-question="2" required>
               <option selected></option> 
               <optgroup label="A">
-                <option value="assistant manager">Assistant Manager</option>
+              <option value="assistant manager">Assistant Manager</option>
               </optgroup>
               <optgroup label="D">
-                <option value="department manager">Department Manager</option>
+              <option value="department manager">Department Manager</option>
               </optgroup>
               <optgroup label="E">
-                <option value="executives">Executives</option>
+              <option value="executives">Executives</option>
               </optgroup>
               <optgroup label="G">
-                <option value="general manager">General Manager</option>
+              <option value="general manager">General Manager</option>
               </optgroup>
               <optgroup label="O">
-                <option value="operational worker">Operational Worker</option>
+              <option value="operational worker">Operational Worker</option>
               </optgroup>              
               <optgroup label="P">
-                <option value="professional worker">Professional Worker</option>
-                <option value="project manager">Project Manager</option>
+              <option value="professional worker">Professional Worker</option>
+              <option value="project manager">Project Manager</option>
               </optgroup>              
               <optgroup label="S">
-                <option value="supervisor">Supervisor</option>
+              <option value="supervisor">Supervisor</option>
               </optgroup>              
               <optgroup label=""></optgroup>
             </select>
@@ -1229,7 +1229,7 @@
         }
       })
     }
-
+    
     function removeGovernmentPosition() {
       governmentPositions = document.querySelectorAll('[data-custom="governmentPosition"]')
       governmentPositions.forEach(element => {
@@ -1254,7 +1254,7 @@
       largeprivate.checked = false;
       military.checked = false;
     })
-    
+
 
     // unclick other option when one is selected
     /*military.addEventListener('click',() => {
@@ -1353,85 +1353,29 @@
 
     postcodeInput.addEventListener('change', function() {
         var postcode = postcodeInput.value;
-
-        var apiUrl = `https://nominatim.openstreetmap.org/search?postalcode=${postcode}&countrycodes=my&format=json`;
-
         document.getElementById('spinner').style.display = 'inline-block'
-        fetch(apiUrl)
-            .then(response => response.json().then(data => {
-                console.log(data)
-                if (data.length > 0) {
-                    var display_name  = data[0].display_name.split(', ')
-                    if(display_name.length == 1) {
-                        // replace with enabling input field so that, user can manually input the city and state
-                        if (document.getElementById('companyCitySelect') !== null) {
-                          document.getElementById('companyCitySelect').remove()
-                        }
-                        cityInput.value = ''
-                        cityInput.style.display = 'block'
-                        console.error("Invalid post code")
-                        document.getElementById('spinner').style.display = 'none'
-                    }
-                    else {
-                        // clear out previous select element, if there is 
-                        if (document.getElementById('companyCitySelect') !== null) {
-                          document.getElementById('companyCitySelect').remove()
-                        }
-                        console.log(display_name)
-                        var state = display_name[ display_name.length - 3 ]
-                        var city = []
-                        if (display_name.length == 3) {
-                          city.push(display_name[0])
-                        } else if (display_name.length > 3) {
-                          city = display_name.slice(0, display_name.length - 3)
-                        }
-                        // change kuala lumpur state to Wilayah Persekutuan
-                        if (state === "Kuala Lumpur") {
-                          state = "Wilayah Persekutuan";
-                        }
-  
-                        // create unique data set
-                        uniqueCities = Array.from(new Set(city))
-                        stateInput.value = state;
-                        // create select element
-                        const select = document.createElement('select')
-                        select.id = 'companyCitySelect'
-                        select.name = 'companyCitySelect'
-                        select.required = true
-                        select.classList.add('form-select')
-                        select.style.borderRadius = '50px' 
-                        select.setAttribute('data-question','8')
-                        select.addEventListener('change',assignCity)
-                        // based on the incoming city, create options with the value and text and append to select
-                        uniqueCities.forEach(option => {
-                          const element = document.createElement('option')
-                          element.value = option;
-                          element.text = option;
-                          select.appendChild(element)
-                        })
-                        // select the first element and disable the original input element
-                        select.selectedIndex = 0
-                        cityInput.value = uniqueCities[0]
-                        cityInput.style.display = 'none'
-                        cityFieldInput.appendChild(select)
-                        document.getElementById('spinner').style.display = 'none'
-                    }
-                } else {
-                     // replace with enabling input field so that, user can manually input the city and state
-                     if (document.getElementById('companyCitySelect') !== null) {
-                      document.getElementById('companyCitySelect').remove()
-                    }
-                    cityInput.value = ''
-                    cityInput.style.display = 'block'
-                    console.error('No results found.');
-                    document.getElementById('spinner').style.display = 'none'
-                }
-            }))
-            .catch(error => console.error('Error:', error));
+        fetch('/postcodeCheck',{
+          method : 'POST', 
+          body : JSON.stringify({postcode}),
+          headers : {'Content-Type': 'application/json'}
+        })
+        .then(response => response.json().then(data => {
+            console.log(data)
+            if(data.length === 1) {
+              const area = data[0].Area;
+              const state = data[0].State;
+              console.log(area,state)
+              cityInput.value = area;
+              stateInput.value = state;
+            }
+            else if(data.length === 0){
+              cityInput.value = '';
+              stateInput.value = '';
+              console.log("Invalid Postcode, please try again")
+            }
+        }))
+        .catch(error => console.error('Error:', error));
     })
-    function assignCity() {
-      cityInput.value = document.getElementById('companyCitySelect').value
-    }
   </script>
 </body>
 </html>

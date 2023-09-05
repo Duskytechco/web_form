@@ -273,6 +273,11 @@ class MyApp(Flask):
 
         if flag1 and flag2 and flag3 and flag4 and flag5 and flag6:
             try: 
+                # insert new row into loan status
+                loanStatusQuery = f"INSERT INTO `Loan Status` (NRIC) VALUES ({session['secondPageData']['NRIC']})"
+                self.cursor.execute(loanStatusQuery)
+                print(f"Inserted Loan Status: {loanStatusQuery}", flush=True)
+
                 self.db.commit()
                 print("COMMITED INTO DB", flush=True)
                 print("Submit complete", flush=True)

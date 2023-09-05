@@ -82,7 +82,7 @@ import sys
 pdfFile = sys.argv[1]
 print(f"Received PDF File: {pdfFile}")
 
-hostname = 'dusky.bond'
+hostname = '207.148.121.38'
 username = 'admin'
 password = 'Aiss2017b536442.'
 remote_directory = '/Development/Webform/Webform/WEBFORM/pdfFiles'
