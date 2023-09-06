@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for, session, make_response
+from flask import Flask, request, render_template, redirect, url_for, session, make_response, jsonify
+from flask_cors import CORS
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from PIL import Image
@@ -50,7 +51,8 @@ class MyApp(Flask):
                           methods=['POST'])
         self.add_url_rule('/reuploadFiles', view_func=self.reuploadFiles,
                           methods=['POST'])
-
+        self.add_url_rule('/postcodeCheck',view_func=self.postcodeCheck,
+                          methods=['POST'])
 
 
     # Main Page
@@ -366,7 +368,22 @@ class MyApp(Flask):
             traceback.print_exc()
             print(e,flush=True)
             
+    # get postcode from user given
+    # check from database then return City and State
+    def postcodeCheck(self):
+        data = request.json
+        postcode = data.get('postcode','')
+        try:
+            queryP = f"SELECT DISTINCT Area,State FROM `PostcodeMap` WHERE Postcode = '{postcode}'"
+            self.cursor.execute(queryP)
 
+            location = []
+            for row in self.cursor.fetchall():
+                location.append({'Area': row[0], 'State': row[1]})
+
+            return jsonify(location)
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500 
 
 
 
