@@ -37,7 +37,8 @@ class MyApp(Flask):
         self.pdfFiles = [] # Array that stores the pdfFiles
         self.add_url_rule('/', view_func=self.index,
                           methods=['GET', 'POST'])  # Bind self.index to /
-        # Bind self.page2 to /page2
+        self.add_url_rule('/privacypolicy', view_func=self.privacypolicy, endpoint='privacypolicy')
+        self.add_url_rule('/page1', view_func=self.page1)
         self.add_url_rule('/page2', view_func=self.page2)
         self.add_url_rule('/page3', view_func=self.page3)
         self.add_url_rule('/reuploadPage', view_func=self.reuploadPage)
@@ -54,17 +55,19 @@ class MyApp(Flask):
         self.add_url_rule('/postcodeCheck',view_func=self.postcodeCheck,
                           methods=['POST'])
 
-
     # Main Page
     def index(self):
+        return render_template('Instructions.html')
+
+    def privacypolicy(self):
+        return render_template('PrivacyPolicy.html')
+    
+    def page1(self):
         return render_template('Page1.html')
-
-
     # Second page
     def page2(self):
         return render_template('Page2.html')
     
-
     def page3(self):
         return render_template('Page3.html')
     
@@ -539,11 +542,6 @@ class MyApp(Flask):
             print(e, flush = True)
             return f"<h1>{e}<h1>"
         
-
-
-
-
-
 app = MyApp(__name__)
 # for session
 app.secret_key = secrets.token_hex(32)

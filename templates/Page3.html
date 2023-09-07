@@ -472,9 +472,9 @@
                 <div class="def">
                   <div class="input-group mb-3">
                     <span class="input-group-text block">RM</span>
-                    <input class="form-control" data-question="7" type="number" name="netSalary" required>
+                    <input class="form-control" data-question="7" type="number" id="netSalary" name="netSalary" required onblur="handleInputChange()" >
                     <span class="input-group-text block">.</span>
-                    <input class="form-control" type="number" name="netSalaryDecimal" maxlength="2" max="99">
+                    <input class="form-control" type="number" name="netSalaryDecimal" placeholder="00" maxlength="2" max="99">
                   </div>
                 </div>
               </div>
@@ -485,9 +485,9 @@
                 <div class="def">
                   <div class="input-group mb-3">
                     <span class="input-group-text block">RM</span>
-                    <input class="form-control" data-question="7" type="number" name="grossSalary" required>
+                    <input class="form-control" data-question="7" type="number" id="grossSalary" name="grossSalary" required onblur="handleInputChange()">
                     <span class="input-group-text block">.</span>
-                    <input class="form-control" type="number" name="grossSalaryDecimal" maxlength="2" max="99">
+                    <input class="form-control" type="number" name="grossSalaryDecimal" placeholder="00" maxlength="2" max="99">
                   </div>
                 </div>
               </div>
@@ -790,6 +790,7 @@
       if (PositionOption === 'operational worker'){
         document.getElementById('PositionSubDropdownContainer').style.display = 'block';  
         subPositionDropdown.required = true;
+        subPositionDropdown.innerHTML += '<option></option>';
         subPositionDropdown.innerHTML += '<optgroup label="A"></optgroup>';
         subPositionDropdown.innerHTML += '<option value="administrative assistants">Administrative Assistants</option>';
         subPositionDropdown.innerHTML += '<option value="assembly line worker">Assembly Line Worker</option>';
@@ -1028,6 +1029,20 @@
       $('.multi_select').selectpicker();
     })
 
+    // Event handler for input changes
+    function handleInputChange() {
+      console.log("salary field blurred");
+      var netSalary = parseFloat(document.getElementById("netSalary").value);
+      var grossSalary = parseFloat(document.getElementById("grossSalary").value);
+
+      // Check if Gross Salary is equal to or lower than Net Salary
+      if (grossSalary <= netSalary) {
+        alert("Gross Salary must be higher than Net Salary.");
+        document.getElementById("grossSalary").value = '';
+        document.getElementById("grossSalary").focus();
+      }    
+    }
+
     // This Section for dropdown list, when OTHER is picked, show another box
     let employmentStatus = document.getElementById("employment-status");
     let addbox0 = document.getElementById('container-for-employed');
@@ -1164,7 +1179,7 @@
       var internationalRadio = document.getElementById('internationalRadio');
       var ngoRadio = document.getElementById('ngoRadio'); 
       // government radio will be checked first, so add the government position first
-      addGovernmentPosition()
+      //addGovernmentPosition()
       // Add event listeners to the radio buttons
       governmentRadio.addEventListener('change', handleSectorSelection);
       privateSectorRadio.addEventListener('change', handleSectorSelection);
