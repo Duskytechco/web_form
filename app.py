@@ -42,8 +42,10 @@ class MyApp(Flask):
         self.add_url_rule('/page2', view_func=self.page2)
         self.add_url_rule('/page3', view_func=self.page3)
         self.add_url_rule('/reuploadPage', view_func=self.reuploadPage)
-        self.add_url_rule('/submitSecondPage', view_func=self.submitSecondPage,
-                          methods=['POST'])  # Bind self.submitSecondPage to /submitSecondPage
+        self.add_url_rule('/submitPage1Data', view_func=self.submitPage1Data,
+                          methods=['POST'])  # Bind self.submitPage1Data to /submitPage1Data
+        self.add_url_rule('/submitPage2Data', view_func=self.submitPage2Data,
+                          methods=['POST'])
         self.add_url_rule('/submit', view_func=self.submit,
                           methods=['POST'])  # Bind self.submit to /submit
         self.add_url_rule('/uploadFiles', view_func=self.uploadFiles,
@@ -63,17 +65,16 @@ class MyApp(Flask):
         return render_template('PrivacyPolicy.html')
     
     def page1(self):
-        return render_template('Page1.html')
+        return render_template('Page1Data.html')
     # Second page
     def page2(self):
-        return render_template('Page2.html')
+        return render_template('Page2Data.html')
     
     def page3(self):
-        return render_template('Page3.html')
-    
+        return render_template('pdfUpload.html')
 
     def reuploadPage(self):
-        return render_template('Reupload.html')
+        return render_template('pdfReupload.html')
     
 
     def reuploadFiles(self):
@@ -92,26 +93,33 @@ class MyApp(Flask):
             # list of zip files
             zipFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file == zipFilePath]
             
-            # check if existing zip file, if not return no nric
-            if zipFilePath not in zipFiles:
-                print("Wrong NRIC",flush=True)
-                return 'NO NRIC'
+            # # check if existing zip file, if not return no nric
+            # if zipFilePath not in zipFiles:
+            #     print("Wrong NRIC",flush=True)
+            #     return 'NO NRIC'
             
             with zipfile.ZipFile(os.path.join(self.config['UPLOAD_FOLDER'], zipFilePath), 'w') as zf:
                 zf.write(pdfFile, f"{nric}.pdf")
+            
+            # Execute SFTP Script to transfer PDF Files
+            try: 
+                subprocess_args = ['python3', 'scripts/transfer_file_via_sftp.py', f"{nric}.zip"]
+                subprocess.run(subprocess_args, check=True)
+                print("SFTP Transfer completed", flush=True)
+            except subprocess.CalledProcessError as e:
+                error_message = f"SFTP script execution failed: {e}"
+                print(error_message, flush=True)
 
             # remove merged pdf
             os.remove(pdfFile)
             
             print("Files has been updated",flush=True)
-            return make_response("Success",200)
+            return make_response("Success Reuploading",200)
         except Exception as e:
             print("Files update failed",flush=True)
             traceback.print_exc()
             print(e,flush=True)
-    
-    
-
+            return make_response("Failed Reuploading",500)
 
 
     def uploadChunkedPDF(self):
@@ -180,32 +188,42 @@ class MyApp(Flask):
             self.processFiles()
             
             print("Submitted files", flush=True)
-            return redirect(url_for('page2'))
+            self.submit()
+            response = make_response("Uploaded Successfully",200)
+            return response
         except Exception as e:
             print(e, flush=True)
-    
+            response = make_response("Uploaded Failed",500)
+            return response
     
 
 
 
 
     # Submit First Page Handler
-    def submitSecondPage(self):
+    def submitPage1Data(self):
+        try:
+            session['firstPageData'] = dict(request.form)
+            print("SESSION FIRST PAGE DATA --",session['firstPageData'], flush=True)
+            print("Submitted first page", flush=True)
+            return redirect(url_for('page2'))
+        except Exception as e:
+            print(e, flush=True)
+
+    def submitPage2Data(self):
         try:
             session['secondPageData'] = dict(request.form)
             print("SESSION SECOND PAGE DATA --",session['secondPageData'], flush=True)
             print("Submitted second page", flush=True)
             return redirect(url_for('page3'))
         except Exception as e:
-            print(e, flush=True)
-
-
+            print(e,flush=True)
 
     # Submit Second Page Handler
     def submit(self):
         print("Submitting form. . .", flush=True)
         try:
-            session['thirdPageData'] = dict(request.form)
+            # session['thirdPageData'] = dict(request.form)
             self.restructureData()
 
             flag1 = flag2 = flag3 = flag4 = flag5 = flag6 = False
@@ -279,7 +297,7 @@ class MyApp(Flask):
         if flag1 and flag2 and flag3 and flag4 and flag5 and flag6:
             try: 
                 # insert new row into loan status
-                loanStatusQuery = f"INSERT INTO `Loan Status` (NRIC) VALUES ({session['secondPageData']['NRIC']})"
+                loanStatusQuery = f"INSERT INTO `Loan Status` (NRIC) VALUES ({session['firstPageData']['NRIC']})"
                 self.cursor.execute(loanStatusQuery)
                 print(f"Inserted Loan Status: {loanStatusQuery}", flush=True)
 
@@ -290,7 +308,7 @@ class MyApp(Flask):
                 # Execute SFTP Script to transfer PDF Files
                 try: 
                     self.createZipFile()
-                    subprocess_args = ['python3', 'scripts/transfer_file_via_sftp.py', f"{session['secondPageData']['NRIC']}.zip"]
+                    subprocess_args = ['python3', 'scripts/transfer_file_via_sftp.py', f"{session['firstPageData']['NRIC']}.zip"]
                     subprocess.run(subprocess_args, check=True)
                     print("SFTP Transfer completed", flush=True)
                 except subprocess.CalledProcessError as e:
@@ -312,9 +330,6 @@ class MyApp(Flask):
         session.clear()
         return '<h1>Submitted successfully</h1>'
         
-
-
-
 
 
     def processFiles(self):
@@ -398,9 +413,9 @@ class MyApp(Flask):
             pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], uniqueFile)
             
             # save the merged pdf into a zip
-            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{session['secondPageData']['NRIC']}.zip")
+            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{session['firstPageData']['NRIC']}.zip")
             with zipfile.ZipFile(zipFilePath, 'w') as zf:
-                zf.write(pdfFile, f"{session['secondPageData']['NRIC']}.pdf")
+                zf.write(pdfFile, f"{session['firstPageData']['NRIC']}.pdf")
 
             # remove merged pdf
             os.remove(pdfFile)
@@ -420,8 +435,8 @@ class MyApp(Flask):
     # Gets data from session
     def restructureData(self):
         try:
-            data = session['secondPageData']
-            print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
+            data = session['firstPageData']
+            print("DEBUGGING FIRST PAGE DATA : ",data,flush=True)
             
             data['gender'] = 'Male'
             if int( data['NRIC']) % 2 == 0:
@@ -458,16 +473,16 @@ class MyApp(Flask):
             self.referenceContacts.clear()
             self.referenceContacts.append(referenceContact1)
             self.referenceContacts.append(referenceContact2)
-            print("Finish Restructure second Page Info", flush=True)
+            print("Finish Restructure first Page Info", flush=True)
         except Exception as e:
-            print("Error in Restructure second Page Info", flush=True)
+            print("Error in Restructure first Page Info", flush=True)
             print(e, flush=True)
             #return f"<h1>{e}<h1>"
             pass
         
         try: 
-            data = session['thirdPageData']
-            print("DEBUGGING THIRD PAGE DATA : ",data,flush=True)
+            data = session['secondPageData']
+            print("DEBUGGING SECOND PAGE DATA : ",data,flush=True)
             employmentStatus = data['employmentStatus']
             status = ''
             if employmentStatus == 'employed':
@@ -531,14 +546,14 @@ class MyApp(Flask):
             companyAddress = ', '.join(companyAddressParts)
             companyAddress = companyAddress.replace("'"," ")
             print("Company Address :", companyAddress,flush=True)
-            self.workingInfo = f"'{session['secondPageData']['NRIC']}', '{data['employmentStatus']}', '{sector}','{status}', '{position}' , '{data['department']}', '{businessNature}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{companyAddress}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
+            self.workingInfo = f"'{session['firstPageData']['NRIC']}', '{data['employmentStatus']}', '{sector}','{status}', '{position}' , '{data['department']}', '{businessNature}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{companyAddress}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
 
-            self.bankingInfo = f"'{session['secondPageData']['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{session['secondPageData']['NRIC']}.zip'"
+            self.bankingInfo = f"'{session['firstPageData']['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{session['firstPageData']['NRIC']}.zip'"
 
-            self.extraInfo = f"'{session['secondPageData']['NRIC']}', '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'Yes' else 'None'}', '{data['howToKnowMotosing']}'"
-            print("Finish Restructure Third Page Info", flush=True)
+            self.extraInfo = f"'{session['firstPageData']['NRIC']}', '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'Yes' else 'None'}', '{data['howToKnowMotosing']}'"
+            print("Finish Restructure Second Page Info", flush=True)
         except Exception as e:
-            print("Error in Restructure Third Page Info", flush=True)
+            print("Error in Restructure Second Page Info", flush=True)
             print(e, flush = True)
             return f"<h1>{e}<h1>"
         
