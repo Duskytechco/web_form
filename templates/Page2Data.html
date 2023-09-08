@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Motosing Webform 3/3</title>
+  <title>Motosing Webform 2/3</title>
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
     integrity="sha512-1yJx7Gp58XzPf7+B+mnvHcI/Q+JeGZJqxSdeLjgbvEJQyAXlF+4gr4Jfv4A4w6+RuJRGZD+Y/ZTF/HdoJGBx6w=="
@@ -31,13 +31,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.bundle.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
-  <script src="js/script.js"></script>
   <script>
     const showingHiddenDiv = (target) => {
       const hiddenDiv = document.querySelectorAll(".employmentstatus");
 
       hiddenDiv.forEach((div) => {
-        if (target.value != ' ' && target.value != '' && target.value != null && target.value != 'student') {
+        if (target.value != ' ' && target.value != '' && target.value != null) {
           div.style.display = 'block';
         } else {
           div.style.display = 'none';
@@ -67,7 +66,7 @@
 </head>
 
 <body>
-  <form class="g-3" id="myForm" method="POST" action="{{ url_for('submit') }}" enctype="multipart/form-data">
+  <form class="g-3" id="myForm" method="POST" action="{{ url_for('submitPage2Data') }}" enctype="multipart/form-data">
     <div id="listitem">
       <div class="list-container container">
         <div class="d-flex align-items-center w-100 justify-content-center mt-5">
@@ -84,9 +83,9 @@
         <div class="list-gap">
           <div class="fs-5">Employment Status <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="employment-status" required name="employmentStatus"
-              onchange="showingHiddenDiv(this)" data-question="1">
-              <option selected></option>
+            <select class="form-select" id="employment-status" name="employmentStatus"
+              onchange="showingHiddenDiv(this)" data-question="1" >
+              <option ></option>
               <option value="employed">Employed</option>
               <option value="self-employed">Self-Employed</option>
               <!-- <option value="retiree">Retiree</option> -->
@@ -126,7 +125,7 @@
                     <div id="addGovernment" style="display: none;">
                       <label for="additionalEmployedStatus">Which sector are you in? <span style="color:red;padding-left:0.25rem">*</span></label>
                       <div>
-                        <input type="radio" checked required class="form-check-input" name="SectorRadio" value="military" id="militaryRadio">
+                        <input type="radio" checked class="form-check-input" name="SectorRadio" value="military" id="militaryRadio">
                         <label class="form-check-label" for="militaryRadio">Military</label>
                       </div>
                       <div>
@@ -165,7 +164,7 @@
               <div style="font-size:14px;padding-top:8px">If you are Self-Employed please click on an
                 option</div>
               <div class="form-check">
-                <input class="form-check-input" required type="radio" name="selfEmployedStatus" value="freeLance" id="option2">
+                <input class="form-check-input" type="radio" name="selfEmployedStatus" value="freeLance" id="option2">
                 <label class="form-check-label" for="option2">
                   Freelance
                 </label>
@@ -189,7 +188,7 @@
               </div>
             </div>
           </div>
-          <div class="list-gap">
+          <!-- <div class="list-gap">
             <div class="form-group d-none card card-body" id="container-for-other-employment-status">
               <label for="add-container0">Other Income Source <span
                   style="color:red;padding-left:0.25rem">*</span></label>
@@ -223,7 +222,7 @@
                   placeholder="Your Answer">
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
         <div class="list-gap employmentstatus">
           <div class="fs-5">Position <span style="color:red;padding-left:0.25rem">*</span></div>
@@ -472,9 +471,9 @@
                 <div class="def">
                   <div class="input-group mb-3">
                     <span class="input-group-text block">RM</span>
-                    <input class="form-control" data-question="7" type="number" name="netSalary" required>
+                    <input class="form-control" data-question="7" type="number" id="netSalary" name="netSalary" required onblur="handleInputChange()" >
                     <span class="input-group-text block">.</span>
-                    <input class="form-control" type="number" name="netSalaryDecimal" maxlength="2" max="99">
+                    <input class="form-control" type="number" name="netSalaryDecimal" placeholder="00" maxlength="2" max="99">
                   </div>
                 </div>
               </div>
@@ -485,9 +484,9 @@
                 <div class="def">
                   <div class="input-group mb-3">
                     <span class="input-group-text block">RM</span>
-                    <input class="form-control" data-question="7" type="number" name="grossSalary" required>
+                    <input class="form-control" data-question="7" type="number" id="grossSalary" name="grossSalary" required onblur="handleInputChange()">
                     <span class="input-group-text block">.</span>
-                    <input class="form-control" type="number" name="grossSalaryDecimal" maxlength="2" max="99">
+                    <input class="form-control" type="number" name="grossSalaryDecimal" placeholder="00" maxlength="2" max="99">
                   </div>
                 </div>
               </div>
@@ -765,11 +764,14 @@
     });*/
 
     const form = document.getElementById("myForm"); 
-    form.addEventListener('submit',function(event) {
+    const btn = document.getElementById("submitBtn"); 
+    btn.addEventListener('click',function(event) {
+      console.log(form)
       if (!form.checkValidity()) {
         event.preventDefault()
       }
     })
+
     //additional Position
     document.getElementById('Position').addEventListener('change', function(event) {
       var selectedOption = event.target.value;
@@ -786,6 +788,7 @@
       if (PositionOption === 'operational worker'){
         document.getElementById('PositionSubDropdownContainer').style.display = 'block';  
         subPositionDropdown.required = true;
+        subPositionDropdown.innerHTML += '<option></option>';
         subPositionDropdown.innerHTML += '<optgroup label="A"></optgroup>';
         subPositionDropdown.innerHTML += '<option value="administrative assistants">Administrative Assistants</option>';
         subPositionDropdown.innerHTML += '<option value="assembly line worker">Assembly Line Worker</option>';
@@ -1024,6 +1027,20 @@
       $('.multi_select').selectpicker();
     })
 
+    // Event handler for input changes
+    function handleInputChange() {
+      console.log("salary field blurred");
+      var netSalary = parseFloat(document.getElementById("netSalary").value);
+      var grossSalary = parseFloat(document.getElementById("grossSalary").value);
+
+      // Check if Gross Salary is equal to or lower than Net Salary
+      if (grossSalary <= netSalary) {
+        alert("Gross Salary must be higher than Net Salary.");
+        document.getElementById("grossSalary").value = '';
+        document.getElementById("grossSalary").focus();
+      }    
+    }
+
     // This Section for dropdown list, when OTHER is picked, show another box
     let employmentStatus = document.getElementById("employment-status");
     let addbox0 = document.getElementById('container-for-employed');
@@ -1035,12 +1052,6 @@
     let addbox2 = document.getElementById('container-for-other-self-employed-status');
     let othercontainer0 = document.getElementById('other-container0');
     let option4 = document.getElementById('option4');
-    let option5 = document.getElementById('option5');
-    let option6 = document.getElementById('option6');
-    let option7 = document.getElementById('option7');
-    let option8 = document.getElementById('option8');
-    let othercontainer1 = document.getElementById('other-container1');
-    let addbox3 = document.getElementById('container-for-other-employment-status');
     let addbox4 = document.getElementById('container-for-other-income-source');
     let military = document.getElementById('militaryRadio')
     let normgov = document.getElementById('normGovRadio')
@@ -1062,10 +1073,6 @@
       option2.required = false;
       option3.required = false;
       option4.required = false;
-      option5.required = false;
-      option6.required = false;
-      option7.required = false;
-      option8.required = false;
     }
 
     employmentStatus.addEventListener('change', () => {
@@ -1074,26 +1081,21 @@
         addbox1.classList.add('d-none');
         option0.required = true;
         option1.required = true;
+        document.forms["myForm"]["employmentStatus"].value = "employed";
+        
       } else if (employmentStatus.value === "self-employed") {
         addbox1.classList.remove('d-none');
         addbox0.classList.add('d-none');
         option2.required = true;
         option3.required = true;
         option4.required = true;
-      } else if (employmentStatus.value === "other") {
-        addbox0.classList.add('d-none');
-        addbox1.classList.add('d-none');
-        addbox3.classList.remove('d-none');
-        option5.required = true;
-        option6.required = true;
-        option7.required = true;
-        option8.required = true;
       } else {
         addbox0.classList.add('d-none');
         addbox1.classList.add('d-none');
-        addbox3.classList.add('d-none');
+        // addbox3.classList.add('d-none');
         required();
       }
+      console.log(employmentStatus.value)
     })
     option0.addEventListener('click', () => {
       option1.required = false;
@@ -1119,39 +1121,6 @@
       addbox2.classList.remove('d-none');
       othercontainer0.required = true;
     })
-    option5.addEventListener('click', () => {
-      option6.required = false;
-      option7.required = false;
-      option8.required = false;
-      addbox3.classList.remove('d-none');
-      othercontainer1.required = false;
-      addbox4.classList.add('d-none');
-    })
-    option6.addEventListener('click', () => {
-      option5.required = false;
-      option7.required = false;
-      option8.required = false;
-      addbox3.classList.remove('d-none');
-      othercontainer1.required = false;
-      addbox4.classList.add('d-none');
-    })
-    option7.addEventListener('click', () => {
-      option5.required = false;
-      option6.required = false;
-      option8.required = false;
-      addbox3.classList.remove('d-none');
-      othercontainer1.required = false;
-      addbox4.classList.add('d-none');
-    })
-    option8.addEventListener('click', () => {
-      option5.required = false;
-      option6.required = false;
-      option7.required = false;
-      addbox3.classList.remove('d-none');
-      othercontainer1.required = true;
-      addbox4.classList.remove('d-none');
-    })
-
     
     document.addEventListener('DOMContentLoaded', function() {
       // Get the radio button elements
@@ -1160,7 +1129,7 @@
       var internationalRadio = document.getElementById('internationalRadio');
       var ngoRadio = document.getElementById('ngoRadio'); 
       // government radio will be checked first, so add the government position first
-      addGovernmentPosition()
+      //addGovernmentPosition()
       // Add event listeners to the radio buttons
       governmentRadio.addEventListener('change', handleSectorSelection);
       privateSectorRadio.addEventListener('change', handleSectorSelection);
@@ -1178,9 +1147,9 @@
         addGovernmentPosition()
         // default check the first one in sector
         military.checked = true
-        onlineEcom.checked = false
-        
-        
+        onlineEcom.checked = false   
+        // let sector be required when govEmployee selected 
+
       } else if (selectedValue === 'privateSector'){
         privSector.style.display = 'block';
         govSector.style.display = 'none';
@@ -1189,9 +1158,12 @@
         onlineEcom.checked = true
 
         removeGovernmentPosition()
+
       } else {
         govSector.style.display = 'none';
         privSector.style.display = 'none';
+        military.checked = false;
+        onlineEcom.checked = false;
         removeGovernmentPosition()
       }
       
@@ -1346,6 +1318,7 @@
     const stateInput = document.getElementById('companyState') 
     const cityInput = document.getElementById('companyCity') 
     const cityFieldInput = document.getElementById('cityDiv') 
+    const cityValue = cityInput.value
 
     postcodeInput.addEventListener('change', function() {
         var postcode = postcodeInput.value;
@@ -1369,9 +1342,11 @@
               stateInput.value = '';
               console.log("Invalid Postcode, please try again")
             }
+            document.getElementById('spinner').style.display = 'none'
         }))
         .catch(error => console.error('Error:', error));
     })
+    
   </script>
 </body>
 </html>
