@@ -85,7 +85,7 @@
           <div class="fs-5">Employment Status <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
             <select class="form-select" id="employment-status" required name="employmentStatus"
-              onchange="showingHiddenDiv(this)" data-question="1" required>
+              onchange="showingHiddenDiv(this)" data-question="1">
               <option selected></option>
               <option value="employed">Employed</option>
               <option value="self-employed">Self-Employed</option>
@@ -323,7 +323,7 @@
           <div class="fs-5">Company/Business Nature <span style="color:red;padding-left:0.25rem">*</span>
           </div>
           <div class="input-group mb-3 businessNatureSelectDiv">
-            <select class="multi_select w-50 rightStraightBorder" data-live-search="true" data-selected-text-format="count > 3" id="business-nature-dropdown" name="businessNature" data-question="3" disabled onchange="checkValue(event)" required>
+            <select class="multi_select w-50 rightStraightBorder" data-live-search="true" data-selected-text-format="count > 3" id="business-nature-dropdown" name="businessNature" data-question="3" disabled required>
               <option selected></option>
               <optgroup label="A"></optgroup>
               <option value="agriculture">Agriculture</option>
@@ -664,22 +664,19 @@
           <div class="list-gap">
             <div class="fs-5">Type of Account <span style="color:red;padding-left:0.25rem">*</span></div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="typeOfAccount" value="Saving" id="option16"
-                onchange="typeOfAccount('option16')" required>
+              <input class="form-check-input" type="radio" name="typeOfAccount" value="Saving" id="option16" required>
               <label class="form-check-label" for="option16">
                 Saving
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="typeOfAccount" value="Current" id="option17"
-                onchange="typeOfAccount('option17')">
+              <input class="form-check-input" type="radio" name="typeOfAccount" value="Current" id="option17">
               <label class="form-check-label" for="option17">
                 Current
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="typeOfAccount" value="Other" id="option18"
-                onchange="typeOfAccount('option18')">
+              <input class="form-check-input" type="radio" name="typeOfAccount" value="Other" id="option18">
               <label class="form-check-label" for="option18">
                 Other
               </label>
@@ -744,8 +741,7 @@
           <div class="gap-2 d-md-block btn-container">
             <div>
               <button class="btn btn-primary" onclick="previousPage()" type="button">Previous Page</button>
-              <a href="#" style="color:white;text-decoration:none"></a><button class="btn btn-danger" id="submitBtn"
-                  type="submit">Submit</button></a>
+              <button class="btn btn-danger" id="submitBtn"type="submit">Submit</button></a>
             </div>
             <div>
               <a href="#" style="color:white;text-decoration:none"><button class="btn btn-green" type="button">Whatsapp
@@ -760,13 +756,13 @@
   <script>
     // Datepicker
     flatpickr("input[type=datetime-local]", {});
-    $(document).ready(function() {
+    /*$(document).ready(function() {
       $('#monthYearPicker').datepicker({
         format: 'yyyy-mm',
         viewMode: 'months',
         minViewMode: 'months'
       });
-    });
+    });*/
 
     const form = document.getElementById("myForm"); 
     form.addEventListener('submit',function(event) {
@@ -1315,10 +1311,10 @@
       id === 'option18' ? button.style.display = 'block' : button.style.display = 'none'
     }
 
-    const checkValue = (e) => {
-      const inputBar = document.querySelector('.form-control.others')
-      e.target.value === 'other' ? inputBar.style.display = 'block' : inputBar.style.display = 'none'
-    }
+    //const checkValue = (e) => {
+    //  const inputBar = document.querySelector('.form-control.others')
+    //  e.target.value === 'other' ? inputBar.style.display = 'block' : inputBar.style.display = 'none'
+    //}
 
     let questions = document.querySelectorAll("input[data-question], select[data-question]")
     questions.forEach((question) => {

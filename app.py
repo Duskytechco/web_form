@@ -89,13 +89,22 @@ class MyApp(Flask):
             # list of zip files
             zipFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file == zipFilePath]
             
-            # check if existing zip file, if not return no nric
-            if zipFilePath not in zipFiles:
-                print("Wrong NRIC",flush=True)
-                return 'NO NRIC'
+            # # check if existing zip file, if not return no nric
+            # if zipFilePath not in zipFiles:
+            #     print("Wrong NRIC",flush=True)
+            #     return 'NO NRIC'
             
             with zipfile.ZipFile(os.path.join(self.config['UPLOAD_FOLDER'], zipFilePath), 'w') as zf:
                 zf.write(pdfFile, f"{nric}.pdf")
+
+            # Execute SFTP Script to transfer PDF Files
+            try: 
+                subprocess_args = ['python3', 'scripts/transfer_file_via_sftp.py', f"{nric}.zip"]
+                subprocess.run(subprocess_args, check=True)
+                print("SFTP Transfer completed", flush=True)
+            except subprocess.CalledProcessError as e:
+                error_message = f"SFTP script execution failed: {e}"
+                print(error_message, flush=True)
 
             # remove merged pdf
             os.remove(pdfFile)
@@ -276,7 +285,7 @@ class MyApp(Flask):
         if flag1 and flag2 and flag3 and flag4 and flag5 and flag6:
             try: 
                 # insert new row into loan status
-                loanStatusQuery = f"INSERT INTO `Loan Status` (NRIC) VALUES ({session['secondPageData']['NRIC']})"
+                loanStatusQuery = f"INSERT INTO `Loan Status` (NRIC) VALUES ('{session['secondPageData']['NRIC']}')"
                 self.cursor.execute(loanStatusQuery)
                 print(f"Inserted Loan Status: {loanStatusQuery}", flush=True)
 
@@ -374,6 +383,8 @@ class MyApp(Flask):
         data = request.json
         postcode = data.get('postcode','')
         try:
+            print("Pinging the server...",flush=True)
+            self.db.ping(reconnect=True)
             queryP = f"SELECT DISTINCT Area,State FROM `PostcodeMap` WHERE Postcode = '{postcode}'"
             self.cursor.execute(queryP)
 
