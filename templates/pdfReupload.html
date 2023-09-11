@@ -72,7 +72,10 @@
                             <button class="btn btn-primary" id="backBtn" type="button">Back</button>
                         </div>
                         <div class="col">
-                            <button class="btn btn-primary" onclick="reupload()" type="button">Reupload</button>
+                            <button class="btn btn-primary" onclick="reupload(this)" type="button">
+                                <span id="btnSpinner" style='display:none' class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                                <span role="status">Reupload</span>    
+                            </button>
                         </div>
                     </div>        
                 </div>
@@ -80,7 +83,6 @@
         </div>
     </div>
 <script>
-    let nric = 0;
     const activateCameraButton = document.getElementById("activateCameraButton");
     const previewContainer = document.getElementById("previewContainer")
     const cameraInput = document.getElementById("cameraInput");
@@ -93,10 +95,6 @@
 
     document.getElementById('backBtn').addEventListener('click', function(){
         window.location.href = '/page3'
-    })
-
-    document.getElementById('nric').addEventListener('change', function(event) {
-        nric = event.target.value 
     })
 
     function clickCamera() {
@@ -127,7 +125,7 @@
     // Function to upload the currently displayed photo
     function uploadPhoto() {
         compressedPhoto = new Compressor(photo, {
-            quality : 0.7,
+            quality : 0.3,
             success(result) {
                 formData.append('photo', result, result.name);
                 statusMessage.innerHTML = `<p class='fs-4 text-success'>Submitted ${result.name}</p>`;
@@ -141,7 +139,11 @@
     }
 
     // Function to submit a fetch api to backend
-    async function reupload() {
+    async function reupload(button) {
+        const btnSpinner = document.getElementById('btnSpinner')
+        btnSpinner.style.display = 'inline-block'
+        button.disabled = true
+        const nric = document.getElementById('nric').value
         const files = pdfFilesInput.files;
         const chunkSize = 1024 * 1024;
         for (const file of files) {
@@ -161,7 +163,7 @@
             }
         }
         formData.append('nric', nric)
-        fetch('/reuploadFiles',{
+        await fetch('/reuploadFiles',{
             method : 'POST',
             body : formData
         })
@@ -174,11 +176,21 @@
                 document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-success fs-4">Reupload Success!</p>'
             } else {
                 console.error('Error uploading files:', response.statusText);
-                document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Reupload Failed. Please try again</p>'
+                if (response.status === 413) {
+                    document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Reupload Failed. Too much images / Files too Large</p>'
+                } else if(response.status === 400) {
+                    document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Reupload Failed. Invalid NRIC</p>'
+                } else {
+                    document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Reupload Failed. Please try again</p>'
+                }
             }
+            btnSpinner.style.display = 'none'
+            button.disabled = false
         })
         .catch(function(error) {
-            console.error('Error uploading files:', error);
+            console.error('Error in catch uploading files :', error);
+            btnSpinner.style.display = 'none'
+            button.disabled = false
         });
     }
 

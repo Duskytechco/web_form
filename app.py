@@ -4,6 +4,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from PIL import Image
 from PyPDF2 import PdfMerger
+import PyPDF2
 import mysql.connector
 import zipfile
 import json
@@ -14,6 +15,7 @@ import traceback
 import secrets
 import time
 import subprocess
+import pandas as pd
 
 
 
@@ -76,32 +78,83 @@ class MyApp(Flask):
     def reuploadPage(self):
         return render_template('pdfReupload.html')
     
-
+    
+    # used to remove empty pdfs
+    def removeEmptyPDF(self):
+        try:
+            print("Removing Empty PDF Files", flush=True)
+            pdfFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file.endswith('.pdf')]
+            for file in pdfFiles:
+                filePath = os.path.join(self.config['UPLOAD_FOLDER'], file)
+                try:
+                    fileSize = os.path.getsize(filePath)
+                    # for corrupted files
+                    if fileSize == 0:
+                        os.remove(filePath)
+                        print(f"Removed {filePath}", flush=True)
+                    else:
+                        # for empty merged.pdf
+                        with open(filePath, 'rb') as pdfFile:
+                            pdfReader = PyPDF2.PdfReader(pdfFile)
+                            if len(pdfReader.pages) == 0:
+                                os.remove(filePath)
+                                print(f"Removed {filePath}", flush=True)   
+                except FileNotFoundError:
+                    print("File not found:",filePath)
+                    
+        except Exception as e:
+            print(e, flush=True)
+    
     def reuploadFiles(self):
         nric = request.form['nric']
         self.photos.clear()
+        print("Reupload NRIC:",nric, flush=True)
+        
+        # check if existing nric in database, if existing return no nric
+        sqlQuery =f"SELECT NRIC FROM `Personal Info` WHERE NRIC = '{nric}'"
+        try:
+            # check if the database is timed out
+            self.db.ping(reconnect=True)
+            data = pd.read_sql(sqlQuery,self.db)
+            if data.empty:
+                print("No NRIC Exist",flush=True)
+                return 'NO NRIC',400
+        except mysql.connector.Error:
+            print("Connection Timed out",flush=True) 
+            
         try:
             # merge all files together by simulating a normal upload file
-            self.uploadFiles()
+            # will not save in server yet, will just be in array
+            print("Merging Files . . .", flush =True)
+                 
+            if "photo" not in request.files:
+                print("No photo found",flush=True)
+            else:
+                # assign to array
+                self.photos.clear()
+                self.photos = request.files.getlist('photo')
+            
+            pdfFiles = session.get('uploaded_filenames','empty')
+            
+            if pdfFiles == 'empty':
+                print("No PDF Files uploaded",flush=True)
+                
+            # call the process files function to save the files into local
+            self.processFiles()
+            
             mergedFilename = session['unique_filename']
             # get the file path of saved merged.pdf
             pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], mergedFilename)
             
             # save the merged pdf into a zip
             zipFilePath = f"{nric}.zip"
-            
-            # list of zip files
-            zipFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file == zipFilePath]
-            
-            # # check if existing zip file, if not return no nric
-            # if zipFilePath not in zipFiles:
-            #     print("Wrong NRIC",flush=True)
-            #     return 'NO NRIC'
-            
+              
+            # remove original zip file, and create another one
+            os.remove(os.path.join(self.config['UPLOAD_FOLDER'],f"{nric}.zip"))
             with zipfile.ZipFile(os.path.join(self.config['UPLOAD_FOLDER'], zipFilePath), 'w') as zf:
                 zf.write(pdfFile, f"{nric}.pdf")
             
-            # Execute SFTP Script to transfer PDF Files
+            # Execute SFTP Script to transfer zip files
             try: 
                 subprocess_args = ['python3', 'scripts/transfer_file_via_sftp.py', f"{nric}.zip"]
                 subprocess.run(subprocess_args, check=True)
@@ -109,25 +162,20 @@ class MyApp(Flask):
             except subprocess.CalledProcessError as e:
                 error_message = f"SFTP script execution failed: {e}"
                 print(error_message, flush=True)
-
-            # Execute SFTP Script to transfer PDF Files
-            try: 
-                subprocess_args = ['python3', 'scripts/transfer_file_via_sftp.py', f"{nric}.zip"]
-                subprocess.run(subprocess_args, check=True)
-                print("SFTP Transfer completed", flush=True)
-            except subprocess.CalledProcessError as e:
-                error_message = f"SFTP script execution failed: {e}"
-                print(error_message, flush=True)
-
-            # remove merged pdf
+                
+            # remove merged pdf File
             os.remove(pdfFile)
             
             print("Files has been updated",flush=True)
+            # reset session data
+            session.clear()
             return make_response("Success Reuploading",200)
         except Exception as e:
             print("Files update failed",flush=True)
+            session.clear()
             traceback.print_exc()
             print(e,flush=True)
+            self.removeEmptyPDF()
             return make_response("Failed Reuploading",500)
 
 
@@ -137,7 +185,7 @@ class MyApp(Flask):
             file = request.files['files']
             chunk_number = int(request.form['chunk_number'])
             total_chunks = int(request.form['total_chunks'])
-            print(total_chunks)
+            print("Total Chunks :",total_chunks, flush=True)
             filename = file.filename.split('.part')[0]
             chunk_filename = f'{filename}.part{chunk_number}'
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
@@ -171,9 +219,6 @@ class MyApp(Flask):
 
 
 
-
-
-
     # upload files POST from page 1 
     # Submit button for page 1
     def uploadFiles(self):
@@ -197,14 +242,89 @@ class MyApp(Flask):
             self.processFiles()
             
             print("Submitted files", flush=True)
-            self.submit()
-            response = make_response("Uploaded Successfully",200)
-            return response
+            return make_response('upload success',200)
         except Exception as e:
             print(e, flush=True)
-            response = make_response("Uploaded Failed",500)
-            return response
+            self.removeEmptyPDF()
+            return make_response('upload failed',500)
     
+
+    def processFiles(self):
+        try:
+            # get files
+            photos = self.photos
+            pdfFiles = session.get('uploaded_filenames',[])
+                
+            # save and append the files to merger
+            merger = PdfMerger()
+            # print("PDFFILES = ", pdfFiles, flush=True)
+            
+            if len(pdfFiles) > 0:
+                for file in pdfFiles:
+                    file = os.path.join(self.config['UPLOAD_FOLDER'], file)
+                    merger.append(file)
+
+            # merge the image file if there is any
+            if len(photos) > 0:
+                for photo in photos:
+                    image = Image.open(photo.stream)
+                    # image = image.resize((1200, 1200))
+                
+                    # create and write into pdf file
+                    pdf_bytes = io.BytesIO()
+                    image.save(pdf_bytes, format='PDF')
+                    pdf_bytes.seek(0)
+                    
+                    # append the pdf file of the image into merger
+                    merger.append(pdf_bytes)
+                    image.close()
+            
+            # generate unique name for the merged pdf based on timestamp
+            # save unique name as a session for later usage
+            uniqueName = f"{int(time.time())}_merged.pdf"
+            session['unique_filename'] = uniqueName
+            
+            # write the merged files into a new pdf
+            mergedPdfPath = os.path.join(self.config['UPLOAD_FOLDER'],uniqueName)
+            with open(mergedPdfPath, 'wb') as combined_pdf_file:
+                merger.write(combined_pdf_file)    
+            
+            # remove saved files
+            if len(pdfFiles) > 0:
+                for file in pdfFiles:
+                    os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file))
+            
+            # reset the photos
+            self.photos.clear()
+            
+            print("Merged PDF file has been created",flush=True)
+        except Exception as e:
+            print("Process Files Failed",flush=True)
+            traceback.print_exc()
+            print(e,flush=True)
+
+
+
+    def createZipFile(self):
+        try:
+            uniqueFile = session['unique_filename']
+            # get the file path of saved merged.pdf
+            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], uniqueFile)
+            
+            # save the merged pdf into a zip
+            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{session['firstPageData']['NRIC']}.zip")
+            with zipfile.ZipFile(zipFilePath, 'w') as zf:
+                zf.write(pdfFile, f"{session['firstPageData']['NRIC']}.pdf")
+
+            # remove merged pdf
+            os.remove(pdfFile)
+            print("Zip file has been created",flush=True)
+
+        except Exception as e:
+            print("Zip File Creation Failed",flush=True)
+            
+            traceback.print_exc()
+            print(e,flush=True)
 
 
 
@@ -219,6 +339,7 @@ class MyApp(Flask):
         except Exception as e:
             print(e, flush=True)
 
+    # Submit Second Page Handler
     def submitPage2Data(self):
         try:
             session['secondPageData'] = dict(request.form)
@@ -228,7 +349,7 @@ class MyApp(Flask):
         except Exception as e:
             print(e,flush=True)
 
-    # Submit Second Page Handler
+    # Submit entire form
     def submit(self):
         print("Submitting form. . .", flush=True)
         try:
@@ -306,7 +427,7 @@ class MyApp(Flask):
         if flag1 and flag2 and flag3 and flag4 and flag5 and flag6:
             try: 
                 # insert new row into loan status
-                loanStatusQuery = f"INSERT INTO `Loan Status` (NRIC) VALUES ({session['firstPageData']['NRIC']})"
+                loanStatusQuery = f"INSERT INTO `Loan Status` (NRIC) VALUES ('{session['firstPageData']['NRIC']}')"
                 self.cursor.execute(loanStatusQuery)
                 print(f"Inserted Loan Status: {loanStatusQuery}", flush=True)
 
@@ -324,77 +445,26 @@ class MyApp(Flask):
                     self.db.rollback()
                     error_message = f"SFTP script execution failed: {e}"
                     print(error_message, flush=True)
+                    return make_response('incorrect data',500)
 
                 
             except Exception as e:
                 self.db.rollback()
                 print(e, flush=True)
-                return f"<h1>{e}<h1>"
+                return make_response('incorrect data',500)
         else:
             self.db.rollback()
+            self.removeEmptyPDF()
             print("Flag detected, not committing to database", flush=True)
-            return '<h1>Something is wrong with the data</h1>'
+            return make_response('incorrect data',500)
 
         # reset session data
         session.clear()
         return '<h1>Submitted successfully</h1>'
-        
+    
+            
 
 
-    def processFiles(self):
-        try:
-            # get files
-            photos = self.photos
-            pdfFiles = session.get('uploaded_filenames',[])
-                
-            # save and append the files to merger
-            merger = PdfMerger()
-            # print("PDFFILES = ", pdfFiles, flush=True)
-            
-            if len(pdfFiles) > 0:
-                for file in pdfFiles:
-                    file = os.path.join(self.config['UPLOAD_FOLDER'], file)
-                    merger.append(file)
-
-            # merge the image file if there is any
-            if len(photos) > 0:
-                for photo in photos:
-                    image = Image.open(photo.stream)
-                    # image = image.resize((1200, 1200))
-                
-                    # create and write into pdf file
-                    pdf_bytes = io.BytesIO()
-                    image.save(pdf_bytes, format='PDF')
-                    pdf_bytes.seek(0)
-                    
-                    # append the pdf file of the image into merger
-                    merger.append(pdf_bytes)
-                    image.close()
-            
-            # generate unique name for the merged pdf based on timestamp
-            # save unique name as a session for later usage
-            uniqueName = f"{int(time.time())}_merged.pdf"
-            session['unique_filename'] = uniqueName
-            
-            # write the merged files into a new pdf
-            mergedPdfPath = os.path.join(self.config['UPLOAD_FOLDER'],uniqueName)
-            with open(mergedPdfPath, 'wb') as combined_pdf_file:
-                merger.write(combined_pdf_file)    
-            
-            # remove saved files
-            if len(pdfFiles) > 0:
-                for file in pdfFiles:
-                    os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file))
-            
-            # reset the photos
-            self.photos.clear()
-            
-            print("Merged PDF file has been created",flush=True)
-        except Exception as e:
-            print("Process Files Failed",flush=True)
-            traceback.print_exc()
-            print(e,flush=True)
-            
     # get postcode from user given
     # check from database then return City and State
     def postcodeCheck(self):
@@ -413,33 +483,6 @@ class MyApp(Flask):
             return jsonify(location)
         except Exception as e:
             return jsonify({'error': str(e)}), 500 
-
-
-
-
-    def createZipFile(self):
-        try:
-            uniqueFile = session['unique_filename']
-            # get the file path of saved merged.pdf
-            pdfFile = os.path.join(self.config['UPLOAD_FOLDER'], uniqueFile)
-            
-            # save the merged pdf into a zip
-            zipFilePath = os.path.join(self.config['UPLOAD_FOLDER'], f"{session['firstPageData']['NRIC']}.zip")
-            with zipfile.ZipFile(zipFilePath, 'w') as zf:
-                zf.write(pdfFile, f"{session['firstPageData']['NRIC']}.pdf")
-
-            # remove merged pdf
-            os.remove(pdfFile)
-            print("Zip file has been created",flush=True)
-
-        except Exception as e:
-            print("Zip File Creation Failed",flush=True)
-            traceback.print_exc()
-            print(e,flush=True)
-            
-
-
-
 
 
     # Restructure all data when submit

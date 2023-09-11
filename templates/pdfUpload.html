@@ -37,7 +37,7 @@
                   </div>
               </div>
               <div class="list-gap">
-                  <p class="fs-3">NRIC (front and back)</p>
+                  <!-- <p class="fs-3">NRIC (front and back)</p> -->
                   <p class="fs-3">Upload 2 times</p>
                   <p class="text-break fs-3">Activate Camera > Take a pitcure OR upload an image file > Submit Image. Repeat</p>
                   <div >
@@ -62,12 +62,18 @@
                   </div>
               </div>
               <div class="list-gap">
+                <div class="mb-3">
+                    <p id="uploadStatus"></p>
+                  </div> 
                 <div class="row gx-5">
                     <div class="col">
                         <button class="btn btn-primary" id="reuploadBtn" type="button">Reupload Files</button>
                     </div>
                     <div class="col">
-                        <button class="btn btn-danger" onclick="submit()" type="button">Submit</button>
+                        <button class="btn btn-danger" onclick="submit(this)" type="button">
+                            <span id="btnSpinner" style='display:none' class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+                            <span role="status">Submit</span>
+                        </button>
                     </div>
                 </div>
               </div>
@@ -118,7 +124,7 @@
     // Function to upload the currently displayed photo
     function uploadImage() {
         compressedPhoto = new Compressor(photo, {
-            quality : 0.7,
+            quality : 0.3,
             success(result) {
                 formData.append('photo', result, result.name);
                 statusMessage.innerHTML = `<p class='fs-4 text-success'>Submitted ${result.name}</p>`;
@@ -132,7 +138,10 @@
     }
 
     // Function to submit a fetch api to backend
-    async function submit() {
+    async function submit(button) {
+        const btnSpinner = document.getElementById('btnSpinner')
+        btnSpinner.style.display = 'inline-block'
+        button.disabled = true;
         const files = pdfFilesInput.files;
         const chunkSize = 1024 * 1024;
         for (const file of files) {
@@ -152,21 +161,39 @@
             }
         }
 
-        fetch('/uploadFiles',{
+        await fetch('/uploadFiles',{
             method : 'POST',
             body : formData
         })
         .then(function(response) {
             // Redirect Response from backend
             if (response.ok) {
-                // Extract the new URL from the response headers
-                window.location.href = response.url;
+                // if upload success then fetch the submit function
+                fetch('/submit', {
+                    method : 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-success fs-4">Submit Success!</p>'
+                    } else {
+                        document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Submit Failed! Please contact help</p>'
+                    }
+                    btnSpinner.style.display = 'none';
+                    button.disabled = false;
+                }) 
             } else {
-                console.error('Error uploading files:', response.statusText);
+                if (response.statusText == 'Request Entity Too Large') {
+                    document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Upload Files Failed. Too much images / Files too Large</p>'
+                } else {
+                    document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Upload Files Failed. Please try again</p>'
+                }
+                btnSpinner.style.display = 'none';
+                button.disabled = false;
             }
         })
         .catch(function(error) {
             console.error('Error uploading files:', error);
+            btnSpinner.style.display = 'none';
+            button.disabled = false;
         });
     }
 
