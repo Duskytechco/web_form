@@ -94,7 +94,7 @@
     cameraInput.addEventListener('change',capturePhoto)
 
     document.getElementById('backBtn').addEventListener('click', function(){
-        window.location.href = '/page3'
+        window.location.href = '/'
     })
 
     function clickCamera() {
@@ -103,8 +103,8 @@
 
     let photo = null
     let displayPhoto = null
-    let formData = new FormData()
     let photoCount = 0
+    let formData = new FormData()
 
     // Function to capture a photo
     function capturePhoto() {
@@ -143,7 +143,8 @@
         const btnSpinner = document.getElementById('btnSpinner')
         btnSpinner.style.display = 'inline-block'
         button.disabled = true
-        const nric = document.getElementById('nric').value
+        let nric = document.getElementById('nric')
+        console.log(nric.value)
         const files = pdfFilesInput.files;
         const chunkSize = 1024 * 1024;
         for (const file of files) {
@@ -162,7 +163,7 @@
                 //formData.append("pdfFiles", file, file.filename);
             }
         }
-        formData.append('nric', nric)
+        formData.append('nric', nric.value)
         await fetch('/reuploadFiles',{
             method : 'POST',
             body : formData
@@ -192,6 +193,7 @@
             btnSpinner.style.display = 'none'
             button.disabled = false
         });
+        formData = new FormData()
     }
 
     async function uploadChunk(data) {

@@ -67,9 +67,6 @@
                   </div> 
                 <div class="row gx-5">
                     <div class="col">
-                        <button class="btn btn-primary" id="reuploadBtn" type="button">Reupload Files</button>
-                    </div>
-                    <div class="col">
                         <button class="btn btn-danger" onclick="submit(this)" type="button">
                             <span id="btnSpinner" style='display:none' class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
                             <span role="status">Submit</span>
@@ -91,10 +88,6 @@
     document.getElementById('removeImageButton').addEventListener('click', removeImage);
     activateCameraButton.addEventListener('click', clickCamera)
     cameraInput.addEventListener('change',capturePhoto)
-
-    document.getElementById('reuploadBtn').addEventListener('click', function(){
-        window.location.href = '/reuploadPage'
-    })
 
     function clickCamera() {
         cameraInput.click()
@@ -202,7 +195,7 @@
             method : 'POST',
             body : data,
         }).then(function(reponse) {
-            console.log(reponse);
+            //console.log(reponse);
         })
         .catch(function(error){
             console.error("Error uploading chunk: ",error)

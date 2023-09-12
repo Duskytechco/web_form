@@ -21,18 +21,6 @@ RUN apt-get update && apt-get install -y \
   libvulkan1 \
   xdg-utils
 
-RUN wget -qO chromium.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_113.0.5672.63-1_amd64.deb \
-  && dpkg -i chromium.deb \
-  && apt-get install -f -y \
-  && rm -f chromium.deb
-
-
-RUN wget -qO chromedriver.zip https://chromedriver.storage.googleapis.com/113.0.5672.63/chromedriver_linux64.zip \
-  && unzip chromedriver.zip \
-  && rm chromedriver.zip \
-  && mv chromedriver /usr/bin/chromedriver \
-  && chmod +x /usr/bin/chromedriver
-
 COPY . .
 
 RUN pip install -r requirements.txt

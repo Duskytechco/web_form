@@ -3,11 +3,8 @@ python-dotenv==1.0.0
 mysql-connector-python==8.0.33
 reportlab==4.0.0
 PyPDF2==3.0.1
-selenium~=4.8.0
 pandas==2.0.1
 requests~=2.28.1
-selenium-recaptcha-solver==1.8.1
 pycryptodome==3.18.0
 Psutil==5.9.5
 paramiko==3.3.1
-flask-cors==4.0.0

@@ -1,7 +1,4 @@
 from flask import Flask, request, render_template, redirect, url_for, session, make_response, jsonify
-from flask_cors import CORS
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 from PIL import Image
 from PyPDF2 import PdfMerger
 import PyPDF2
@@ -29,14 +26,15 @@ class MyApp(Flask):
         # self.thirdPageData = {}  # Dict that storing second page info
         self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db', port='3306')  # Connect to database
         self.cursor = self.db.cursor()
-        self.personalInfo = ""  # Storing personal info
-        self.productInfo = "" # Storing product info
-        self.referenceContacts = []  # A list of reference contacts
-        self.workingInfo = ""  # Storing working info
-        self.bankingInfo = ""  # Storing bank info
-        self.extraInfo = "" # Storing extra info
-        self.photos = [] # Array that stores the photos
-        self.pdfFiles = [] # Array that stores the pdfFiles
+        # all data are tuples for sql parametize query
+        self.personalInfo = ()  # Storing personal info
+        self.productInfo = () # Storing product info
+        self.referenceContacts = [()]  # A list of reference contacts
+        self.workingInfo = ()  # Storing working info
+        self.bankingInfo = ()  # Storing bank info
+        self.extraInfo = () # Storing extra info
+        # self.photos = [] # Array that stores the photos
+        # self.pdfFiles = [] # Array that stores the pdfFiles
         self.add_url_rule('/', view_func=self.index,
                           methods=['GET', 'POST'])  # Bind self.index to /
         self.add_url_rule('/privacypolicy', view_func=self.privacypolicy, endpoint='privacypolicy')
@@ -58,7 +56,7 @@ class MyApp(Flask):
                           methods=['POST'])
         self.add_url_rule('/postcodeCheck',view_func=self.postcodeCheck,
                           methods=['POST'])
-
+        
     # Main Page
     def index(self):
         return render_template('Instructions.html')
@@ -78,11 +76,13 @@ class MyApp(Flask):
     def reuploadPage(self):
         return render_template('pdfReupload.html')
     
+    def validateSessionToken(self):
+        print(session, flush=True)
+        
     
     # used to remove empty pdfs
     def removeEmptyPDF(self):
         try:
-            print("Removing Empty PDF Files", flush=True)
             pdfFiles = [file for file in os.listdir(self.config['UPLOAD_FOLDER']) if file.endswith('.pdf')]
             for file in pdfFiles:
                 filePath = os.path.join(self.config['UPLOAD_FOLDER'], file)
@@ -100,23 +100,40 @@ class MyApp(Flask):
                                 os.remove(filePath)
                                 print(f"Removed {filePath}", flush=True)   
                 except FileNotFoundError:
-                    print("File not found:",filePath)
+                    print("File not found:",filePath, flush=True)
                     
         except Exception as e:
             print(e, flush=True)
     
+    
+    
+    # remove merge pdf if there is error during submission
+    def removeMergedPDF(self):
+        try:
+            mergedPDF = session.get('unique_filename','empty')
+            if mergedPDF != 'empty':
+                os.remove(os.path.join(self.config['UPLOAD_FOLDER'],mergedPDF))
+                print("Removed : ", mergedPDF, flush=True)
+        except FileNotFoundError:
+            pass
+    
+    
+    
+    # reupload file POST endpoint
     def reuploadFiles(self):
         nric = request.form['nric']
-        self.photos.clear()
+        
         print("Reupload NRIC:",nric, flush=True)
         
         # check if existing nric in database, if existing return no nric
-        sqlQuery =f"SELECT NRIC FROM `Personal Info` WHERE NRIC = '{nric}'"
+        sqlQuery ="SELECT NRIC FROM `Personal Info` WHERE NRIC = %s"
         try:
+            queryData = (nric,)
             # check if the database is timed out
             self.db.ping(reconnect=True)
-            data = pd.read_sql(sqlQuery,self.db)
-            if data.empty:
+            self.cursor.execute(sqlQuery,queryData)
+            data = self.cursor.fetchall()
+            if not data:
                 print("No NRIC Exist",flush=True)
                 return 'NO NRIC',400
         except mysql.connector.Error:
@@ -130,9 +147,8 @@ class MyApp(Flask):
             if "photo" not in request.files:
                 print("No photo found",flush=True)
             else:
-                # assign to array
-                self.photos.clear()
-                self.photos = request.files.getlist('photo')
+                # assign to session
+                session['photo'] = request.files.getlist('photo')
             
             pdfFiles = session.get('uploaded_filenames','empty')
             
@@ -178,7 +194,17 @@ class MyApp(Flask):
             self.removeEmptyPDF()
             return make_response("Failed Reuploading",500)
 
-
+    # after submit success, clear all data to prevent possible resubmit
+    def clearData(self):
+        self.personalInfo = ()
+        self.productInfo = ()
+        self.referenceContacts = [()]  
+        self.workingInfo = () 
+        self.bankingInfo = ()
+        self.extraInfo = () 
+    
+    # will be called multiple times to upload all chunks of a pdf file and combined into complete pdf file
+    # after uploading all pdf, will call uploadFiles to complete the merge file
     def uploadChunkedPDF(self):
         try:
             print("Uploading Chunked PDF",flush=True)
@@ -201,7 +227,11 @@ class MyApp(Flask):
                         chunk_filename = f'{filename}.part{i}'
                         with open(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename), 'rb') as chunk_file:
                             merged_file.write(chunk_file.read())
-                        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
+                            
+                        try:
+                            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], chunk_filename))
+                        except FileNotFoundError:
+                            pass
                 
                 # when all chunks have been merged, the session will append the filename for later usage
                 session['uploaded_filenames'].append(filename)
@@ -220,18 +250,16 @@ class MyApp(Flask):
 
 
     # upload files POST from page 1 
-    # Submit button for page 1
+    # Submit button for page 3
     def uploadFiles(self):
         try:
-            # will not save in server yet, will just be in array
             print("Merging Files . . .", flush =True)
                  
             if "photo" not in request.files:
                 print("No photo found",flush=True)
             else:
-                # assign to array
-                self.photos.clear()
-                self.photos = request.files.getlist('photo')
+                # assign to session
+                session['photo'] = request.files.getlist('photo')
             
             pdfFiles = session.get('uploaded_filenames','empty')
             
@@ -249,10 +277,13 @@ class MyApp(Flask):
             return make_response('upload failed',500)
     
 
+    # called during uploadFiles to process images, save as pdf, merging all pdf together
+    # generate unique merged pdf file, the unique is based on current time
+    # and will be saved in session for further usage
     def processFiles(self):
         try:
             # get files
-            photos = self.photos
+            photos = session.get('photo', [])
             pdfFiles = session.get('uploaded_filenames',[])
                 
             # save and append the files to merger
@@ -288,14 +319,20 @@ class MyApp(Flask):
             mergedPdfPath = os.path.join(self.config['UPLOAD_FOLDER'],uniqueName)
             with open(mergedPdfPath, 'wb') as combined_pdf_file:
                 merger.write(combined_pdf_file)    
+                
+            try:
+                # remove saved files
+                if len(pdfFiles) > 0:
+                    for file in pdfFiles:
+                        os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file))
+            except FileNotFoundError:
+                pass
             
-            # remove saved files
+            # reset the photos and pdf files (if there is)
+            if len(photos) > 0:
+                session.pop('photo')
             if len(pdfFiles) > 0:
-                for file in pdfFiles:
-                    os.remove(os.path.join(self.config['UPLOAD_FOLDER'],file))
-            
-            # reset the photos
-            self.photos.clear()
+                session.pop('uploaded_filenames')
             
             print("Merged PDF file has been created",flush=True)
         except Exception as e:
@@ -305,6 +342,9 @@ class MyApp(Flask):
 
 
 
+    # to create zip file once it is inside the database 
+    # based on the unique merged pdf, create a zip file based on nric
+    # and rename the merge pdf file to nric
     def createZipFile(self):
         try:
             uniqueFile = session['unique_filename']
@@ -349,11 +389,11 @@ class MyApp(Flask):
         except Exception as e:
             print(e,flush=True)
 
+    # will be called after uploadFiles POST 
     # Submit entire form
     def submit(self):
-        print("Submitting form. . .", flush=True)
+        print("Submitting form...", flush=True)
         try:
-            # session['thirdPageData'] = dict(request.form)
             self.restructureData()
 
             flag1 = flag2 = flag3 = flag4 = flag5 = flag6 = False
@@ -370,8 +410,8 @@ class MyApp(Flask):
             print("Connection Timed out",flush=True) 
             
         try:
-            query = f"INSERT INTO `Personal Info` (`NRIC`, `Name`, `Phone Number`, `Email`, `Title`, `Gender`, `Race`, `Marital Status`, `Bumi`, `Address`, `No of year in residence`, `Ownership Status`, `Stay in registered address`, `Where user stay(If not stay in registered address)`, `Loan Status`,  `Timestamp`) VALUES ({self.personalInfo})"
-            self.cursor.execute(query)
+            query = "INSERT INTO `Personal Info` (`NRIC`, `Name`, `Phone Number`, `Email`, `Title`, `Gender`, `Race`, `Marital Status`, `Bumi`, `Address`, `No of year in residence`, `Ownership Status`, `Stay in registered address`, `Where user stay(If not stay in registered address)`, `Loan Status`,  `Timestamp`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            self.cursor.execute(query, self.personalInfo)
             print(f"Inserted Personal Info :{self.personalInfo}" , flush=True)
             flag1 = True
         except mysql.connector.Error as e:
@@ -380,8 +420,8 @@ class MyApp(Flask):
 
         try:
             for i in self.referenceContacts:
-                queryX = f"INSERT INTO `Reference Contact` (`NRIC`, `Name`,`Reference Contact NRIC`, `Phone Number`, `Stay with user`,`Stay where(If no)`, `Relation to user`) VALUES ({i})"
-                self.cursor.execute(queryX)
+                queryX = "INSERT INTO `Reference Contact` (`NRIC`, `Name`,`Reference Contact NRIC`, `Phone Number`, `Stay with user`,`Stay where(If no)`, `Relation to user`) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+                self.cursor.execute(queryX, i)
                 print(f"Inserted Reference Contact :{i}" , flush=True)
             flag2 = True
         except mysql.connector.Error as e:
@@ -389,8 +429,8 @@ class MyApp(Flask):
             flag2 = False
 
         try:
-            query2 = f"INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Sector`,`Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`,`Net Salary` , `Gross Salary`, `Have EPF`, `Salary Term`) VALUES ({self.workingInfo})"
-            self.cursor.execute(query2)
+            query2 = "INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Sector`,`Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`,`Net Salary` , `Gross Salary`, `Have EPF`, `Salary Term`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            self.cursor.execute(query2, self.workingInfo)
             print(f"Inserted Working Info :{self.workingInfo}" , flush=True)
             flag3 = True
         except mysql.connector.Error as e:
@@ -398,8 +438,8 @@ class MyApp(Flask):
             flag3 = False
 
         try:
-            query3 = f"INSERT INTO `Banking Info` (`NRIC`, `Bank Name`, `Bank Account Number`, `Type Of Account`, `pdfFilePath`) VALUES ({self.bankingInfo})"
-            self.cursor.execute(query3)
+            query3 = "INSERT INTO `Banking Info` (`NRIC`, `Bank Name`, `Bank Account Number`, `Type Of Account`, `pdfFilePath`) VALUES (%s, %s, %s, %s, %s)"
+            self.cursor.execute(query3, self.bankingInfo)
             print(f"Inserted Banking Info :{self.bankingInfo}" , flush=True)
             flag4 = True
         except mysql.connector.Error as e:
@@ -407,8 +447,8 @@ class MyApp(Flask):
             flag4 = False
 
         try:
-            query4 = f"INSERT INTO `Product Info` (`NRIC`, `Product Type`, `Brand`, `Model`, `Number Plate`, `Tenure`) VALUES ({self.productInfo})"
-            self.cursor.execute(query4)
+            query4 = "INSERT INTO `Product Info` (`NRIC`, `Product Type`, `Brand`, `Model`, `Number Plate`, `Tenure`) VALUES (%s, %s, %s, %s, %s, %s)"
+            self.cursor.execute(query4, self.productInfo)
             print(f"Inserted Product Info :{self.productInfo}" , flush=True)
             flag5 = True
         except mysql.connector.Error as e:
@@ -416,8 +456,8 @@ class MyApp(Flask):
             flag5 = False
 
         try:
-            query5 = f"INSERT INTO `Extra Info` (`NRIC`, `Best time to contact`, `Have license or not`, `License Type`, `How user know Motosing`) VALUES ({self.extraInfo})"
-            self.cursor.execute(query5)
+            query5 = "INSERT INTO `Extra Info` (`NRIC`, `Best time to contact`, `Have license or not`, `License Type`, `How user know Motosing`) VALUES (%s, %s, %s, %s, %s)"
+            self.cursor.execute(query5, self.extraInfo)
             print(f"Inserted Extra Info :{self.extraInfo}" , flush=True)
             flag6 = True
         except mysql.connector.Error as e:
@@ -427,9 +467,9 @@ class MyApp(Flask):
         if flag1 and flag2 and flag3 and flag4 and flag5 and flag6:
             try: 
                 # insert new row into loan status
-                loanStatusQuery = f"INSERT INTO `Loan Status` (NRIC) VALUES ('{session['firstPageData']['NRIC']}')"
-                self.cursor.execute(loanStatusQuery)
-                print(f"Inserted Loan Status: {loanStatusQuery}", flush=True)
+                loanStatusQuery = "INSERT INTO `Loan Status` (NRIC) VALUES (%s)"
+                self.cursor.execute(loanStatusQuery, (session['firstPageData']['NRIC'],))
+                print(f"Inserted Loan Status: {loanStatusQuery}, {session['firstPageData']['NRIC']}", flush=True)
 
                 self.db.commit()
                 print("COMMITED INTO DB", flush=True)
@@ -445,22 +485,25 @@ class MyApp(Flask):
                     self.db.rollback()
                     error_message = f"SFTP script execution failed: {e}"
                     print(error_message, flush=True)
-                    return make_response('incorrect data',500)
+                    return make_response('sftp error',500)
 
-                
             except Exception as e:
                 self.db.rollback()
+                self.removeMergedPDF()
+                self.removeEmptyPDF()
                 print(e, flush=True)
                 return make_response('incorrect data',500)
         else:
             self.db.rollback()
+            self.removeMergedPDF()
             self.removeEmptyPDF()
             print("Flag detected, not committing to database", flush=True)
-            return make_response('incorrect data',500)
+            return make_response('flag detected',500)
 
-        # reset session data
+        # reset session data and info data
+        self.clearData()
         session.clear()
-        return '<h1>Submitted successfully</h1>'
+        return make_response('submit success',200)
     
             
 
@@ -471,10 +514,11 @@ class MyApp(Flask):
         data = request.json
         postcode = data.get('postcode','')
         try:
-            print("Pinging the server...",flush=True)
+            # print("Pinging the server...",flush=True)
+            postcode = (postcode,)
             self.db.ping(reconnect=True)
-            queryP = f"SELECT DISTINCT Area,State FROM `PostcodeMap` WHERE Postcode = '{postcode}'"
-            self.cursor.execute(queryP)
+            queryP = "SELECT DISTINCT Area,State FROM `PostcodeMap` WHERE Postcode = %s"
+            self.cursor.execute(queryP, postcode)
 
             location = []
             for row in self.cursor.fetchall():
@@ -513,16 +557,18 @@ class MyApp(Flask):
             address = ', '.join(addressParts)
             address = address.replace("'"," ")
             print("address :", address,flush=True)
+            
+            # for timestamp
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
             
-            self.personalInfo = f'"{data["NRIC"]}", "{data["name"]}", "{data["countryCode"] + data["phoneNumber"]}", "{data["email"]}", "{data["title"]}", "{data["gender"]}", "{data["race"] if data["race"] != "" else data["otherRace"]}", "{data["maritalStatus"]}", "{data["bumiornon"]}", "{address}", "{data["numOfYear"]}", "{data["ownership"]}", "{data["stayRegisterAddress"]}", "{data["noStayRegisterAddress"] if data["stayRegisterAddress"] == "No" else "None"}", "NULL", "{currentTime}"'
+            self.personalInfo = (data['NRIC'], data["name"], data["countryCode"] + data["phoneNumber"], data["email"], data["title"], data["gender"], data["race"] if data["race"] != "" else data["otherRace"], data["maritalStatus"], data["bumiornon"], address, data["numOfYear"], data["ownership"], data["stayRegisterAddress"], data["noStayRegisterAddress"] if data["stayRegisterAddress"] == "No" else "None", 'NULL', currentTime)
             
-            self.productInfo = f"'{data['NRIC']}', '{data['productType'].lower()}{data['newusedrecon'].lower()}', '{data['brand']}', '{data['modal']}', '{data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None'}', '{data['tenure']}'"
+            self.productInfo = (data['NRIC'], data['productType'].lower()+data['newusedrecon'].lower(), data['brand'], data['model'], data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None', data['tenure'])
 
-            referenceContact1 = f"'{data['NRIC']}', '{data['referenceName1']}', '{data['referenceNric1']}', '{data['referenceCountryCode1'] + data['referencePhoneNum1']}', '{data['stayWithReference1']}', '{data['notStayWithApplicant1'] if data['stayWithReference1'] == 'No' else 'None'}', '{data['referenceRelation1']}'"
+            referenceContact1 = (data['NRIC'], data['referenceName1'], data['referenceNric1'], data['referenceCountryCode1'] + data['referencePhoneNum1'], data['stayWithReference1'], data['notStayWithApplicant1'] if data['stayWithReference1'] == 'No' else 'None', data['referenceRelation1'])
 
-            referenceContact2 = f"'{data['NRIC']}', '{data['referenceName2']}', '{data.get('referenceNric2','-')}','{data['referenceCountryCode2'] + data['referencePhoneNum2']}', '{data['stayWithReference2']}', '{data['notStayWithApplicant2'] if data['stayWithReference2'] == 'No' else 'None'}', '{data['referenceRelation2']}'"
+            referenceContact2 = (data['NRIC'], data['referenceName2'], data.get('referenceNric2','-') ,data['referenceCountryCode2'] + data['referencePhoneNum2'], data['stayWithReference2'], data['notStayWithApplicant2'] if data['stayWithReference2'] == 'No' else 'None', data['referenceRelation2'])
 
             self.referenceContacts.clear()
             self.referenceContacts.append(referenceContact1)
@@ -531,7 +577,6 @@ class MyApp(Flask):
         except Exception as e:
             print("Error in Restructure first Page Info", flush=True)
             print(e, flush=True)
-            #return f"<h1>{e}<h1>"
             pass
         
         try: 
@@ -580,6 +625,9 @@ class MyApp(Flask):
             if not grossDecimal:
                 grossDecimal = "00"
             
+            netSalary = f'RM {data["netSalary"]}.{netDecimal}'
+            grossSalary = f'RM {data["grossSalary"]}.{grossDecimal}'
+            
             # use array to store all address parts
             companyAddressParts = [data['companyLot'], data['companyStreet']]
             
@@ -600,16 +648,18 @@ class MyApp(Flask):
             companyAddress = ', '.join(companyAddressParts)
             companyAddress = companyAddress.replace("'"," ")
             print("Company Address :", companyAddress,flush=True)
-            self.workingInfo = f"'{session['firstPageData']['NRIC']}', '{data['employmentStatus']}', '{sector}','{status}', '{position}' , '{data['department']}', '{businessNature}', '{data['companyName']}', '{data['companyCountryCode'] + data['companyPhoneNumber']}', '{data['workinginsingapore']}', '{companyAddress}', '{data['whenJoinedCompany']}', 'RM {data['netSalary'] + '.' + netDecimal}', 'RM {data['grossSalary'] + '.' + grossDecimal}', '{data.get('epfGross','No')}', '{data['salaryTerm']}'"
+            
+            filePath = f'./pdfFiles/{session["firstPageData"]["NRIC"]}.zip'
+            
+            self.workingInfo = (session['firstPageData']['NRIC'], data['employmentStatus'], sector, status, position, data['department'], businessNature, data['companyName'], data['companyCountryCode'] + data['companyPhoneNumber'], data['workinginsingapore'], companyAddress, data['whenJoinedCompany'], netSalary, grossSalary, data.get('epfGross','No'), data['salaryTerm'])
 
-            self.bankingInfo = f"'{session['firstPageData']['NRIC']}', '{data['bankName']}', '{data['bankAccountNumber']}', '{data['typeOfAccount'] if data['typeOfAccount'] != 'other' else data['typeOfAccountOther']}', './pdfFiles/{session['firstPageData']['NRIC']}.zip'"
+            self.bankingInfo = (session['firstPageData']['NRIC'], data['bankName'], data['bankAccountNumber'], data['typeOfAccount'], filePath)
 
-            self.extraInfo = f"'{session['firstPageData']['NRIC']}', '{data['bestContactTime']}', '{data['motorLicense']}', '{data['licenseType'] if data['motorLicense'] == 'Yes' else 'None'}', '{data['howToKnowMotosing']}'"
+            self.extraInfo = (session['firstPageData']['NRIC'], data['bestContactTime'], data['motorLicense'], data['licenseType'] if data['motorLicense'] == 'Yes' else 'None', data['howToKnowMotosing'])
             print("Finish Restructure Second Page Info", flush=True)
         except Exception as e:
             print("Error in Restructure Second Page Info", flush=True)
             print(e, flush = True)
-            return f"<h1>{e}<h1>"
         
 app = MyApp(__name__)
 # for session

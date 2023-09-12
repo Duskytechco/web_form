@@ -43,7 +43,7 @@
           <div class="abc">
             <div class="def">
               <input class="form-control" id="name" name="name" type="text" placeholder="Your Answer"
-                data-question="1" required>
+                data-question="1" required oninput="preventSpecialCharacters(this)">
             </div>
           </div>
         </div>
@@ -170,13 +170,13 @@
                   <span class="visually-hidden">Loading...</span>
                 </div>
                 <div class="input-group" id="cityDiv">
-                  <input type="text" class="form-control" id="city" name="city" placeholder="" data-question="8" disabled required/>
+                  <input type="text" class="form-control" id="city" name="city" placeholder="" data-question="8" disabled required oninput="preventSpecialCharacters(this)"/>
                 </div>
               </div>
               <div class="col">
                 <label for="state" class="form-label">State <span style="color:red;padding-left:0.25rem">*</span></label>
                 <div class="input-group">
-                  <input type="text" class="form-control" id="state" name="state" placeholder="" data-question="8" disabled required/>
+                  <input type="text" class="form-control" id="state" name="state" placeholder="" data-question="8" disabled required oninput="preventSpecialCharacters(this)"/>
                 </div>
               </div>
             </div> 
@@ -184,25 +184,25 @@
               <div class="col">
                 <label for="lot" class="form-label">Lot (House Number) <span style="color:red;padding-left:0.25rem">*</span></label>
                 <div class="input-group">
-                  <input type="text"class="form-control" id="lot" name="lot" maxlength="10" placeholder="Your Answer" data-question="8" disabled required/>
+                  <input type="text"class="form-control" id="lot" name="lot" maxlength="10" placeholder="Your Answer" data-question="8" disabled required oninput="preventSpecialCharacters(this)"/>
                 </div>
               </div>
               <div class="col">
                 <label for="street" class="form-label">Street <span style="color:red;padding-left:0.25rem">*</span></label>
                 <div class="input-group">
-                  <input type="text"class="form-control" id="street" name="street" maxlength="50" placeholder="Your Answer" data-question="8" disabled required/>
+                  <input type="text"class="form-control" id="street" name="street" maxlength="50" placeholder="Your Answer" data-question="8" disabled required oninput="preventSpecialCharacters(this)"/>
                 </div>
               </div>
               <div class="col">
                 <label for="buildingName" class="form-label">Building Name</label>
                 <div class="input-group">
-                  <input type="text"class="form-control" id="buildingName" name="buildingName" maxlength="30" placeholder="Your Answer" data-question="8" disabled/>
+                  <input type="text"class="form-control" id="buildingName" name="buildingName" maxlength="30" placeholder="Your Answer" data-question="8" disabled oninput="preventSpecialCharacters(this)"/>
                 </div>
               </div>
               <div class="col">
                 <label for="district" class="form-label">District</label>
                 <div class="input-group">
-                  <input type="text"class="form-control" id="district" name="district" maxlength="30" placeholder="Your Answer" data-question="8" disabled/>
+                  <input type="text"class="form-control" id="district" name="district" maxlength="30" placeholder="Your Answer" data-question="8" disabled oninput="preventSpecialCharacters(this)"/>
                 </div>
               </div>
             </div>
@@ -260,7 +260,7 @@
                   style="color:red;padding-left:0.25rem">*</span></label>
               <div class="fs-5" style="font-size:14px;padding-top:8px">Lot, Street, Postal Code, District, State
               </div>
-              <input type="text" class="form-control" id="add-container1" placeholder="Your Answer">
+              <input type="text" class="form-control" id="add-container1" placeholder="Your Answer" oninput="preventSpecialCharacters(this)">
             </div>
           </div>
         </div>
@@ -337,7 +337,7 @@
         <div class="list-gap">
           <div class="fs-5">Model<span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="input-group mb-3">
-            <select class="form-select" id="modal" name="modal" data-question="11" required>
+            <select class="form-select" id="model" name="model" data-question="11" required>
             </select>
           </div>
         </div>
@@ -428,14 +428,14 @@
           <div class="fs-5" style="font-size:14px;padding-top:8px">Full Name as in NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" name="referenceName1" placeholder="Your Answer" data-question="14" disabled required/>
+              <input class="form-control uppercase" name="referenceName1" placeholder="Your Answer" data-question="14" disabled required oninput="preventSpecialCharacters(this)"/>
             </div>
           </div>
           <div class="fs-5" style="font-size:14px;padding-top:8px">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <p class="fs-5" style="font-size: 12px;">At least need 1 NRIC for Reference Contact</p>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" type="text" name="referenceNric1" placeholder="NRIC" required>
+              <input class="form-control uppercase" type="text" name="referenceNric1" placeholder="NRIC" required oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
             </div>
           </div>
         </div>
@@ -468,7 +468,7 @@
             </label>
           </div>
           <div class="form-floating option10">
-            <input type="text" name="notStayWithApplicant1" class="form-control" id="notStayWithApplicant" />
+            <input type="text" name="notStayWithApplicant1" class="form-control" id="notStayWithApplicant" oninput="preventSpecialCharacters(this)"/>
             <label for="notStayWithApplicant">Where reference contact stay</label>
           </div>
         </div>
@@ -502,14 +502,14 @@
           <div class="fs-5" style="font-size:14px;padding-top:8px">Full Name as in NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" name="referenceName2" placeholder="Your Answer" data-question="17" disabled required/>
+              <input class="form-control uppercase" name="referenceName2" placeholder="Your Answer" data-question="17" disabled required oninput="preventSpecialCharacters(this)"/>
             </div>
           </div>
           <div class="fs-5" style="font-size:14px;padding-top:8px">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <p class="fs-5" style="font-size: 12px;">Put '-' if no NRIC</p>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" id="referenceNric2" type="text" name="referenceNric2" placeholder="NRIC">
+              <input class="form-control uppercase" id="referenceNric2" type="text" name="referenceNric2" placeholder="NRIC" oninput="this.value = this.value.replace(/[^0-9\-]/g, '').slice(0, 12);">
             </div>
           </div>
         </div>
@@ -543,7 +543,7 @@
             </label>
           </div>
           <div class="form-floating option12">
-            <input type="text" name="notStayWithApplicant2" class="form-control" id="notStayWithApplicant2" />
+            <input type="text" name="notStayWithApplicant2" class="form-control" id="notStayWithApplicant2" oninput="preventSpecialCharacters(this)"/>
             <label for="notStayWithApplicant2">Where reference contact stay</label>
           </div>
           <!--If No, show another container for fill in new address-->
@@ -752,7 +752,7 @@
     };
 
     const showDynamically = (choose) => {
-      selectTag = document.querySelector('#modal')
+      selectTag = document.querySelector('#model')
       if (choose == 'ZONTES') {
         selectTag.innerHTML = `<option selected></option>
               <option value="155G">155G</option>
@@ -1203,6 +1203,17 @@
                 event.preventDefault(); // Prevent the default form submission action
             }
         });
+
+    function preventSpecialCharacters(inputField) {
+      // Define a regular expression pattern to match special characters
+      var pattern = /[!@#$%^&*()_+{}\[\]:;<>?~\\|="'\`]/g;
+      
+      // Check if the input value contains any special characters
+      if (pattern.test(inputField.value)) {
+          // replace the special character with empty string
+          inputField.value = inputField.value.replace(pattern, "")
+      }
+    }
 
     const postcodeInput = document.getElementById('postcode');
     const stateInput = document.getElementById('state');
