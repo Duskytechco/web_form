@@ -56,30 +56,66 @@ class MyApp(Flask):
                           methods=['POST'])
         self.add_url_rule('/postcodeCheck',view_func=self.postcodeCheck,
                           methods=['POST'])
+        self.add_url_rule('/authenticate',view_func=self.authenticate,
+                          methods=['POST'])
         
     # Main Page
     def index(self):
+        session['progress'] = 0
         return render_template('Instructions.html')
 
     def privacypolicy(self):
         return render_template('PrivacyPolicy.html')
     
     def page1(self):
-        return render_template('Page1Data.html')
-    # Second page
+        authentication = session.get('authenticate',None)
+        if authentication:
+            session['progress'] = 1
+            return render_template('Page1Data.html')
+        else:
+            print("Invalid Authentication. Redirecting to Index",flush=True)
+            return redirect(url_for('index'))
+    
     def page2(self):
-        return render_template('Page2Data.html')
+        sessionProgress = session.get('progress',0)
+        authentication = session.get('authenticate',None)
+        if sessionProgress == 0 or authentication == None:
+            print("Invalid Authentication and Progress. Redirecting to Index",flush=True)
+            return redirect(url_for('index'))
+        elif (sessionProgress == 1 or sessionProgress == 3)  and authentication:
+            session['progress'] = 2
+            return render_template('Page2Data.html')
+        else:
+            return redirect(url_for('index'))
     
     def page3(self):
-        return render_template('pdfUpload.html')
+        sessionProgress = session.get('progress',0)
+        authentication = session.get('authenticate',None)
+        if sessionProgress == 0 or authentication == None:
+            print("Invalid Authentication and Progress. Redirecting to Index",flush=True)
+            return redirect(url_for('index'))
+        elif sessionProgress == 2 and authentication:
+            session['progress'] = 3
+            return render_template('pdfUpload.html')
+        else: 
+            return redirect(url_for('index'))
 
     def reuploadPage(self):
         return render_template('pdfReupload.html')
-    
-    def validateSessionToken(self):
-        print(session, flush=True)
-        
-    
+
+    # used in the instruction page to check for captcha token
+    # if exist, sign this user as authenticated
+    # to allow access to all other routes
+    def authenticate(self):
+        captcha = request.json.get('captcha',None)
+        # print("Captcha Response: ",captcha, flush=True)
+        if captcha:
+            session['captcha'] = captcha
+            session['authenticate'] = "Authenticated"
+            return make_response('authenticated',200)
+        else:
+            return make_response('failed to authenticate',400)
+     
     # used to remove empty pdfs
     def removeEmptyPDF(self):
         try:
@@ -328,11 +364,9 @@ class MyApp(Flask):
             except FileNotFoundError:
                 pass
             
-            # reset the photos and pdf files (if there is)
-            if len(photos) > 0:
-                session.pop('photo')
-            if len(pdfFiles) > 0:
-                session.pop('uploaded_filenames')
+            # reset the photos and pdf files (if there is, else return none)
+            session.pop('photo', None)
+            session.pop('uploaded_filenames', None)
             
             print("Merged PDF file has been created",flush=True)
         except Exception as e:
