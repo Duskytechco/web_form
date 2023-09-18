@@ -85,6 +85,7 @@ print(f"Received PDF File: {pdfFile}")
 hostname = '207.148.121.38'
 username = 'admin'
 password = 'Aiss2017b536442.'
+port = 7040
 remote_directory = '/Development/Webform/Webform/WEBFORM/pdfFiles'
 local_file = f"webform/{pdfFile}"
 
@@ -93,7 +94,7 @@ client = paramiko.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())  # Auto-add host key (not recommended for production)
 
 try:
-    client.connect(hostname, username=username, password=password)
+    client.connect(hostname, username=username, password=password, port=port)
 
     # Get the initial memory usage
     initial_memory = psutil.virtual_memory().used
