@@ -41,6 +41,9 @@
                         <button type="button" class="btn btn-primary" id="activateCameraButton">Activate Camera
                             <input style="display:none" name="image" type="file" id="cameraInput" accept="image/*" capture="camera">
                         </button>
+                        <button type="button" class="btn btn-primary" id="photoButton">Choose Photo
+                            <input style="display:none" name="image" type="file" id="photoInput" accept="image/*">
+                        </button>
                         <button type="button" class="btn btn-primary" id="uploadButton" >Submit Image</button>
                         <button type="button" class="btn btn-danger" id="removeImgButton">Remove Image</button>
                         <p id=photoCount class="fs-4">Total Photo Submitted 0</p>
@@ -82,14 +85,18 @@
 <script>
     let nric = 0;
     const activateCameraButton = document.getElementById("activateCameraButton");
+    const photoButton = document.getElementById("photoButton");
     const previewContainer = document.getElementById("previewContainer")
     const cameraInput = document.getElementById("cameraInput");
+    const photoInput = document.getElementById("photoInput");
     const pdfFilesInput = document.getElementById("pdfFiles")
     const statusMessage = document.getElementById("statusMessage")
     document.getElementById('uploadButton').addEventListener('click', uploadPhoto);
     document.getElementById('removeImgButton').addEventListener('click', removePhoto);
     activateCameraButton.addEventListener('click', clickCamera)
+    photoButton.addEventListener('click', clickCamera)
     cameraInput.addEventListener('change',capturePhoto)
+    photoInput.addEventListener('change',capturePhoto)
 
     document.getElementById('backBtn').addEventListener('click', function(){
         window.location.href = '/page3'
