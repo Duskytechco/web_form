@@ -83,6 +83,12 @@ var {
     height: auto;
 }
 
+@media (min-width:769px){
+    #activateCameraButton{
+        display: none;
+    }
+}
+
 html {
     display: block;
 }

@@ -42,7 +42,7 @@
                             <input style="display:none" name="image" type="file" id="cameraInput" accept="image/*" capture="camera">
                         </button>
                         <button type="button" class="btn btn-primary" id="photoButton">Choose Photo
-                            <input style="display:none" name="image" type="file" id="photoInput" accept="image/*">
+                            <input style="display:none" name="image" type="file" id="photoInput" accept="image/*" >
                         </button>
                         <button type="button" class="btn btn-primary" id="uploadButton" >Submit Image</button>
                         <button type="button" class="btn btn-danger" id="removeImgButton">Remove Image</button>
@@ -96,7 +96,7 @@
     document.getElementById('uploadButton').addEventListener('click', uploadPhoto);
     document.getElementById('removeImgButton').addEventListener('click', removePhoto);
     activateCameraButton.addEventListener('click', clickCamera)
-    photoButton.addEventListener('click', clickCamera)
+    photoButton.addEventListener('click', clickGallery)
     cameraInput.addEventListener('change',capturePhoto)
     photoInput.addEventListener('change',capturePhoto)
 
@@ -106,6 +106,9 @@
 
     function clickCamera() {
         cameraInput.click()
+    }
+    function clickGallery() {
+        photoInput.click()
     }
 
     let photo = null
@@ -125,6 +128,7 @@
         };
         
         photo = cameraInput.files[0];
+        photo = photoInput.files[0];
 
         reader.readAsDataURL(photo);
     }
@@ -182,14 +186,19 @@
                 // window.location.href = response.url;
                 console.log("Success!")
                 document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-success fs-4">Reupload Success!</p>'
+                alert('Reupload Success!')
+                window.location.href='https://www.motosing.com/'
             } else {
                 console.error('Error uploading files:', response.statusText);
                 if (response.status === 413) {
                     document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Reupload Failed. Too much images / Files too Large</p>'
+                    alert('Reupload Failed. Too much images / Files too Large')
                 } else if(response.status === 400) {
                     document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Reupload Failed. Invalid NRIC</p>'
+                    alert('Reupload Failed. Invalid NRIC')
                 } else {
                     document.getElementById('uploadStatus').innerHTML = '<p id="uploadStatus" class="text-danger fs-4">Reupload Failed. Please try again</p>'
+                    alert('Reupload Failed. Please try again')
                 }
             }
             btnSpinner.style.display = 'none'
