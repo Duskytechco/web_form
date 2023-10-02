@@ -16,7 +16,6 @@ import pandas as pd
 
 
 
-
 class MyApp(Flask):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -429,7 +428,8 @@ class MyApp(Flask):
         print("Submitting form...", flush=True)
         try:
             self.restructureData()
-
+            self.createZipFile()
+            
             flag1 = flag2 = flag3 = flag4 = flag5 = flag6 = False
         except Exception as e:
             print("Error before sql statements", flush=True)
@@ -508,18 +508,6 @@ class MyApp(Flask):
                 self.db.commit()
                 print("COMMITED INTO DB", flush=True)
                 print("Submit complete", flush=True)
-
-                # Execute SFTP Script to transfer PDF Files
-                try: 
-                    self.createZipFile()
-                    subprocess_args = ['python3', 'scripts/transfer_file_via_sftp.py', f"{session['firstPageData']['NRIC']}.zip"]
-                    subprocess.run(subprocess_args, check=True)
-                    print("SFTP Transfer completed", flush=True)
-                except subprocess.CalledProcessError as e:
-                    self.db.rollback()
-                    error_message = f"SFTP script execution failed: {e}"
-                    print(error_message, flush=True)
-                    return make_response('sftp error',500)
 
             except Exception as e:
                 self.db.rollback()
