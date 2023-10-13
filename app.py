@@ -13,6 +13,7 @@ import secrets
 import time
 import subprocess
 import pandas as pd
+from mysql.connector import pooling
 
 
 
@@ -23,17 +24,14 @@ class MyApp(Flask):
         self.config['MAX_CONTENT_LENGTH'] = 32 * 1024 * 1024
         # self.secondPageData = {}  # Dict that storing first page info
         # self.thirdPageData = {}  # Dict that storing second page info
-        self.db = mysql.connector.connect(host='149.28.139.83', user='sharedAccount', password='Shared536442.', database='crm_002_db', port='3306')  # Connect to database
-        self.cursor = self.db.cursor()
-        # all data are tuples for sql parametize query
-        self.personalInfo = ()  # Storing personal info
-        self.productInfo = () # Storing product info
-        self.referenceContacts = [()]  # A list of reference contacts
-        self.workingInfo = ()  # Storing working info
-        self.bankingInfo = ()  # Storing bank info
-        self.extraInfo = () # Storing extra info
-        # self.photos = [] # Array that stores the photos
-        # self.pdfFiles = [] # Array that stores the pdfFiles
+        self.dbConfig = {
+            "host": "149.28.139.83",
+            "user": "sharedAccount",
+            "password": "Shared536442.",
+            "database": "crm_002_db",
+            "port" : "3306"
+        }
+        self.db = pooling.MySQLConnectionPool(pool_name="dbpool",pool_size=20, **self.dbConfig)  # Connect to database
         self.add_url_rule('/', view_func=self.index,
                           methods=['GET', 'POST'])  # Bind self.index to /
         self.add_url_rule('/privacypolicy', view_func=self.privacypolicy, endpoint='privacypolicy')
@@ -165,14 +163,18 @@ class MyApp(Flask):
         try:
             queryData = (nric,)
             # check if the database is timed out
-            self.db.ping(reconnect=True)
-            self.cursor.execute(sqlQuery,queryData)
-            data = self.cursor.fetchall()
+            conn = self.db.get_connection()
+            conn._cnx.ping(reconnect=True)
+            cursor = conn._cnx.cursor()
+            cursor.execute(sqlQuery,queryData)
+            data = cursor.fetchall()
             if not data:
                 print("No NRIC Exist",flush=True)
                 return 'NO NRIC',400
         except mysql.connector.Error:
             print("Connection Timed out",flush=True) 
+        finally:
+            conn.close()
             
         try:
             # merge all files together by simulating a normal upload file
@@ -231,12 +233,12 @@ class MyApp(Flask):
 
     # after submit success, clear all data to prevent possible resubmit
     def clearData(self):
-        self.personalInfo = ()
-        self.productInfo = ()
-        self.referenceContacts = [()]  
-        self.workingInfo = () 
-        self.bankingInfo = ()
-        self.extraInfo = () 
+        session['personalInfo'] = ()
+        session['productInfo'] = ()
+        session['referenceContacts'] = [()]
+        session['workingInfo'] = ()
+        session['bankingInfo'] = ()
+        session['extraInfo'] = ()
     
     # will be called multiple times to upload all chunks of a pdf file and combined into complete pdf file
     # after uploading all pdf, will call uploadFiles to complete the merge file
@@ -347,7 +349,7 @@ class MyApp(Flask):
             
             # generate unique name for the merged pdf based on timestamp
             # save unique name as a session for later usage
-            uniqueName = f"{int(time.time())}_merged.pdf"
+            uniqueName = f'{session["firstPageData"]["NRIC"]}_merged.pdf'
             session['unique_filename'] = uniqueName
             
             # write the merged files into a new pdf
@@ -428,7 +430,6 @@ class MyApp(Flask):
         print("Submitting form...", flush=True)
         try:
             self.restructureData()
-            self.createZipFile()
             
             flag1 = flag2 = flag3 = flag4 = flag5 = flag6 = False
         except Exception as e:
@@ -439,23 +440,26 @@ class MyApp(Flask):
         # check if the database is timed out
         try:
             print("Pinging the server...",flush=True)
-            self.db.ping(reconnect=True)
+            conn = self.db.get_connection()
+            cnx = conn._cnx
+            cnx.ping(reconnect=True)
+            cursor = cnx.cursor()
         except mysql.connector.Error:
             print("Connection Timed out",flush=True) 
             
         try:
             query = "INSERT INTO `Personal Info` (`NRIC`, `Name`, `Phone Number`, `Email`, `Title`, `Gender`, `Race`, `Marital Status`, `Bumi`, `Address`, `No of year in residence`, `Ownership Status`, `Stay in registered address`, `Where user stay(If not stay in registered address)`, `Loan Status`,  `Timestamp`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            self.cursor.execute(query, self.personalInfo)
-            print(f"Inserted Personal Info :{self.personalInfo}" , flush=True)
+            cursor.execute(query, session['personalInfo'])
+            print(f"Inserted Personal Info :{session['personalInfo']}" , flush=True)
             flag1 = True
         except mysql.connector.Error as e:
             print(f"MySQL Error First Query: {e}", flush=True)
             flag1 = False
 
         try:
-            for i in self.referenceContacts:
+            for i in session['referenceContacts']:
                 queryX = "INSERT INTO `Reference Contact` (`NRIC`, `Name`,`Reference Contact NRIC`, `Phone Number`, `Stay with user`,`Stay where(If no)`, `Relation to user`) VALUES (%s, %s, %s, %s, %s, %s, %s)"
-                self.cursor.execute(queryX, i)
+                cursor.execute(queryX, i)
                 print(f"Inserted Reference Contact :{i}" , flush=True)
             flag2 = True
         except mysql.connector.Error as e:
@@ -464,8 +468,8 @@ class MyApp(Flask):
 
         try:
             query2 = "INSERT INTO `Working Info` (`NRIC`, `Employment Status`, `Sector`,`Status`, `Position`, `Department`, `Business Nature`, `Company Name`, `Company Phone Number`, `Working in Singapore`, `Company Address`, `When user joined company`,`Net Salary` , `Gross Salary`, `Have EPF`, `Salary Term`) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            self.cursor.execute(query2, self.workingInfo)
-            print(f"Inserted Working Info :{self.workingInfo}" , flush=True)
+            cursor.execute(query2, session['workingInfo'])
+            print(f"Inserted Working Info :{session['workingInfo']}" , flush=True)
             flag3 = True
         except mysql.connector.Error as e:
             print(f'MySQL Error Third Query: {e}', flush=True)
@@ -473,8 +477,8 @@ class MyApp(Flask):
 
         try:
             query3 = "INSERT INTO `Banking Info` (`NRIC`, `Bank Name`, `Bank Account Number`, `Type Of Account`, `pdfFilePath`) VALUES (%s, %s, %s, %s, %s)"
-            self.cursor.execute(query3, self.bankingInfo)
-            print(f"Inserted Banking Info :{self.bankingInfo}" , flush=True)
+            cursor.execute(query3, session['bankingInfo'])
+            print(f"Inserted Banking Info :{session['bankingInfo']}" , flush=True)
             flag4 = True
         except mysql.connector.Error as e:
             print(f'Mysql Error Forth Query: {e}', flush=True)
@@ -482,8 +486,8 @@ class MyApp(Flask):
 
         try:
             query4 = "INSERT INTO `Product Info` (`NRIC`, `Product Type`, `Brand`, `Model`, `Number Plate`, `Tenure`) VALUES (%s, %s, %s, %s, %s, %s)"
-            self.cursor.execute(query4, self.productInfo)
-            print(f"Inserted Product Info :{self.productInfo}" , flush=True)
+            cursor.execute(query4, session['productInfo'])
+            print(f"Inserted Product Info :{session['productInfo']}" , flush=True)
             flag5 = True
         except mysql.connector.Error as e:
             print(f'Mysql Error Fifth Query: {e}', flush=True)
@@ -491,8 +495,8 @@ class MyApp(Flask):
 
         try:
             query5 = "INSERT INTO `Extra Info` (`NRIC`, `Best time to contact`, `Have license or not`, `License Type`, `How user know Motosing`) VALUES (%s, %s, %s, %s, %s)"
-            self.cursor.execute(query5, self.extraInfo)
-            print(f"Inserted Extra Info :{self.extraInfo}" , flush=True)
+            cursor.execute(query5, session['extraInfo'])
+            print(f"Inserted Extra Info :{session['extraInfo']}" , flush=True)
             flag6 = True
         except mysql.connector.Error as e:
             print(f'Mysql Error Sixth Query: {e}', flush=True)
@@ -502,21 +506,23 @@ class MyApp(Flask):
             try: 
                 # insert new row into loan status
                 loanStatusQuery = "INSERT INTO `Loan Status` (NRIC) VALUES (%s)"
-                self.cursor.execute(loanStatusQuery, (session['firstPageData']['NRIC'],))
+                cursor.execute(loanStatusQuery, (session['firstPageData']['NRIC'],))
                 print(f"Inserted Loan Status: {loanStatusQuery}, {session['firstPageData']['NRIC']}", flush=True)
 
-                self.db.commit()
+                cnx.commit()
                 print("COMMITED INTO DB", flush=True)
                 print("Submit complete", flush=True)
 
+                self.createZipFile()        
+                        
             except Exception as e:
-                self.db.rollback()
+                cnx.rollback()
                 self.removeMergedPDF()
                 self.removeEmptyPDF()
                 print(e, flush=True)
                 return make_response('incorrect data',500)
         else:
-            self.db.rollback()
+            cnx.rollback()
             self.removeMergedPDF()
             self.removeEmptyPDF()
             print("Flag detected, not committing to database", flush=True)
@@ -525,6 +531,11 @@ class MyApp(Flask):
         # reset session data and info data
         self.clearData()
         session.clear()
+        try:
+            conn.close()
+        except Exception as e:
+            print("Failed in closing conn : ", e, flush=True)
+            pass
         return make_response('submit success',200)
     
             
@@ -535,20 +546,25 @@ class MyApp(Flask):
     def postcodeCheck(self):
         data = request.json
         postcode = data.get('postcode','')
+        conn = self.db.get_connection()
+        cnx = conn._cnx
         try:
             # print("Pinging the server...",flush=True)
             postcode = (postcode,)
-            self.db.ping(reconnect=True)
+            cursor = cnx.cursor()
+            cnx.ping(reconnect=True)
             queryP = "SELECT DISTINCT Area,State FROM `PostcodeMap` WHERE Postcode = %s"
-            self.cursor.execute(queryP, postcode)
+            cursor.execute(queryP, postcode)
 
             location = []
-            for row in self.cursor.fetchall():
+            for row in cursor.fetchall():
                 location.append({'Area': row[0], 'State': row[1]})
 
             return jsonify(location)
         except Exception as e:
-            return jsonify({'error': str(e)}), 500 
+            return jsonify({'error': str(e)}), 500
+        finally:
+            conn.close() 
 
 
     # Restructure all data when submit
@@ -584,17 +600,15 @@ class MyApp(Flask):
             now = datetime.now()
             currentTime = now.strftime("%Y-%m-%d %H:%M:%S")
             
-            self.personalInfo = (data['NRIC'], data["name"], data["countryCode"] + data["phoneNumber"], data["email"], data["title"], data["gender"], data["race"] if data["race"] != "" else data["otherRace"], data["maritalStatus"], data["bumiornon"], address, data["numOfYear"], data["ownership"], data["stayRegisterAddress"], data["noStayRegisterAddress"] if data["stayRegisterAddress"] == "No" else "None", 'NULL', currentTime)
+            session['personalInfo'] = (data['NRIC'], data["name"], data["countryCode"] + data["phoneNumber"], data["email"], data["title"], data["gender"], data["race"] if data["race"] != "" else data["otherRace"], data["maritalStatus"], data["bumiornon"], address, data["numOfYear"], data["ownership"], data["stayRegisterAddress"], data["noStayRegisterAddress"] if data["stayRegisterAddress"] == "No" else "None", 'NULL', currentTime)
             
-            self.productInfo = (data['NRIC'], data['productType'].lower()+data['newusedrecon'].lower(), data['brand'], data['model'], data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None', data['tenure'])
+            session['productInfo'] = (data['NRIC'], data['productType'].lower()+data['newusedrecon'].lower(), data['brand'], data['model'], data['usedNumberPlate'] if data['newusedrecon'] == 'Used' else data['reconNumberPlate'] if data['newusedrecon'] == 'Recon' else 'None', data['tenure'])
 
             referenceContact1 = (data['NRIC'], data['referenceName1'], data['referenceNric1'], data['referenceCountryCode1'] + data['referencePhoneNum1'], data['stayWithReference1'], data['notStayWithApplicant1'] if data['stayWithReference1'] == 'No' else 'None', data['referenceRelation1'])
 
             referenceContact2 = (data['NRIC'], data['referenceName2'], data.get('referenceNric2','-') ,data['referenceCountryCode2'] + data['referencePhoneNum2'], data['stayWithReference2'], data['notStayWithApplicant2'] if data['stayWithReference2'] == 'No' else 'None', data['referenceRelation2'])
 
-            self.referenceContacts.clear()
-            self.referenceContacts.append(referenceContact1)
-            self.referenceContacts.append(referenceContact2)
+            session['referenceContacts'] = [ referenceContact1, referenceContact2 ]
             print("Finish Restructure first Page Info", flush=True)
         except Exception as e:
             print("Error in Restructure first Page Info", flush=True)
@@ -673,11 +687,11 @@ class MyApp(Flask):
             
             filePath = f'./pdfFiles/{session["firstPageData"]["NRIC"]}.zip'
             
-            self.workingInfo = (session['firstPageData']['NRIC'], data['employmentStatus'], sector, status, position, data['department'], businessNature, data['companyName'], data['companyCountryCode'] + data['companyPhoneNumber'], data['workinginsingapore'], companyAddress, data['whenJoinedCompany'], netSalary, grossSalary, data.get('epfGross','No'), data['salaryTerm'])
+            session['workingInfo'] = (session['firstPageData']['NRIC'], data['employmentStatus'], sector, status, position, data['department'], businessNature, data['companyName'], data['companyCountryCode'] + data['companyPhoneNumber'], data['workinginsingapore'], companyAddress, data['whenJoinedCompany'], netSalary, grossSalary, data.get('epfGross','No'), data['salaryTerm'])
 
-            self.bankingInfo = (session['firstPageData']['NRIC'], data['bankName'], data['bankAccountNumber'], data['typeOfAccount'], filePath)
+            session['bankingInfo'] = (session['firstPageData']['NRIC'], data['bankName'], data['bankAccountNumber'], data['typeOfAccount'], filePath)
 
-            self.extraInfo = (session['firstPageData']['NRIC'], data['bestContactTime'], data['motorLicense'], data['licenseType'] if data['motorLicense'] == 'Yes' else 'None', data['howToKnowMotosing'])
+            session['extraInfo'] = (session['firstPageData']['NRIC'], data['bestContactTime'], data['motorLicense'], data['licenseType'] if data['motorLicense'] == 'Yes' else 'None', data['howToKnowMotosing'])
             print("Finish Restructure Second Page Info", flush=True)
         except Exception as e:
             print("Error in Restructure Second Page Info", flush=True)
