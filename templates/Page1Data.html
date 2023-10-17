@@ -66,7 +66,7 @@
               <option value="+60" selected>+60</option>
               <option value="+65">+65</option>
             </select>
-            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="phoneNumber"
+            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="phoneNumber" id="phoneNumber"
               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11);" data-question="3" disabled required>
           </div>
         </div>
@@ -447,7 +447,7 @@
               <option value="+60">+60</option>
               <option value="+65">+65</option>
             </select>
-            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="referencePhoneNum1"
+            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="referencePhoneNum1" id="referencePhoneNum1"
               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11);" data-question="15" disabled required>
           </div>
         </div>
@@ -521,7 +521,7 @@
               <option value="+60">+60</option>
               <option value="+65">+65</option>
             </select>
-            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="referencePhoneNum2"
+            <input type="tel" class="form-control w-75" placeholder="Your Answer" name="referencePhoneNum2" id="referencePhoneNum2"
               oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11);" data-question="18" disabled required>
           </div>
         </div>
@@ -605,6 +605,22 @@
         event.preventDefault()
       }
     })
+
+    document.getElementById("form").addEventListener("submit", function (event) {
+      // Get the values from the input fields
+      var phoneNumberValue = document.getElementById("phoneNumber").value;
+      var referencePhoneNum1Value = document.getElementById("referencePhoneNum1").value;
+      var referencePhoneNum2Value = document.getElementById("referencePhoneNum2").value;
+
+      // Check if phoneNumber is the same as referencePhoneNum1 or referencePhoneNum2
+      if (
+        phoneNumberValue === referencePhoneNum1Value ||
+        phoneNumberValue === referencePhoneNum2Value
+      ) {
+        alert("Applicant's phone number cannot be the same as reference contact numbers.");
+        event.preventDefault(); // Prevent form submission
+      }
+    });
 
     //This section for used/recon, showing another box
     let option7 = document.getElementById("option7");
