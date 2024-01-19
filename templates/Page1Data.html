@@ -39,7 +39,7 @@
         </div>
         <div class="list-gap">
           <div class="fs-5">Name <span style="color:red;padding-left:0.25rem">*</span></div>
-          <div class="fs-6" style="font-size:14px;padding-top:8px">Full Name according to NRIC (Caps Only)</div>
+          <div class="fs-6" style="font-size:14px;padding-top:8px">Full Name according to NRIC</div>
           <div class="abc">
             <div class="def">
               <input class="form-control" id="name" name="name" type="text" placeholder="Your Answer"
@@ -49,12 +49,12 @@
         </div>
         <div class="list-gap">
           <div class="fs-5">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
-          <div class="fs-6" style="font-size:14px;padding-top:8px">Numbers only ( no dash )</div>
+          <div class="fs-6" style="font-size:14px;padding-top:8px">Numbers only ( no dash needed )</div>
           <div class="abc">
             <div class="def">
               <input class="form-control" placeholder="Your Answer" type="text" name="NRIC"
-                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);"
-                onchange="autoSelectGender(event)" data-question="2" disabled required pattern=".{12}" title="Has to be 12 digits">
+                oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12); formatNRIC(this)"
+                onchange="autoSelectGender(event)" data-question="2" disabled required pattern="\d{12}" title="Has to be 12 digits">
             </div>
           </div>
         </div>
@@ -428,14 +428,14 @@
           <div class="fs-5" style="font-size:14px;padding-top:8px">Full Name as in NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" name="referenceName1" placeholder="Your Answer" data-question="14" disabled required oninput="preventSpecialCharacters(this)"/>
+              <input class="form-control uppercase" name="referenceName1" placeholder="Your Answer" data-question="14" disabled required oninput="validateName(this)"/>
             </div>
           </div>
           <div class="fs-5" style="font-size:14px;padding-top:8px">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <p class="fs-5" style="font-size: 12px;">At least need 1 NRIC for Reference Contact</p>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" type="text" name="referenceNric1" placeholder="NRIC" required oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12);">
+              <input class="form-control uppercase" type="text" name="referenceNric1" placeholder="NRIC" required oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12); formatNRIC(this)">
             </div>
           </div>
         </div>
@@ -502,14 +502,14 @@
           <div class="fs-5" style="font-size:14px;padding-top:8px">Full Name as in NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" name="referenceName2" placeholder="Your Answer" data-question="17" disabled required oninput="preventSpecialCharacters(this)"/>
+              <input class="form-control uppercase" name="referenceName2" placeholder="Your Answer" data-question="17" disabled required oninput="validateName(this)"/>
             </div>
           </div>
           <div class="fs-5" style="font-size:14px;padding-top:8px">NRIC <span style="color:red;padding-left:0.25rem">*</span></div>
           <p class="fs-5" style="font-size: 12px;">Put '-' if no NRIC</p>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" id="referenceNric2" type="text" name="referenceNric2" placeholder="NRIC" oninput="this.value = this.value.replace(/[^0-9\-]/g, '').slice(0, 12);">
+              <input class="form-control uppercase" id="referenceNric2" type="text" name="referenceNric2" placeholder="NRIC" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12); formatNRIC(this)">
             </div>
           </div>
         </div>
@@ -1232,14 +1232,63 @@
     }
 
     function validateName(inputField) {
-      // Define the allowed characters including alphabets and special characters
-      const pattern = /[!@#$%^&*()_+{}\[\]:;<>?~\\|="'\`0-9]/g;
-      if (pattern.test(inputField.value)) {
-        // replace the special character with empty string
-        inputField.value = inputField.value.replace(pattern, "")
+        // Remove all symbols and convert to uppercase
+        inputField.value = inputField.value.replace(/[^a-zA-Z\s]/g, "").toUpperCase();
       }
-    }
 
+    function formatNRIC(inputField) {
+        // Remove non-numeric characters
+        const numericValue = inputField.value.replace(/[^0-9]/g, '');
+      
+        // Validate date (YYMMDD)
+        const year = numericValue.slice(0, 2);
+        const month = numericValue.slice(2, 4);
+        const day = numericValue.slice(4, 6);
+      
+        const currentYear = new Date().getFullYear() % 100; // Get the last two digits of the current year
+        const inputYear = parseInt(year, 10); // Assuming 'year' is the variable representing the first two digits
+      
+        // Check if the input year is within a valid range (0 to currentYear or 50 to 99)
+        if ((inputYear < 0 || inputYear > currentYear) && (inputYear < 50 || inputYear > 99)) {
+          alert('Invalid year. Please enter a valid year.');
+          inputField.value = ''; // Clear the input
+          return;
+        }
+      
+        const inputMonth = parseInt(month, 10);
+        // Check if the input month is within a valid range (1 to 12)
+        if (inputMonth < 0 || inputMonth > 12) {
+          alert('Invalid month. Please enter a month between 01 and 12.');
+          inputField.value = ''; // Clear the input
+          return;
+        }
+      
+        const inputDay = parseInt(day, 10);
+        // Check if the input day is within a valid range (1 to 31)
+        if (inputDay < 0 || inputDay > 31) {
+          alert('Invalid day. Please enter a day between 01 and 31.');
+          inputField.value = ''; // Clear the input
+          return;
+        }
+      
+        // Adjust the two-digit year based on your logic
+        const adjustedYear = inputYear <= currentYear ? 2000 + inputYear : 1900 + inputYear;
+        const inputDate = new Date(adjustedYear, inputMonth - 1, inputDay);
+      
+        const today = new Date();
+      
+        console.log('Input Date:', inputDate);
+        console.log('Today:', today);
+      
+        if (inputDate > today) {
+          // The input date is in the future
+          // You can handle this case accordingly, for example, by displaying an error message
+          alert('Invalid date. Please enter a date before today.');
+          inputField.value = ''; // Clear the input
+          return;
+        }
+    }
+      
     const postcodeInput = document.getElementById('postcode');
     const stateInput = document.getElementById('state');
     const cityInput = document.getElementById('city');
