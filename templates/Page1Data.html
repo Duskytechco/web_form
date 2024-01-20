@@ -509,7 +509,7 @@
           <p class="fs-5" style="font-size: 12px;">Put '-' if no NRIC</p>
           <div class="abc">
             <div class="def">
-              <input class="form-control uppercase" id="referenceNric2" type="text" name="referenceNric2" placeholder="NRIC" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 12); formatNRIC(this)">
+              <input class="form-control uppercase" id="referenceNric2" type="text" name="referenceNric2" placeholder="NRIC" oninput="this.value = this.value.replace(/[^0-9-]/g, '').slice(0, 12); formatNRIC(this)">
             </div>
           </div>
         </div>

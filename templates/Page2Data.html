@@ -365,8 +365,7 @@
               registered</div>
             <div class="abc">
               <div class="def">
-                <input class="form-control uppercase" name="companyName" placeholder="Your Answer" data-question="4"
-                  disabled required oninput="preventSpecialCharacters(this)"/>
+                <input class="form-control" name="companyName" placeholder="Your Answer" data-question="4" disabled required oninput="preventSpecialCharacters(this); this.value = this.value.toUpperCase();" />
               </div>
             </div>
           </div>
