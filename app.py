@@ -14,6 +14,7 @@ import time
 import subprocess
 import pandas as pd
 from mysql.connector import pooling
+import atexit
 
 
 
@@ -28,7 +29,7 @@ class MyApp(Flask):
             "host": "149.28.139.83",
             "user": "sharedAccount",
             "password": "Shared536442.",
-            "database": "crm_002_db",
+            "database": os.environ['DB'],
             "port" : "3306"
         }
         self.db = pooling.MySQLConnectionPool(pool_name="dbpool",pool_size=20, **self.dbConfig)  # Connect to database
@@ -55,6 +56,18 @@ class MyApp(Flask):
                           methods=['POST'])
         self.add_url_rule('/authenticate',view_func=self.authenticate,
                           methods=['POST'])
+        # Register cleanup function to be called on exit
+        atexit.register(self.cleanup)
+    
+    # Cleanup function to close the MySQL connection pool
+    def cleanup(self):
+        try:
+            print("Closing MySQL connection pool...", flush=True)
+            if hasattr(self, 'db') and self.db:
+                self.db.close()
+            print("MySQL connection pool closed", flush=True)
+        except Exception as e:
+            print("Error closing MySQL connection pool:", e, flush=True)
         
     # Main Page
     def index(self):
@@ -192,6 +205,9 @@ class MyApp(Flask):
             if pdfFiles == 'empty':
                 print("No PDF Files uploaded",flush=True)
                 
+            # set the session nric
+            session['firstPageData'] = {'NRIC':nric}
+            
             # call the process files function to save the files into local
             self.processFiles()
             
@@ -347,7 +363,7 @@ class MyApp(Flask):
                     merger.append(pdf_bytes)
                     image.close()
             
-            # generate unique name for the merged pdf based on timestamp
+            # generate unique name for the merged pdf based on nric
             # save unique name as a session for later usage
             uniqueName = f'{session["firstPageData"]["NRIC"]}_merged.pdf'
             session['unique_filename'] = uniqueName
@@ -701,5 +717,5 @@ app = MyApp(__name__)
 # for session
 app.secret_key = secrets.token_hex(32)
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=os.environ['PORT'])
 #EOF

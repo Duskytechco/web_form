@@ -67,14 +67,14 @@
               <option value="+65">+65</option>
             </select>
             <input type="tel" class="form-control w-75" placeholder="Your Answer" name="phoneNumber" id="phoneNumber"
-              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11);" data-question="3" disabled required>
+              oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 11); validatePhoneNumber(this)" data-question="3" disabled required>
           </div>
         </div>
         <div class="list-gap">
           <div class="fs-5">Email <span style="color:red;padding-left:0.25rem">*</span></div>
           <div class="abc">
             <div class="def">
-              <input class="form-control" id="email" name="email" type="email" onchange="validateEmail(event)"
+              <input class="form-control" id="email" name="email" type="email" onchange="validateEmail(this)"
                 placeholder="Your Answer" data-question="4" disabled required/>
             </div>
           </div>
@@ -617,7 +617,7 @@
         phoneNumberValue === referencePhoneNum1Value ||
         phoneNumberValue === referencePhoneNum2Value
       ) {
-        alert("Applicant's phone number cannot be the same as reference contact numbers.");
+        alert("Applicant's Phone Number Cannot Be The Same As Reference Contact Numbers.");
         event.preventDefault(); // Prevent form submission
       }
     });
@@ -727,11 +727,17 @@
       option === 'no' ? (hiddenDiv.style.display = 'block') : (hiddenDiv.style.display = 'none');
     }
 
-    const validateEmail = (event) => {
-      const email = event.target.value;
-      let emailRe = /\S+@\S+\.\S+/;
-      !emailRe.test(email) ? alert("Please enter a valid email address") : "";
-    };
+    function validateEmail(inputField){
+      let pattern = /^[a-zA-Z0-9.-_]+@[a-zA-Z0-9.]+\.[a-zA-Z]{2,}$/;
+      if (!pattern.test(inputField.value)) {
+        // Display a message or perform any other actions
+        alert("Please Enter A Valid Email Address.");
+
+        // Remove the special characters from the input value
+        inputField.value = "";
+      }
+    }
+
 
     const autoSelectGender = (event) => {
       const NRIC = parseInt(event.target.value);
@@ -1220,25 +1226,58 @@
             }
         });
 
+    // function preventSpecialCharacters(inputField) {
+    //   // Define a regular expression pattern to match special characters
+    //   var pattern = /[!@#$%^&*()_+{}\[\]:;<>?~\\|="'\`,]/g;
+      
+    //   // Check if the input value contains any special characters
+    //   if (pattern.test(inputField.value)) {
+    //       // replace the special character with empty string
+    //       inputField.value = inputField.value.replace(pattern, "")
+    //   }
+    // }
+
     function preventSpecialCharacters(inputField) {
       // Define a regular expression pattern to match special characters
-      var pattern = /[!@#$%^&*()_+{}\[\]:;<>?~\\|="'\`]/g;
+      var pattern = /[!@#$%^&*()_+{}\[\]:;<>?~\\|="'\`,]/g;
       
       // Check if the input value contains any special characters
       if (pattern.test(inputField.value)) {
-          // replace the special character with empty string
-          inputField.value = inputField.value.replace(pattern, "")
+        // Display a message or perform any other actions
+        alert("No Special Characters allowed.");
+
+        // Remove the special characters from the input value
+        inputField.value = inputField.value.replace(pattern, "");
       }
     }
 
+
+    // function validateName(inputField) {
+    //     // Remove all symbols and convert to uppercase
+    //     inputField.value = inputField.value.replace(/[^a-zA-Z\s]/g, "").toUpperCase();
+    //   }
+
     function validateName(inputField) {
-        // Remove all symbols and convert to uppercase
-        inputField.value = inputField.value.replace(/[^a-zA-Z\s]/g, "").toUpperCase();
+        const inputValue = inputField.value;
+
+        // Check if the input contains anything other than letters and whitespace
+        if (/[^a-zA-Z\s]/.test(inputValue)) {
+          alert("Only Alphabets Are Allowed On Name");
+        }
+        // Remove invalid characters and update the input value
+        inputField.value = inputValue.replace(/[^a-zA-Z\s]/g, "").toUpperCase();
       }
+
 
     function formatNRIC(inputField) {
         // Remove non-numeric characters
         const numericValue = inputField.value.replace(/[^0-9]/g, '');
+        if (!Number.isInteger(Number(numericValue))) {
+          alert("Please Enter a Valid NRIC With Only Numeric Characters.");
+          
+          // Optionally, you can reset the input value or take other actions
+          inputField.value = "";
+        }
       
         // Validate date (YYMMDD)
         const year = numericValue.slice(0, 2);
@@ -1250,7 +1289,7 @@
       
         // Check if the input year is within a valid range (0 to currentYear or 50 to 99)
         if ((inputYear < 0 || inputYear > currentYear) && (inputYear < 50 || inputYear > 99)) {
-          alert('Invalid year. Please enter a valid year.');
+          alert('Invalid Year. Please Enter A Valid Year.');
           inputField.value = ''; // Clear the input
           return;
         }
@@ -1258,7 +1297,7 @@
         const inputMonth = parseInt(month, 10);
         // Check if the input month is within a valid range (1 to 12)
         if (inputMonth < 0 || inputMonth > 12) {
-          alert('Invalid month. Please enter a month between 01 and 12.');
+          alert('Invalid Month. Please Enter A Month Between 01 And 12.');
           inputField.value = ''; // Clear the input
           return;
         }
@@ -1266,7 +1305,7 @@
         const inputDay = parseInt(day, 10);
         // Check if the input day is within a valid range (1 to 31)
         if (inputDay < 0 || inputDay > 31) {
-          alert('Invalid day. Please enter a day between 01 and 31.');
+          alert('Invalid Day. Please Enter A Day Between 01 And 31.');
           inputField.value = ''; // Clear the input
           return;
         }
@@ -1283,11 +1322,24 @@
         if (inputDate > today) {
           // The input date is in the future
           // You can handle this case accordingly, for example, by displaying an error message
-          alert('Invalid date. Please enter a date before today.');
+          alert('Invalid Date. Please Enter A Date Before Today.');
           inputField.value = ''; // Clear the input
           return;
         }
     }
+
+    function validatePhoneNumber(inputField) {
+          const numericValue = inputField.value.replace(/[^0-9]/g, '');
+
+          // Check if the numeric value is an integer
+          if (!Number.isInteger(Number(numericValue))) {
+            alert("Please Enter A Valid Phone Number With Only Numeric Characters.");
+            
+            // Optionally, you can reset the input value or take other actions
+            inputField.value = "";
+          }
+        }
+
       
     const postcodeInput = document.getElementById('postcode');
     const stateInput = document.getElementById('state');
@@ -1315,7 +1367,7 @@
             else if(data.length === 0){
               cityInput.value = '';
               stateInput.value = '';
-              console.log("Invalid Postcode, please try again")
+              console.log("Invalid Postcode, Please Try Again")
             }
             document.getElementById('spinner').style.display = 'none';
         }))

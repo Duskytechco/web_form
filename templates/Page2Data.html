@@ -648,7 +648,7 @@
             <div class="abc">
               <div class="def">
                 <input class="form-control" placeholder="Your Answer" type="text" name="bankAccountNumber"
-                  data-question="11" disabled required oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                  data-question="11" disabled required oninput="this.value = this.value.replace(/[^0-9]/g, ''); validateBankAccountNumber(this)">
               </div>
             </div>
           </div>
@@ -767,7 +767,7 @@
             dateInput.setCustomValidity('');
         } else {
             // Input does not match the pattern; set a custom error message
-            dateInput.setCustomValidity('Please enter a valid format: YYYY-MM, for When You Join the Company');
+            dateInput.setCustomValidity('Please Enter A Valid Format: YYYY-MM, For When You Join the Company');
         }
       })
     }
@@ -1037,13 +1037,13 @@
 
     // Event handler for input changes
     function handleInputChange() {
-      console.log("salary field blurred");
+      console.log("Salary Field Blurred");
       var netSalary = parseFloat(document.getElementById("netSalary").value);
       var grossSalary = parseFloat(document.getElementById("grossSalary").value);
 
       // Check if Gross Salary is equal to or lower than Net Salary
       if (grossSalary <= netSalary) {
-        alert("Gross Salary must be higher than Net Salary.");
+        alert("Gross Salary Must Be Higher Than Net Salary.");
         document.getElementById("grossSalary").value = '';
         document.getElementById("grossSalary").focus();
       }    
@@ -1321,17 +1321,32 @@
     function previousPage(){
       history.back()
     }
-    
+
     function preventSpecialCharacters(inputField) {
       // Define a regular expression pattern to match special characters
-      var pattern = /[!@#$%^&*()_+{}\[\]:;<>?~\\|="'\`]/g;
+      var pattern = /[!@#$%^&*()_+{}\[\]:;<>?~\\|="'\`,]/g;
       
       // Check if the input value contains any special characters
       if (pattern.test(inputField.value)) {
-          // replace the special character with empty string
-          inputField.value = inputField.value.replace(pattern, "")
+        // Display a message or perform any other actions
+        alert("No Special Characters Allowed.");
+
+        // Remove the special characters from the input value
+        inputField.value = inputField.value.replace(pattern, "");
       }
     }
+
+    function validateBankAccountNumber(inputField) {
+          const numericValue = inputField.value.replace(/[^0-9]/g, '');
+
+          // Check if the numeric value is an integer
+          if (!Number.isInteger(Number(numericValue))) {
+            alert("Please Enter A Valid Bank Account Number With Only Numeric Characters.");
+            
+            // Optionally, you can reset the input value or take other actions
+            inputField.value = "";
+          }
+        }
 
     const postcodeInput = document.getElementById('companyPostcode') 
     const stateInput = document.getElementById('companyState') 
@@ -1359,7 +1374,7 @@
             else if(data.length === 0){
               cityInput.value = '';
               stateInput.value = '';
-              console.log("Invalid Postcode, please try again")
+              console.log("Invalid Postcode, Please Try Again")
             }
             document.getElementById('spinner').style.display = 'none'
         }))

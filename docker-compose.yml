@@ -1,14 +1,28 @@
-version: '3.9'
-
 services:
   webform:
     build:
       context: .
       dockerfile: ./Dockerfile
     command: sh -c "sleep 20s ; python3 ./app.py"
-    ports:
-      - "5000:5000"
     environment:
-      - FLASK_ENV=production
+    - FLASK_ENV=production
+    - PORT=5000
+    - DB=crm_002_db
+    ports:
+    - 5000:5000
     volumes:
-      - ./pdfFiles:/app/webform
+    - ./pdfFiles/002:/app/webform
+  webform_003:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    command: sh -c "sleep 20s ; python3 ./app.py"
+    environment:
+    - FLASK_ENV=production
+    - DB=crm_003_db
+    - PORT=5001
+    ports:
+    - 5001:5001
+    volumes:
+    - ./pdfFiles/003:/app/webform
+version: '3.9'
